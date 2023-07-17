@@ -1,4 +1,5 @@
 import bcryt from 'bcryptjs';
+import validator from 'validator';
 var salt = bcryt.genSaltSync(10);
 
 export class User {
@@ -16,13 +17,13 @@ export class User {
 
     constructor(email?: string, password?: string, mobile?: string, uid?: string | number, religion?: string, firstname
         ?: string, lastname?: string, username?: string, profile?: string, isblock?: boolean, isonline?: boolean) {
-        this.email = email;
+        this.email = validator.isEmail(email??'')? email:undefined;
         this.password = bcryt.hashSync(password ?? '', salt);
-        this.mobile = mobile;
+        this.mobile = validator.isMobilePhone(mobile??'')? mobile:undefined;
         this.firstname = firstname;
         this.lastname = lastname;
         this.uid = uid;
-        this.username = username;
+        this.username = username??email?.substr(email.indexOf("@")),
         this.profile = profile;
         this.religion = religion;
         this.isonline = isonline;
@@ -88,7 +89,7 @@ export class User {
     }
 
     public setEmail(email: string): void {
-        this.email = email;
+        this.email = validator.isEmail(email)?email:undefined;
     }
 
     public getPassword(): string | undefined {
@@ -128,8 +129,8 @@ export class User {
 
 export class UserBuilder {
     private user: User;
-    constructor() {
-        this.user = new User();
+    constructor(user?:User) {
+        this.user = user??new User();
     }
     public setIsblock(isblock: boolean): UserBuilder {
         this.user.setIsblock(isblock);
