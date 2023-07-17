@@ -1,7 +1,7 @@
 import {FireAuth} from '../FireBase/FireAuth';
-import {User} from '../Model/User'
+import {User,UserBuilder} from '../Model/User'
 
-export function add(user:User): boolean|undefined{
+export function add(user:User|UserBuilder|Array<User|UserBuilder>): boolean|undefined{
     try {
         
         return true;
