@@ -1,7 +1,7 @@
 import fire from './Firebase';
 import {User} from '../Model/User'
 const Auth=fire.auth();
-class FireAuth{
+export class FireAuth{
     static async add(user:User){
         try {
           const newuser=await Auth.createUser({
@@ -16,8 +16,9 @@ class FireAuth{
             return user;
 
         } catch (error) {
-            
+            throw error;
         }
     }
 }
+
 
