@@ -23,5 +23,31 @@ class FireAuth {
             }
         });
     }
+    static delete(user) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            try {
+                yield Auth.deleteUser(user);
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    }
+    static edit(user) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            try {
+                if ((user === null || user === void 0 ? void 0 : user.getUid()) != undefined)
+                    yield Auth.updateUser(user.getUid(), {
+                        displayName: user.getUsername(),
+                        password: user.getPassword(),
+                        email: user.getEmail(),
+                        phoneNumber: user.getMobile(),
+                        photoURL: user.getProfile()
+                    });
+            }
+            catch (error) {
+            }
+        });
+    }
 }
 exports.FireAuth = FireAuth;

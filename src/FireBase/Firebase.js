@@ -6,4 +6,4 @@ Firebase.initializeApp(
         credential:Firebase.credential.cert(ServiceKey)
     }
 );
-console.log(Firebase.SDK_VERSION)
+module.exports=Firebase;
