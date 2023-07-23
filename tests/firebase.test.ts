@@ -1,4 +1,5 @@
 import fire from '../src/FireBase/Firebase';
+import fireStorage from '../src/FireBase/FireStorage';
 
 describe("Testing with firebase ",()=>{
     describe("first test firebase properly connected or not",()=>{
@@ -14,8 +15,12 @@ describe("Testing with firebase ",()=>{
             expect(snapshot.exists).toBe(true);
             expect(snapshot?.data()?.testField).toBe('testValue');
         });
-        describe("FireStore",()=>{
-            
+        describe("FireStorage",()=>{
+            it("check uploades function",()=>{
+                fireStorage.upload("./unnamed.png",'test/unnamed.png').then(result=>{
+                    expect(result).toBe("File uploaded successfully.");
+                })
+            })
         });
     })
 })

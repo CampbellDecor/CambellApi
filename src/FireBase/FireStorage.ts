@@ -14,3 +14,4 @@ class Stroage{
           }
     }
 }
+export default Stroage;
