@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.5% </span>
+                <span class="strong">82.35% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>7/8</span>
+                <span class='fraction'>28/34</span>
             </div>
         
             
@@ -246,11 +246,11 @@
 <a name='L181'></a><a href='#L181'>181</a>
 <a name='L182'></a><a href='#L182'>182</a>
 <a name='L183'></a><a href='#L183'>183</a>
-<a name='L184'></a><a href='#L184'>184</a>
-<a name='L185'></a><a href='#L185'>185</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L184'></a><a href='#L184'>184</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -272,7 +272,7 @@
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
@@ -429,62 +429,61 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import bcryt from 'bcryptjs';
+import validator from 'validator';
 var salt = bcryt.genSaltSync(10);
-export class User{
-    private uid ?:string|number;
-    private firstname ?:string;
-    private username ? :string;
-    private profile ? :string;
-    private lastname ?:string;
-    private email?:string;
-    private password?:string;
-    private mobile ?:string
-    private religion ? :string;
-    private isblock ?:boolean;
-    private isonline ?:boolean;
 &nbsp;
-   
+export class User {
+    private uid?: string | number;
+    private firstname?: string;
+    private username?: string;
+    private profile?: string;
+    private lastname?: string;
+    private email?: string;
+    private password?: string;
+    private mobile?: string
+    private religion?: string;
+    private isblock?: boolean;
+    private isonline?: boolean;
 &nbsp;
-    constructor( email?:string,password?:string,mobile?:string,uid?:string|number,religion ? :string,firstname ?:string,lastname ?:string,username ? :string,profile ? :string,isblock ?:boolean,isonline ?: boolean){
-        this.email=email;
-        this.password=bcryt.hashSync(password??'', salt);
-        this.mobile=mobile;
-        this.firstname=firstname;
-        this.lastname=lastname;
-        this.uid=uid;
-        this.username=username;
-        this.profile=profile;
-        this.religion=religion;
-        this.isonline=isonline;
-        this.isblock=isblock;
+    constructor(email?: string, password?: string, mobile?: string, uid?: string | number, religion?: string, firstname
+        ?: string, lastname?: string, username?: string, profile?: string, isblock?: boolean, isonline?: boolean) {
+        this.email = validator.isEmail(email??'')? email:undefined;
+        this.password = bcryt.hashSync(password ?? '', salt);
+        this.mobile = validator.isMobilePhone(<span class="branch-0 cbranch-no" title="branch not covered" >mobile?</span>?'')? <span class="branch-0 cbranch-no" title="branch not covered" >mobile:</span>undefined;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.uid = uid;
+        this.username = <span class="branch-0 cbranch-no" title="branch not covered" >username?</span>?email?.substr(email.indexOf("@")),
+        this.profile = profile;
+        this.religion = religion;
+        this.isonline = isonline;
+        this.isblock = isblock;
     }
-    public getIsblock():boolean|undefined {
+    public getIsblock(): boolean | undefined {
         return this.isblock;
     }
 &nbsp;
-    public setIsblock(isblock:boolean): void {
+    public setIsblock(isblock: boolean): void {
         this.isblock = isblock;
     }
 &nbsp;
-    public getIsonline():boolean|undefined {
+    public getIsonline(): boolean | undefined {
         return this.isonline;
     }
 &nbsp;
-    public <span class="fstat-no" title="function not covered" >setIsonline(</span>isonline:boolean): void {
+    public <span class="fstat-no" title="function not covered" >setIsonline(</span>isonline: boolean): void {
 <span class="cstat-no" title="statement not covered" >        this.isonline = isonline;</span>
     }
-    public <span class="fstat-no" title="function not covered" >getUid(</span>): string|number|undefined {
+    public <span class="fstat-no" title="function not covered" >getUid(</span>): string | number | undefined {
 <span class="cstat-no" title="statement not covered" >        return this.uid;</span>
     }
 &nbsp;
-    public <span class="fstat-no" title="function not covered" >setUid(</span>uid: string|number): void {
+    public <span class="fstat-no" title="function not covered" >setUid(</span>uid: string | number): void {
 <span class="cstat-no" title="statement not covered" >        this.uid = uid;</span>
     }
 &nbsp;
-    public getFirstname(): string|undefined {
+    public getFirstname(): string | undefined {
         return this.firstname;
     }
 &nbsp;
@@ -492,7 +491,7 @@ export class User{
         this.firstname = firstname;
     }
 &nbsp;
-    public <span class="fstat-no" title="function not covered" >getUsername(</span>):string |undefined{
+    public <span class="fstat-no" title="function not covered" >getUsername(</span>): string | undefined {
 <span class="cstat-no" title="statement not covered" >        return this.username;</span>
     }
 &nbsp;
@@ -500,7 +499,7 @@ export class User{
 <span class="cstat-no" title="statement not covered" >        this.username = username;</span>
     }
 &nbsp;
-    public getProfile(): string|undefined {
+    public getProfile(): string | undefined {
         return this.profile;
     }
 &nbsp;
@@ -508,7 +507,7 @@ export class User{
 <span class="cstat-no" title="statement not covered" >        this.profile = profile;</span>
     }
 &nbsp;
-    public getLastname(): string|undefined {
+    public getLastname(): string | undefined {
         return this.lastname;
     }
 &nbsp;
@@ -516,26 +515,26 @@ export class User{
 <span class="cstat-no" title="statement not covered" >        this.lastname = lastname;</span>
     }
 &nbsp;
-    public getEmail(): string|undefined {
+    public getEmail(): string | undefined {
         return this.email;
     }
 &nbsp;
     public setEmail(email: string): void {
-        this.email = email;
+        this.email = validator.isEmail(email)?email:<span class="branch-1 cbranch-no" title="branch not covered" >undefined;</span>
     }
 &nbsp;
-    public getPassword(): string|undefined {
+    public getPassword(): string | undefined {
         return this.password;
     }
-    public comparePassword(password:string): boolean {
-        return  bcryt.compareSync(password, this.password??<span class="branch-1 cbranch-no" title="branch not covered" >'')</span>;
+    public comparePassword(password: string): boolean {
+        return bcryt.compareSync(password, this.password ?? <span class="branch-1 cbranch-no" title="branch not covered" >'')</span>;
     }
 &nbsp;
-    public <span class="fstat-no" title="function not covered" >setPassword(</span>password: string): void|undefined {
+    public <span class="fstat-no" title="function not covered" >setPassword(</span>password: string): void | undefined {
 <span class="cstat-no" title="statement not covered" >        this.password = bcryt.hashSync(password, salt);</span>
     }
 &nbsp;
-    public <span class="fstat-no" title="function not covered" >getMobile(</span>): string|undefined {
+    public <span class="fstat-no" title="function not covered" >getMobile(</span>): string | undefined {
 <span class="cstat-no" title="statement not covered" >        return this.mobile;</span>
     }
 &nbsp;
@@ -543,86 +542,84 @@ export class User{
         this.mobile = mobile;
     }
 &nbsp;
-    public <span class="fstat-no" title="function not covered" >getReligion(</span>): string|undefined {
+    public <span class="fstat-no" title="function not covered" >getReligion(</span>): string | undefined {
 <span class="cstat-no" title="statement not covered" >        return this.religion;</span>
     }
 &nbsp;
     public <span class="fstat-no" title="function not covered" >setReligion(</span>religion: string): void {
 <span class="cstat-no" title="statement not covered" >        this.religion = religion;</span>
     }
-    public static InstanceOf():User{
+    public static InstanceOf(): User {
         return new User();
     }
-    public static UserBuilder(){
+    public static UserBuilder() {
         return new UserBuilder();
     }
-    
+&nbsp;
 }
 &nbsp;
-export class UserBuilder{
-    private user:User;
-    constructor(){
-        this.user=new User();
+export class UserBuilder {
+    private user: User;
+    constructor(user?:User) {
+        this.user = <span class="branch-0 cbranch-no" title="branch not covered" >user?</span>?new User();
     }
-    public setIsblock(isblock:boolean):UserBuilder {
-this.user.setIsblock(isblock);
-return this;
-}
-public <span class="fstat-no" title="function not covered" >setIsonline(</span>isonline:boolean):UserBuilder {
-<span class="cstat-no" title="statement not covered" >this.user.setIsonline(isonline);</span>
-<span class="cstat-no" title="statement not covered" >return this;</span>
-}
-public <span class="fstat-no" title="function not covered" >setUid(</span>uid: string|number):UserBuilder {
-<span class="cstat-no" title="statement not covered" >this.user.setUid(uid);</span>
-<span class="cstat-no" title="statement not covered" >return this;</span>
-}
-public setMobile(mobile: string): UserBuilder {
-this.user.setMobile(mobile);
-return this;
-}
-public <span class="fstat-no" title="function not covered" >setReligion(</span>religion: string):UserBuilder {
-<span class="cstat-no" title="statement not covered" >this.user.setReligion(religion);</span>
-<span class="cstat-no" title="statement not covered" >return this;</span>
-}
-public <span class="fstat-no" title="function not covered" >setPassword(</span>password: string): UserBuilder {
-<span class="cstat-no" title="statement not covered" >this.user.setPassword(password);</span>
-<span class="cstat-no" title="statement not covered" >return this</span>
-}
+    public setIsblock(isblock: boolean): UserBuilder {
+        this.user.setIsblock(isblock);
+        return this;
+    }
+    public <span class="fstat-no" title="function not covered" >setIsonline(</span>isonline: boolean): UserBuilder {
+<span class="cstat-no" title="statement not covered" >        this.user.setIsonline(isonline);</span>
+<span class="cstat-no" title="statement not covered" >        return this;</span>
+    }
+    public <span class="fstat-no" title="function not covered" >setUid(</span>uid: string | number): UserBuilder {
+<span class="cstat-no" title="statement not covered" >        this.user.setUid(uid);</span>
+<span class="cstat-no" title="statement not covered" >        return this;</span>
+    }
+    public setMobile(mobile: string): UserBuilder {
+        this.user.setMobile(mobile);
+        return this;
+    }
+    public <span class="fstat-no" title="function not covered" >setReligion(</span>religion: string): UserBuilder {
+<span class="cstat-no" title="statement not covered" >        this.user.setReligion(religion);</span>
+<span class="cstat-no" title="statement not covered" >        return this;</span>
+    }
+    public <span class="fstat-no" title="function not covered" >setPassword(</span>password: string): UserBuilder {
+<span class="cstat-no" title="statement not covered" >        this.user.setPassword(password);</span>
+<span class="cstat-no" title="statement not covered" >        return this</span>
+    }
 &nbsp;
-public setEmail(email: string): UserBuilder {
-this.user.setEmail(email);
-return this;
-}
+    public setEmail(email: string): UserBuilder {
+        this.user.setEmail(email);
+        return this;
+    }
 &nbsp;
-public <span class="fstat-no" title="function not covered" >setLastname(</span>lastname: string): UserBuilder {
-<span class="cstat-no" title="statement not covered" >this.user.setLastname(lastname);</span>
-<span class="cstat-no" title="statement not covered" >return this;</span>
-}
-public <span class="fstat-no" title="function not covered" >setProfile(</span>profile: string): UserBuilder {
-<span class="cstat-no" title="statement not covered" >this.user.setProfile(profile);</span>
-<span class="cstat-no" title="statement not covered" >return this;</span>
-}
-public <span class="fstat-no" title="function not covered" >setUsername(</span>username: string): UserBuilder {
-<span class="cstat-no" title="statement not covered" >this.user.setUsername(username);</span>
-<span class="cstat-no" title="statement not covered" >return this;</span>
-}
-public setFirstname(firstname: string): UserBuilder {
-this.user.setFirstname(firstname);
-return this;
-}
-public getUser(){
-    return this.user;
-}
-}
-&nbsp;
-&nbsp;</pre></td></tr></table></pre>
+    public <span class="fstat-no" title="function not covered" >setLastname(</span>lastname: string): UserBuilder {
+<span class="cstat-no" title="statement not covered" >        this.user.setLastname(lastname);</span>
+<span class="cstat-no" title="statement not covered" >        return this;</span>
+    }
+    public <span class="fstat-no" title="function not covered" >setProfile(</span>profile: string): UserBuilder {
+<span class="cstat-no" title="statement not covered" >        this.user.setProfile(profile);</span>
+<span class="cstat-no" title="statement not covered" >        return this;</span>
+    }
+    public <span class="fstat-no" title="function not covered" >setUsername(</span>username: string): UserBuilder {
+<span class="cstat-no" title="statement not covered" >        this.user.setUsername(username);</span>
+<span class="cstat-no" title="statement not covered" >        return this;</span>
+    }
+    public setFirstname(firstname: string): UserBuilder {
+        this.user.setFirstname(firstname);
+        return this;
+    }
+    public getUser() {
+        return this.user;
+    }
+}</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-07-16T16:45:21.761Z
+                at 2023-07-23T00:15:01.060Z
             </div>
         <script src="prettify.js"></script>
         <script>
