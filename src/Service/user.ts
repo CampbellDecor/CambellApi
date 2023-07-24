@@ -1,10 +1,11 @@
-import {FireAuth} from '../FireBase/FireAuth';
+import FireAuth from '../FireBase/FireAuth';
+import FireStorage from '../FireBase/FireStorage';
 import {User,UserBuilder} from '../Model/User'
 
-export function add(user:User|UserBuilder|Array<User|UserBuilder>): boolean|undefined{
+export function add(user:User|UserBuilder|Array<User|UserBuilder>):{
     try {
         
-        return true;
+       
     } catch (error) {
         throw error;
     }
