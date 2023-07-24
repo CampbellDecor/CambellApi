@@ -24,14 +24,15 @@ class FireDb {
                     dbobj = this.Db.child(id);
                 }
                 else
-                    dbobj = yield this.Db.push();
+                    dbobj = yield this.Db.push().then((item) => {
+                        id = item.key;
+                    });
                 yield dbobj.set(object);
-                return dbobj;
+                return id;
             }
-            catch (_a) {
+            catch (error) {
+                throw error;
             }
         });
     }
 }
-let a = new FireDb("user");
-a.add({ name: "kaji" }).then(console.log);

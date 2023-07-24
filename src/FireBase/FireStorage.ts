@@ -9,7 +9,13 @@ class FireStorage{
             await Budcket.upload(localFilePath, {
               destination: storageFilepath
             });
-            console.log('File uploaded successfully.');
+            const file=Budcket.file(storageFilepath);
+            const [url]=await file.getSignedUrl({
+              action:'read',
+              expires:FireStorage.expriedDate(4)
+            })
+            return {storageUrl:storageFilepath,
+                    url:url}
           } catch (error) {
             console.error('Error uploading file:', error);
             throw error;
@@ -21,5 +27,8 @@ class FireStorage{
         let storageFilepath=basepath+"/"+name+type;
         return storageFilepath;
     }
+    static expriedDate(howlong:number):string{
+      let date=new Date();
+      return `${date.getFullYear()+100}+${date.getMonth()+1}-${date.getDate()+howlong}`
+    }
 }
-module.exports=FireStorage;
