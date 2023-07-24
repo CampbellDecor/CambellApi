@@ -2,6 +2,8 @@
 var Firebase = require('firebase-admin');
 const ServiceKey = require('./ServiceKey.json');
 Firebase.initializeApp({
-    credential: Firebase.credential.cert(ServiceKey)
+    credential: Firebase.credential.cert(ServiceKey),
+    databaseURL: "https://cambelldecor-default-rtdb.asia-southeast1.firebasedatabase.app",
+    storageBucket: "cambelldecor.appspot.com",
 });
-console.log(Firebase.SDK_VERSION);
+module.exports = Firebase;

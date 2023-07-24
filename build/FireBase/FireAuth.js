@@ -51,3 +51,4 @@ class FireAuth {
     }
 }
 exports.FireAuth = FireAuth;
+module.exports = FireAuth;
