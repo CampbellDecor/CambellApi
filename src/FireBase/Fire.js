@@ -8,11 +8,5 @@ Firebase.initializeApp(
         storageBucket:"cambelldecor.appspot.com",
     }
 );
-exports.fireex=(functionName)=>{
-    try {
-        functionName;
-    } catch (error) {
-        throw error;
-    }
-}
+
 module.exports=Firebase;
