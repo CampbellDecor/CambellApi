@@ -1,6 +1,6 @@
 import fire, { firestore } from './Fire'
 import { Model } from '../Model/Model';
-class FireStore {
+export default class FireStore {
    FireStoreB = firestore();
    private Entity: any;
    constructor(collection?: string) {
