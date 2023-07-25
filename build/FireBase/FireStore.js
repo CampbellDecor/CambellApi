@@ -2,17 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const Fire_1 = require("./Fire");
-class FireDatabase {
+const Model_1 = require("../Model/Model");
+class FireStore {
     constructor(collection) {
-        this.Database = (0, Fire_1.database)();
-        this.Entity = this.Database.ref(collection);
+        this.FireStoreB = (0, Fire_1.firestore)();
+        this.Entity = this.FireStoreB.collection(collection);
     }
     add(element) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
-                const row = yield this.Entity.push();
-                yield row.set(element);
-                return row.key;
+                const row = yield this.Entity.add(element);
+                return row.id;
             }
             catch (error) {
                 throw error;
@@ -22,9 +22,9 @@ class FireDatabase {
     addWithId(element, id) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
-                const row = yield this.Entity.child(id);
-                yield row.set(element);
-                return row.key;
+                const row = this.Entity.doc(id);
+                yield row.set(Model_1.Model);
+                return row.id;
             }
             catch (error) {
                 throw error;
@@ -33,13 +33,17 @@ class FireDatabase {
     }
     addWithIncrement(element) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            let id = 0;
             try {
-                const snapshot = yield this.Entity.orderByKey().limitToLast(1).once('value');
-                // The snapshot will contain the last added element, which you can get the key from.
-                const lastKey = Object.keys(snapshot.val())[0];
-                const row = yield this.Entity.child(parseInt(lastKey) + 1);
-                yield row.set(element);
-                return row.key;
+                const snapshot = yield this.Entity.orderBy('createdAt', 'desc').limit(1).get();
+                if (!snapshot.empty) {
+                    const lastDocument = snapshot.docs[0];
+                    const last = lastDocument.id;
+                    id = parseInt(last);
+                }
+                const row = this.Entity.doc(id);
+                yield row.set(Model_1.Model);
+                return row.id;
             }
             catch (error) {
                 throw error;
@@ -49,7 +53,10 @@ class FireDatabase {
     delete(element) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
-                yield this.Entity.child(element.getId()).remove();
+                const obj = yield this.Entity.doc(element.getId());
+                ;
+                obj.delete();
+                return true;
             }
             catch (error) {
                 throw error;
@@ -59,7 +66,9 @@ class FireDatabase {
     deleteWithId(element) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
-                yield this.Entity.child(element).remove();
+                const obj = yield this.Entity.doc(element);
+                obj.delete();
+                return true;
             }
             catch (error) {
                 throw error;
@@ -69,8 +78,9 @@ class FireDatabase {
     edit(element) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
-                yield this.Entity.child(element.getId()).update(element);
-                return element;
+                const obj = yield this.Entity.doc(element.getId());
+                ;
+                obj.update(element);
             }
             catch (error) {
                 throw error;
@@ -80,7 +90,8 @@ class FireDatabase {
     editWithId(element, id) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
-                yield this.Entity.child(id).update(element);
+                const obj = yield this.Entity.doc(id);
+                obj.update(element);
                 return element;
             }
             catch (error) {
@@ -91,19 +102,27 @@ class FireDatabase {
     orderById() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
-                const snapshot = yield this.Entity.orderByKey().once('value');
-                return snapshot.val();
+                const snapshot = yield this.Entity.orderBy(Fire_1.firestore.FieldPath.documentId()).get();
+                const documents = [];
+                snapshot.forEach((doc) => {
+                    documents.push(Model_1.Model.setData(doc.data()).fixedId(doc.id));
+                });
+                return documents;
             }
             catch (error) {
                 throw error;
             }
         });
     }
-    orderBy(field) {
+    orderBy(field, orderby) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
-                const snapshot = yield this.Entity.orderByChild(field).once('value');
-                return snapshot.val();
+                const snapshot = yield this.Entity.orderBy(field, orderby !== null && orderby !== void 0 ? orderby : 'asc').get();
+                const documents = [];
+                snapshot.forEach((doc) => {
+                    documents.push(Model_1.Model.setData(doc.data()).fixedId(doc.id));
+                });
+                return documents;
             }
             catch (error) {
                 throw error;
@@ -113,8 +132,12 @@ class FireDatabase {
     getAll() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
-                const snapshot = yield this.Entity.once('value');
-                return snapshot.val();
+                const querySnapshot = yield this.Entity.get();
+                const documents = [];
+                querySnapshot.forEach((doc) => {
+                    documents.push(Model_1.Model.setData(doc.data()).fixedId(doc.id));
+                });
+                return documents;
             }
             catch (error) {
                 throw error;
@@ -124,16 +147,13 @@ class FireDatabase {
     getByID(id) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
-                const snapshot = yield this.Entity.child(id).once('value');
-                // Check if the snapshot contains data
-                if (snapshot.exists()) {
-                    // Extract the data from the snapshot and return it
-                    const data = snapshot.val();
-                    return data;
+                const docRef = yield this.Entity.doc(id);
+                const docSnapshot = yield docRef.get();
+                if (docSnapshot.exists) {
+                    return docSnapshot.data();
                 }
                 else {
-                    // If the snapshot doesn't contain data for the given ID
-                    return `No data found for ID: ${id}`;
+                    throw new Error('Not found');
                 }
             }
             catch (error) {
@@ -144,11 +164,8 @@ class FireDatabase {
     count() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
-                let itemCount = 0;
-                yield this.Entity.once('value', (snapshot) => {
-                    itemCount = snapshot.numChildren();
-                });
-                return itemCount;
+                const snapshot = yield this.Entity.get();
+                return snapshot.size;
             }
             catch (error) {
                 throw error;
@@ -156,4 +173,3 @@ class FireDatabase {
         });
     }
 }
-exports.default = FireDatabase;
