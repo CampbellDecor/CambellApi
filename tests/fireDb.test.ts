@@ -48,11 +48,11 @@ describe("FireBase RealTime Database",function(){
            await expect(userdb.getAll()).resolves.not.toBeUndefined();
         })
     })
-    describe("delete",()=>{
+    describe("delete withid",()=>{
        
         const servicedb=new DB("service");
-        test("delete a object using delete function", async ()=>{
-            await expect(servicedb.delete({} as Model)).resolves.not.toContain({})
+        test("delete a object using delete function with id", async ()=>{
+            await expect(servicedb.deleteWithId(1)).resolves.not.toContain({servicename:"food",price:1500})
         })
     })
 });
