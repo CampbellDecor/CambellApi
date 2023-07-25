@@ -53,6 +53,40 @@ class FireDatabase{
          throw error;
       }
      }
+     async edit(element:Model){
+      try {
+         await this.Entity.child(element.getId()).update(element);
+         return element;
+      } catch (error) {
+         throw error;
+      }
+     }
+     async editWithId(element:Model,id:string|number){
+      try {
+         await this.Entity.child(id).update(element);
+         return element;
+      } catch (error) {
+         throw error;
+      }
+     }
+     async orderById(){
+      try {
+         const snapshot=await this.Entity.orderByKey().once('value');
+         return snapshot.val()
+
+      } catch (error) {
+         throw error;
+      }
+     }
+     async orderBy(field:string){
+      try {
+         const snapshot=await this.Entity.orderByChild(field).once('value');
+         return snapshot.val()
+
+      } catch (error) {
+         throw error;
+      }
+     }
      
     
 }

@@ -46,4 +46,57 @@ class FireDatabase {
             }
         });
     }
+    delete(element) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            try {
+                yield this.Entity.child(element.getId()).remove();
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    }
+    deleteWithId(element) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            try {
+                yield this.Entity.child(element).remove();
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    }
+    edit(element) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            try {
+                yield this.Entity.child(element.getId()).update(element);
+                return element;
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    }
+    editWithId(element, id) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            try {
+                yield this.Entity.child(id).update(element);
+                return element;
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    }
+    orderById() {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            try {
+                const snapshot = yield this.Entity.orderByKey().once('value');
+                return snapshot.val();
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    }
 }
