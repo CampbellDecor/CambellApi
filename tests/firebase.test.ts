@@ -1,4 +1,4 @@
-import fire from '../src/FireBase/Firebase';
+import fire from '../src/FireBase/Fire';
 import fireStorage from '../src/FireBase/FireStorage';
 
 describe("Testing with firebase ",()=>{
