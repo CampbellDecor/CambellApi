@@ -1,5 +1,4 @@
-import fire from '../src/FireBase/Firebase';
-import fireStorage from '../src/FireBase/FireStorage';
+import fire,{firestore,database} from '../src/FireBase/Fire';
 
 describe("Testing with firebase ",()=>{
     describe("first test firebase properly connected or not",()=>{
@@ -7,20 +6,25 @@ describe("Testing with firebase ",()=>{
             expect(parseFloat(fire.SDK_VERSION)).toBeGreaterThanOrEqual(11);  
         })
         it("FireStore connectivity test",async ()=>{
-            const collectionRef = fire.firestore().collection('test_collection');
+            const collectionRef = firestore().collection('test_collection');
             const docRef = collectionRef.doc('test_doc');
             await docRef.set({ testField: 'testValue' });
             const snapshot = await docRef.get();
          // Check if the test document has the expected data
-            expect(snapshot.exists).toBe(true);
+            expect(snapshot.exists).toBeTruthy();
             expect(snapshot?.data()?.testField).toBe('testValue');
         });
-        describe("FireStorage",()=>{
-            it("check uploades function",()=>{
-                fireStorage.upload("./unnamed.png",'test/unnamed.png').then(result=>{
-                    expect(result).toBe("File uploaded successfully.");
-                })
-            })
-        });
+        it("FireBase RealTime Database",async ()=>{
+            const documentref=database().ref('test_collection');
+            const eleref=await documentref.child("test");
+            await eleref.set({name:"cambell",
+                        age:23,
+                    married:false});
+            expect(eleref.key).toBe("test");
+            const ds=await documentref.child("test").once("value");
+            let data=await ds.val();
+            expect(data.name).toBe("cambell");
+            expect(data.age).toBeGreaterThan(20);
+        })
     })
 })
