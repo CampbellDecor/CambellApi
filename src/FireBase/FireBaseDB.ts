@@ -42,6 +42,7 @@ class FireDatabase{
      async delete(element:Model){
       try {
         await this.Entity.child(element.getId()).remove();
+        return await this.getAll();
       } catch (error) {
          throw error;
       }
@@ -57,6 +58,7 @@ class FireDatabase{
       try {
          await this.Entity.child(element.getId()).update(element);
          return element;
+         return await this.getAll();
       } catch (error) {
          throw error;
       }
@@ -114,7 +116,7 @@ class FireDatabase{
      }
      async count(){
       try {
-         let itemCount=0;
+         let itemCount:number=0;
          await this.Entity.once('value', (snapshot:any) => {
             itemCount = snapshot.numChildren();
          });
