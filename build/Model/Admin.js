@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const User_1 = require("./User");
-class Admin extends User_1.User {
+const tslib_1 = require("tslib");
+const User_1 = tslib_1.__importStar(require("./User"));
+class Admin extends User_1.default {
     isIsadmin() {
         return this.isadmin;
     }

@@ -1,4 +1,4 @@
-import fire from './Firebase';
+import fire from './Fire';
 const Budget=fire.storage().bucket();
 class Stroage{
     static async upload(localFilePath:string,storageFilepath:string){

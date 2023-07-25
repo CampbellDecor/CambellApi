@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
+const express_1 = tslib_1.__importDefault(require("express"));
+const UserRoute_1 = tslib_1.__importDefault(require("./UserRoute"));
+const chat_1 = tslib_1.__importDefault(require("./chat"));
+const admin_1 = tslib_1.__importDefault(require("./admin"));
+const Router = express_1.default.Router();
+Router.use("/user", UserRoute_1.default);
+Router.use("/chatr", chat_1.default);
+Router.use("/admin", admin_1.default);
+exports.default = Router;
