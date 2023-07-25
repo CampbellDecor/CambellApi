@@ -1,6 +1,6 @@
 import {database} from './Fire'
 import {Model} from '../Model/Model';
-import validator from 'validator';
+
 class FireDatabase{
     Database=database();
     private Entity:any;
@@ -87,6 +87,43 @@ class FireDatabase{
          throw error;
       }
      }
+     async getAll(){
+      try {
+         const snapshot=await this.Entity.once('value');
+         return snapshot.val();
+      } catch (error) {
+         throw error;
+      }
+     }
+     async getByID(id:string|number){
+      try {
+         const snapshot = await this.Entity.child(id).once('value');
+
+         // Check if the snapshot contains data
+         if (snapshot.exists()) {
+           // Extract the data from the snapshot and return it
+           const data = snapshot.val();
+           return data;
+         } else {
+           // If the snapshot doesn't contain data for the given ID
+           return `No data found for ID: ${id}`;
+         }
+      } catch (error) {
+         throw error;
+      }
+     }
+     async count(){
+      try {
+         let itemCount=0;
+         await this.Entity.once('value', (snapshot:any) => {
+            itemCount = snapshot.numChildren();
+         });
+         return itemCount;
+      } catch (error) {
+         throw error;
+      }
+     }
      
     
 }
+export default FireDatabase;
