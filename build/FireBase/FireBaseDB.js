@@ -99,4 +99,15 @@ class FireDatabase {
             }
         });
     }
+    orderBy(field) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            try {
+                const snapshot = yield this.Entity.orderByChild(field).once('value');
+                return snapshot.val();
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    }
 }
