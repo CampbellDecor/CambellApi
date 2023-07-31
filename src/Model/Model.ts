@@ -7,3 +7,4 @@ export abstract class Model{
         return this.data;
     }
 }
+

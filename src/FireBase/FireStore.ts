@@ -6,7 +6,7 @@ export default class FireStore {
    constructor(collection?: string) {
       this.Entity = this.FireStoreB.collection(collection as string);
    }
-   async add(element: Model) {
+   async add(element: Object) {
       try {
          const row = await this.Entity.add(element);
          return row.id;
@@ -14,7 +14,7 @@ export default class FireStore {
          throw error;
       }
    }
-   async addWithId(element: Model, id: number | string) {
+   async addWithId(element: Object, id: number | string) {
       try {
          const row =this.Entity.doc(id);
          await row.set(Model);
@@ -23,7 +23,7 @@ export default class FireStore {
          throw error;
       }
    }
-   async addWithIncrement(element: Model) {
+   async addWithIncrement(element: Object) {
       let id:number=0;
       try {
          const snapshot = await this.Entity.orderBy('createdAt', 'desc').limit(1).get();
@@ -65,7 +65,7 @@ export default class FireStore {
          throw error;
       }
    }
-   async editWithId(element: Model, id: string | number) {
+   async editWithId(element: Object, id: string | number) {
       try {
          const obj=await this.Entity.doc(id);
          obj.update(element);

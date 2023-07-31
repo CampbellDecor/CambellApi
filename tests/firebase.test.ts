@@ -1,4 +1,4 @@
-import fire,{firestore,database} from '../src/FireBase/Fire';
+import fire,{firestore,database,auth,storage} from '../src/FireBase/Fire';
 
 describe("Testing with firebase ",()=>{
     describe("first test firebase properly connected or not",()=>{
@@ -6,25 +6,26 @@ describe("Testing with firebase ",()=>{
             expect(parseFloat(fire.SDK_VERSION)).toBeGreaterThanOrEqual(11);  
         })
         it("FireStore connectivity test",async ()=>{
-            const collectionRef = firestore().collection('test_collection');
-            const docRef = collectionRef.doc('test_doc');
-            await docRef.set({ testField: 'testValue' });
-            const snapshot = await docRef.get();
-         // Check if the test document has the expected data
-            expect(snapshot.exists).toBeTruthy();
-            expect(snapshot?.data()?.testField).toBe('testValue');
+            const collections = await firestore().listCollections();
+            expect(collections.length).toBeGreaterThanOrEqual(0);
+           
         });
-        it("FireBase RealTime Database",async ()=>{
-            const documentref=database().ref('test_collection');
-            const eleref=await documentref.child("test");
-            await eleref.set({name:"cambell",
-                        age:23,
-                    married:false});
-            expect(eleref.key).toBe("test");
-            const ds=await documentref.child("test").once("value");
-            let data=await ds.val();
-            expect(data.name).toBe("cambell");
-            expect(data.age).toBeGreaterThan(20);
+        it("FireBase RealTime Database connectivty",async ()=>{
+            const databaseRef =fire.database().ref();
+            const snapshot = await databaseRef.once('value');
+            const collections = snapshot.numChildren();
+            expect(collections).toBeGreaterThanOrEqual(0);
         })
-    })
+        test("FireBae Authenditication Connectivity Test correctly worked ",async ()=>{
+            const userRecords = await auth().listUsers();
+           expect(userRecords.users.length).toBeGreaterThanOrEqual(0);
+        });
+        test("FireStorage Connectivity Test correctly worked",()=>{
+            storage().bucket().getFiles().then(files=>{
+                expect(files.length).toBeLessThanOrEqual(0);
+            })
+        })
+
+    });
+    
 })

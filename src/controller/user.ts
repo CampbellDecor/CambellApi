@@ -17,5 +17,23 @@ export default class User{
             res.status(404).json(error);
         }
    }
+   deleteUser(req:Request,res:Response){
+
+   }
+   editUser(req:Request,res:Response){
+
+   }
+   getall(req:Request,res:Response){
+
+   }
+   getOne(req:Request,res:Response){
+
+   }
+    login(req:Request,res:Response){
+
+    }
+    logout(req:Request,res:Response){
+        
+    }
 
 }

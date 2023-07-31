@@ -6,4 +6,5 @@ const UserController=new User();
 const Router=express.Router();
 
 Router.post('/',UserController.addUser);
+Router.post('/add',UserController.addUser);
 export default Router;
