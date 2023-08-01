@@ -1,8 +1,9 @@
 import bcryt from 'bcryptjs';
-import {Model} from './Model';
+import {Model,Details} from './Model';
 import validator from 'validator';
+import {Status} from './Extra';
 var salt = bcryt.genSaltSync(10);
-
+//User
 export default class User extends Model{
    
     private uid?: string | number;
@@ -15,19 +16,19 @@ export default class User extends Model{
     private mobile?: string
     private religion?: string;
     private isblock?: boolean;
-    private isonline?: boolean;
+    private isonline?:boolean;
 
-    constructor(email?: string, password?: string, mobile?: string, uid?: string | number, religion?: string, firstname
-        ?: string, lastname?: string, username?: string, profile?: string, isblock?: boolean, isonline?: boolean)  
+    constructor(email?: string, password?: string, uid?: string | number, religion?: string, firstname
+        ?: string, lastname?: string, username?: string, profile?: string, isblock?:boolean, isonline?:boolean)  
         {
             super();
         this.email = validator.isEmail(email??'')? email:undefined;
         this.password = bcryt.hashSync(password ?? '', salt);
-        this.mobile = validator.isMobilePhone(mobile??'')? mobile:undefined;
+        // this.mobile = validator.isMobilePhone(mobile??'')? mobile:undefined;
         this.firstname = firstname;
         this.lastname = lastname;
         this.uid = uid;
-        this.username = username??email?.substr(email.indexOf("@")),
+        this.username = username??email?.substring(0,email.indexOf("@")),
         this.profile = profile;
         this.religion = religion;
         this.isonline = isonline;
@@ -137,7 +138,7 @@ export default class User extends Model{
     }
 
 }
-
+//Builder
 export class UserBuilder {
     private user: User;
     constructor(user?:User) {
@@ -192,4 +193,59 @@ export class UserBuilder {
     public getUser() {
         return this.user;
     }
+}
+//user Status Decrotion
+abstract class AvailableStatus extends Status{
+    private actions:Array<any>=[];
+    constructor(available:boolean,lastAvailable?:string){
+        super(available,lastAvailable);
+    }
+     saveaction(array:Array<any>):void{
+        array.push({sigin:this.isIshere(),
+                    action:this});
+        this.actions.push(array);
+     }
+     showHistory(sort?:string):Array<any>{
+        if(sort==="des"){
+            this.actions.sort((act1,act2)=>act2.action.getContent() - act1.action.getContent());
+        }else{
+           this.actions.sort((act1,act2)=>act1.action.getContent() - act2.action.getContent());
+        }
+        return this.actions;
+     }
+     abstract getAction():Array<any>;
+   
+}
+//Online
+class Online extends AvailableStatus{
+    constructor(lastSigin?:string){
+        super(true,lastSigin);
+    }
+    getAction():Array<any>{
+       return  this.showHistory().filter(action=>action.sigin==true);
+    }
+}
+//Offline
+class Offline extends AvailableStatus{
+    constructor(lastSigout?:string){
+        super(false,lastSigout);
+    }
+    getAction():Array<any>{
+       return  this.showHistory().filter(action=>action.sigin==false);
+    }
+}
+abstract class userStatus extends Status{
+    private date:Date|undefined=new Date();
+    constructor(isblock:boolean,reson?:string){
+        super(isblock,reson);
+    }
+    public getDate(): Date|undefined {
+        return this.date;
+    }
+
+    public setDate(date?:Date): void {
+        this.date = date;
+    }
+    
+    
 }

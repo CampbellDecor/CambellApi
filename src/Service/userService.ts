@@ -1,36 +1,37 @@
 import CambellStore from '../FireBase/FireStore'
+import { Model } from '../Model/Model';
 import User from '../Model/User';
 import Service from './Service';
 
 export default class Service_user implements Service{
-    addService(model: User): string;
-    addService(model: User, id: string): string;
+    addService(model: Model): string;
+    addService(model: Model, id: string): string;
     addService(model: unknown, id?: unknown): string {
         throw new Error('Method not implemented.');
     }
-    editService(model: User): User;
-    editService(model: User, id: string): User;
-    editService(model: unknown, id?: unknown): User {
+    editService(model: Model): Model;
+    editService(model: Model, id: string): Model;
+    editService(model: unknown, id?: unknown): import("../Model/Model").Model {
         throw new Error('Method not implemented.');
     }
-    FindByID(id: string | number): User {
+    FindByID(id: string | number): Model {
         throw new Error('Method not implemented.');
     }
-    getAll(): User[] {
+    getAll(): Model[] {
         throw new Error('Method not implemented.');
     }
-    deleteService(model: User):any;
+    deleteService(model: Model):any;
     deleteService(model: string):any;
     deleteService(model: unknown): any {
         throw new Error('Method not implemented.');
     }
-    sort(): User[];
-    sort(field: string): User[];
-    sort(field?: unknown): User[] {
+    sort(): Model[];
+    sort(field: string): Model[];
+    sort(field?: unknown): import("../Model/Model").Model[] {
         throw new Error('Method not implemented.');
     }
     isExist(model: string): boolean;
-    isExist(model: User): boolean;
+    isExist(model: Model): boolean;
     isExist(model: unknown): boolean {
         throw new Error('Method not implemented.');
     }
@@ -39,5 +40,6 @@ export default class Service_user implements Service{
     search(model: unknown): any {
         throw new Error('Method not implemented.');
     }
+   
 
 }
