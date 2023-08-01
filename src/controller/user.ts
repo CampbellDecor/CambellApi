@@ -1,38 +1,45 @@
 import { Request,Response, response } from "express";
 import UserService from '../Service/userService';
 import UserModel,{UserBuilder} from '../Model/User'
-import {UserController} from './controller';
+import{RoleController} from './controller';
 const userService=new UserService();
 
 const user=new UserBuilder();
-export default class User extends UserController{
-    add(req:Request,res:Response):void{
-        try {
-            const {email,password,mobile}=req.body;
-            user.setEmail(email).setPassword(password).setMobile(mobile)
-        } catch (error) {
-            response.status(404).json(error);
+export default class UserContoller extends RoleController{
+    add(req: Request, res: Response): void {
+       try {
+         const {uid,password,username,religion,firstname,lastname,email,mobile}=req.body;
+        if((email | mobile) && password){
+
+        }else{
+            res.redirect("/add");
         }
         
-        }
-    edit(req:Request,res:Response):void{
-
+       } catch (error) {
+        throw error;
+       }
     }
-    delete(req:Request,res:Response):void{
-
+    edit(req: Request, res: Response): void {
+        throw new Error("Method not implemented.");
     }
-    getAll(req:Request,res:Response):void{
-
+    delete(req: Request, res: Response): void {
+        throw new Error("Method not implemented.");
     }
-    getById(req:Request,res:Response):void{
-
+    getAll(req: Request, res: Response): void {
+        throw new Error("Method not implemented.");
     }
-    login(req:Request,res:Response):void{
-
+    getById(req: Request, res: Response): void {
+        throw new Error("Method not implemented.");
     }
-    logout(req:Request,res:Response):void{
-
+    login(req: Request, res: Response): void {
+        throw new Error("Method not implemented.");
     }
-  
+    logout(req: Request, res: Response): void {
+        throw new Error("Method not implemented.");
+    }
+    isexist(req: Request, res: Response): void {
+        throw new Error("Method not implemented.");
+    }
+   
 
 }

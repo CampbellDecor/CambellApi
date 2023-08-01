@@ -6,7 +6,7 @@ import Service from './Service';
 export default class Service_user implements Service{
     addService(model: Model): string;
     addService(model: Model, id: string): string;
-    addService(model: unknown, id?: unknown): string {
+    addService(model: Model, id?: string): string {
         throw new Error('Method not implemented.');
     }
     editService(model: Model): Model;
