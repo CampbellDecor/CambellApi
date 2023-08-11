@@ -1,8 +1,9 @@
 import { Request,Response, response } from "express";
-import UserService from '../Service/userService';
+import {ServiceProvider} from '../Service/Service';
 import UserModel,{UserBuilder} from '../Model/User'
 import{RoleController} from './controller';
-const userService=new UserService();
+
+const userservice=new ServiceProvider("user").getService();
 
 const user=new UserBuilder();
 export default class UserContoller extends RoleController{
@@ -25,8 +26,12 @@ export default class UserContoller extends RoleController{
     delete(req: Request, res: Response): void {
         throw new Error("Method not implemented.");
     }
-    getAll(req: Request, res: Response): void {
-        throw new Error("Method not implemented.");
+    async getAll(req: Request, res: Response){
+      try{
+         await userservice.getAll();
+      }catch(err){
+        res.json(err);
+      }
     }
     getById(req: Request, res: Response): void {
         throw new Error("Method not implemented.");

@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const Fire_1 = require("./Fire");
-const User_1 = tslib_1.__importDefault(require("../Model/User"));
 class FireAuth {
     getall() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
@@ -86,6 +85,3 @@ class FireAuth {
     }
 }
 exports.default = FireAuth;
-const kl = new FireAuth();
-const u = new User_1.default("thanumahee440@gmail.com", "Thanush");
-kl.getall().then(console.log);

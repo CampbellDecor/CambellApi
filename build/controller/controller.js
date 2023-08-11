@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserController = void 0;
-class UserController {
+exports.RoleController = void 0;
+class RoleController {
 }
-exports.UserController = UserController;
+exports.RoleController = RoleController;

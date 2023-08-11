@@ -107,9 +107,9 @@ export default class FireStore {
       try {
          const querySnapshot = await this.Entity.get();
 
-         const documents: Array<Model> = [];
+         const documents: Array<any> = [];
          querySnapshot.forEach((doc: any) => {
-            documents.push(Model.setData(doc.data()).fixedId(doc.id));
+            documents.push({id:doc.id,...doc.data()});
          });
 
          return documents;

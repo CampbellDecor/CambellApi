@@ -5,7 +5,6 @@ const tslib_1 = require("tslib");
 const bcryptjs_1 = tslib_1.__importDefault(require("bcryptjs"));
 const Model_1 = require("./Model");
 const validator_1 = tslib_1.__importDefault(require("validator"));
-const Extra_1 = require("./Extra");
 var salt = bcryptjs_1.default.genSaltSync(10);
 //User
 class User extends Model_1.Model {
@@ -103,8 +102,8 @@ class User extends Model_1.Model {
     static InstanceOf() {
         return new User();
     }
-    static UserBuilder() {
-        return new UserBuilder();
+    selfObj() {
+        return this;
     }
 }
 exports.default = User;
@@ -162,54 +161,3 @@ class UserBuilder {
     }
 }
 exports.UserBuilder = UserBuilder;
-//user Status Decrotion
-class AvailableStatus extends Extra_1.Status {
-    constructor(available, lastAvailable) {
-        super(available, lastAvailable);
-        this.actions = [];
-    }
-    saveaction(array) {
-        array.push({ sigin: this.isIshere(),
-            action: this });
-        this.actions.push(array);
-    }
-    showHistory(sort) {
-        if (sort === "des") {
-            this.actions.sort((act1, act2) => act2.action.getContent() - act1.action.getContent());
-        }
-        else {
-            this.actions.sort((act1, act2) => act1.action.getContent() - act2.action.getContent());
-        }
-        return this.actions;
-    }
-}
-//Online
-class Online extends AvailableStatus {
-    constructor(lastSigin) {
-        super(true, lastSigin);
-    }
-    getAction() {
-        return this.showHistory().filter(action => action.sigin == true);
-    }
-}
-//Offline
-class Offline extends AvailableStatus {
-    constructor(lastSigout) {
-        super(false, lastSigout);
-    }
-    getAction() {
-        return this.showHistory().filter(action => action.sigin == false);
-    }
-}
-class userStatus extends Extra_1.Status {
-    constructor(isblock, reson) {
-        super(isblock, reson);
-        this.date = new Date();
-    }
-    getDate() {
-        return this.date;
-    }
-    setDate(date) {
-        this.date = date;
-    }
-}

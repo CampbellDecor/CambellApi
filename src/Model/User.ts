@@ -2,6 +2,7 @@ import bcryt from 'bcryptjs';
 import {Model,Details} from './Model';
 import validator from 'validator';
 import {Status} from './Extra';
+import random from 'random'
 var salt = bcryt.genSaltSync(10);
 //User
 export default class User extends Model{
@@ -133,8 +134,8 @@ export default class User extends Model{
     public static InstanceOf(): User {
         return new User();
     }
-    public static UserBuilder() {
-        return new UserBuilder();
+    public selfObj():User{
+        return this;
     }
 
 }
@@ -194,58 +195,75 @@ export class UserBuilder {
         return this.user;
     }
 }
-//user Status Decrotion
-abstract class AvailableStatus extends Status{
-    private actions:Array<any>=[];
-    constructor(available:boolean,lastAvailable?:string){
-        super(available,lastAvailable);
+export class UserDetails{
+    private user:User|undefined;
+    private userActivity?:userHistory;
+    constructor(user?:User){
+        this.user=user;
     }
-     saveaction(array:Array<any>):void{
-        array.push({sigin:this.isIshere(),
-                    action:this});
-        this.actions.push(array);
-     }
-     showHistory(sort?:string):Array<any>{
-        if(sort==="des"){
-            this.actions.sort((act1,act2)=>act2.action.getContent() - act1.action.getContent());
-        }else{
-           this.actions.sort((act1,act2)=>act1.action.getContent() - act2.action.getContent());
+    toObj():Object{
+        return {
+            ...this.user,
+            activity:this.userActivity
         }
-        return this.actions;
-     }
-     abstract getAction():Array<any>;
+    }
    
 }
-//Online
-class Online extends AvailableStatus{
-    constructor(lastSigin?:string){
-        super(true,lastSigin);
-    }
-    getAction():Array<any>{
-       return  this.showHistory().filter(action=>action.sigin==true);
-    }
-}
-//Offline
-class Offline extends AvailableStatus{
-    constructor(lastSigout?:string){
-        super(false,lastSigout);
-    }
-    getAction():Array<any>{
-       return  this.showHistory().filter(action=>action.sigin==false);
-    }
-}
-abstract class userStatus extends Status{
-    private date:Date|undefined=new Date();
-    constructor(isblock:boolean,reson?:string){
-        super(isblock,reson);
-    }
-    public getDate(): Date|undefined {
-        return this.date;
+export class userHistory{
+    private useractivities:Array<UserActivity>;
+    constructor(useractivities:Array<UserActivity>){
+            this.useractivities=useractivities;
     }
 
-    public setDate(date?:Date): void {
-        this.date = date;
+
+}
+export class UserActivity{
+    private activityid:number;
+    private dateTime:Date;
+    private activity:String;
+    constructor(activity:String,dateTime:Date=new Date()){
+        this.activity=activity;
+        this.dateTime=dateTime;
+        this.activityid=random.int(0,Number.MAX_SAFE_INTEGER);
     }
+    public getActivityid(): number {
+        return this.activityid;
+    }
+
+    public setActivityid(activityid: number): void {
+        this.activityid = activityid;
+    }
+
+    public getDate(): Date {
+        return this.dateTime;
+    }
+
+    public setDate(date: Date): void {
+        this.dateTime = date;
+    }
+
+    public getTime(): any {
+        return this.dateTime.getTime();
+    }
+
+  
+    public getActivity(): String {
+        return this.activity;
+    }
+
+    public setActivity(activity: String): void {
+        this.activity = activity;
+    }
+
     
-    
+}
+class sigoutSiginActivity extends UserActivity{
+        signin(){
+            super.setDate(new Date());
+            super.setActivity("sign in");
+        }
+        signout(){
+            super.setDate(new Date());
+            super.setActivity("sign out");
+        }
 }

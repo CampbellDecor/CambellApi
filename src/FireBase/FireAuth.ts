@@ -90,6 +90,4 @@ export default class FireAuth{
 //    }
 
 }
-const kl=new FireAuth();
-const u=new User("thanumahee440@gmail.com","Thanush");
-kl.getall().then(console.log);
+

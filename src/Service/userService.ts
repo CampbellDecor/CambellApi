@@ -1,45 +1,17 @@
-import CambellStore from '../FireBase/FireStore'
-import { Model } from '../Model/Model';
-import User from '../Model/User';
+import CambellStore from '../FireBase/FireStore';
+import CambellAuth from '../FireBase/FireAuth'
 import Service from './Service';
-
+const userStore=new CambellStore("user");
+const Auth=new CambellAuth();
 export default class Service_user implements Service{
-    addService(model: Model): string;
-    addService(model: Model, id: string): string;
-    addService(model: Model, id?: string): string {
-        throw new Error('Method not implemented.');
-    }
-    editService(model: Model): Model;
-    editService(model: Model, id: string): Model;
-    editService(model: unknown, id?: unknown): import("../Model/Model").Model {
-        throw new Error('Method not implemented.');
-    }
-    FindByID(id: string | number): Model {
-        throw new Error('Method not implemented.');
-    }
-    getAll(): Model[] {
-        throw new Error('Method not implemented.');
-    }
-    deleteService(model: Model):any;
-    deleteService(model: string):any;
-    deleteService(model: unknown): any {
-        throw new Error('Method not implemented.');
-    }
-    sort(): Model[];
-    sort(field: string): Model[];
-    sort(field?: unknown): import("../Model/Model").Model[] {
-        throw new Error('Method not implemented.');
-    }
-    isExist(model: string): boolean;
-    isExist(model: Model): boolean;
-    isExist(model: unknown): boolean {
-        throw new Error('Method not implemented.');
-    }
-    search(model: string):any;
-    search(model: Object):any;
-    search(model: unknown): any {
-        throw new Error('Method not implemented.');
-    }
    
+     async getAll(){
+        try{
+          const users=await userStore.getAll();
+          return users;
+        }catch(error){
+            throw error;
+        }
+    }
 
 }

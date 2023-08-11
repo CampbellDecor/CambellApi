@@ -1,17 +1,19 @@
-import{Model} from '../Model/Model'
+
+import{Model} from '../Model/Model';
+import User from "./userService";
 export default interface Service{
-    addService(model:Model):string;
-    addService(model:Model,id:string):string;
-    editService(model:Model):Model;
-    editService(model:Model,id:string):Model;
-    FindByID(id:string|number):Model;
-    getAll():Array<Model>;
-    deleteService(model:Model):any;
-    deleteService(model:string):any;
-    sort():Array<Model>;
-    sort(field:string):Array<Model>;
-    isExist(model:string):boolean;
-    isExist(model:Model):boolean;
-    search(model:string):any;
-    search(model:Object):any;
+    getAll():any;
+}
+
+export class ServiceProvider{
+    private service:Service;
+    constructor(servicePro?:string){
+        switch (servicePro) {
+            case "user":this.service=new User();break;
+            default:this.service=new User();break;
+        }
+    }
+     getService():Service{
+        return this.service;
+    }
 }
