@@ -1,8 +1,6 @@
 import bcryt from 'bcryptjs';
 import {Model,Details} from './Model';
 import validator from 'validator';
-import {Status} from './Extra';
-import random from 'random'
 var salt = bcryt.genSaltSync(10);
 //User
 export default class User extends Model{
@@ -198,23 +196,32 @@ export class UserBuilder {
 export class UserDetails{
     private user:User|undefined;
     private userActivity?:userHistory;
+
+
     constructor(user?:User){
         this.user=user;
     }
-    toObj():Object{
-        return {
-            ...this.user,
-            activity:this.userActivity
-        }
+    public getUserActivity(): userHistory |undefined{
+        return this.userActivity;
     }
+
+    public setUserActivity(userActivity: userHistory): void {
+        this.userActivity = userActivity;
+    }
+
    
 }
 export class userHistory{
-    private useractivities:Array<UserActivity>;
-    constructor(useractivities:Array<UserActivity>){
+    private useractivities?:Array<UserActivity>;
+    constructor(useractivities?:Array<UserActivity>){
             this.useractivities=useractivities;
     }
-
+    add(activity:UserActivity):void{
+        this.useractivities?.push(activity);
+    }
+    delete(activity:UserActivity):void{
+        this.useractivities?.push(activity);
+    }
 
 }
 export class UserActivity{
@@ -224,7 +231,7 @@ export class UserActivity{
     constructor(activity:String,dateTime:Date=new Date()){
         this.activity=activity;
         this.dateTime=dateTime;
-        this.activityid=random.int(0,Number.MAX_SAFE_INTEGER);
+        this.activityid=new Date().getTimezoneOffset();
     }
     public getActivityid(): number {
         return this.activityid;
@@ -257,13 +264,28 @@ export class UserActivity{
 
     
 }
-class sigoutSiginActivity extends UserActivity{
+export class AccountActivity extends UserActivity{
+    constructor(){
+        super("");
+    }
         signin(){
             super.setDate(new Date());
             super.setActivity("sign in");
+            return this;
         }
         signout(){
             super.setDate(new Date());
             super.setActivity("sign out");
+            return this;
+        }
+        create(){
+            super.setDate(new Date());
+            super.setActivity("created account");
+            return this;
+        }
+        delet(){
+            super.setDate(new Date());
+            super.setActivity("delete account");
+            return this;
         }
 }

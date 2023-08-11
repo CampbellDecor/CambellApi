@@ -1,14 +1,11 @@
 import UserDao from '../src/FireBase/Dao/User'
 const user=new UserDao();
 describe("userDao",()=>{
-    describe("getall",()=>{
-        test('is array', async () => {
-            const users= await user.getall();
-            expect(Array.isArray(users)).toBeTruthy();
+    describe("CreateUser",()=>{
+        test('return out put is string', async () => {
+               const result=await  user.createUser("mtthanu126@gmail.com","123456789");
+                expect(result==='string').toBeTruthy();
         });
-        test('output is', async () => {
-            const users= await user.getall();
-            expect(users[0]).toBe({name:"Yuka"});
-        });
+    
     })
 })
