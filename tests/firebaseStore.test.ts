@@ -14,4 +14,21 @@ describe("FireStore",()=>{
             const users=await db.getAll();
             expect(users[0].name).toBe("Yuka");
         })})
+        describe("getById",()=>{
+        
+            test("check output give correct name",async ()=>{
+                const user=await db.getByID("fH786YWNi0vHz67Y809I");
+                expect(user.name).toBe("Thanush");
+            })})
+            describe("getBygroup",()=>{
+        
+                test("check output is array",async ()=>{
+                    const user=await db.getGroup(["Z1581157Y4MXl2stVQ63"]);
+                    expect(Array.isArray(user)).toBeTruthy();
+                })
+                test("username is Thanush",async ()=>{
+                    const user=await db.getGroup(["Z1581157Y4MXl2stVQ63"]);
+                    expect(user[0]).toBe("Yuka");
+                })
+            })
 });

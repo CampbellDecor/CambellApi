@@ -6,4 +6,5 @@ describe("firebase Auth",()=>{
         await expect(Auth.getall()).resolves.toBeDefined();
         })
     })
+    
 })

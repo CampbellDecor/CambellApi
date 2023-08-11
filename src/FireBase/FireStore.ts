@@ -117,6 +117,21 @@ export default class FireStore {
          throw error;
       }
    }
+   async getGroup(groups:Array<any>){
+      try {
+         const outputs:Array<any>=[];
+         const ObjectQuery = await this.Entity.where(firestore.FieldPath.documentId(),"in",groups).get();
+         ObjectQuery.forEach((doc:any) => {
+            outputs.push({
+              id: doc.id,
+              data: doc.data(),
+            });
+          });
+      return outputs;
+      } catch (error) {
+         throw error;
+      }
+   }
    async getByID(id: string | number) {
       try {
          const docRef = await this.Entity.doc(id);

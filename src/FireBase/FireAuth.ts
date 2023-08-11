@@ -1,13 +1,14 @@
 import {auth} from './Fire';
 import User,{UserBuilder} from '../Model/User';
 
+
 export default class FireAuth{
-    async getall(){
+    async getall(idset?:Array<String>){
         try {
             const userList=await auth().listUsers();
             let userRecord:Array<any>=[];
-            await userList.users.forEach(user=>{
-                userRecord.push(user.toJSON());
+             userList.users.forEach(user=>{
+                    userRecord.push(user.toJSON());
             }
             )
             return userRecord;
