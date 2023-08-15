@@ -1,4 +1,5 @@
 import {auth} from './Fire';
+
 import User,{UserBuilder} from '../Model/User';
 
 
@@ -41,11 +42,13 @@ export default class FireAuth{
                 displayName:user.getUsername(),
                 photoURL:user.getProfile(),
                 email:user.getEmail(),
+
             })
         } catch (error) {
             throw error;
         }
     }
+
     async changeProfile(user:User){
         try {
             await auth().updateUser(user.getId() as string,{
