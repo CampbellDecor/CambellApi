@@ -8,3 +8,7 @@ export abstract class Model{
     }
 }
 
+export abstract class Details<T>{
+   abstract getAll():Array<Details<T>>;
+}
+

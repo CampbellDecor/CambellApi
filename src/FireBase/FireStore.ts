@@ -107,12 +107,27 @@ export default class FireStore {
       try {
          const querySnapshot = await this.Entity.get();
 
-         const documents: Array<Model> = [];
+         const documents: Array<any> = [];
          querySnapshot.forEach((doc: any) => {
-            documents.push(Model.setData(doc.data()).fixedId(doc.id));
+            documents.push({id:doc.id,...doc.data()});
          });
 
          return documents;
+      } catch (error) {
+         throw error;
+      }
+   }
+   async getGroup(groups:Array<any>){
+      try {
+         const outputs:Array<any>=[];
+         const ObjectQuery = await this.Entity.where(firestore.FieldPath.documentId(),"in",groups).get();
+         ObjectQuery.forEach((doc:any) => {
+            outputs.push({
+              id: doc.id,
+              data: doc.data(),
+            });
+          });
+      return outputs;
       } catch (error) {
          throw error;
       }

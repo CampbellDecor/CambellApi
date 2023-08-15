@@ -1,10 +1,17 @@
 import express  from 'express';
-import User from '../controller/user';
+import UserContoller from '../controller/user';
+const userConttoller=new UserContoller();
 
-
-const UserController=new User();
 const Router=express.Router();
 
-Router.post('/',UserController.addUser);
-Router.post('/add',UserController.addUser);
+Router.post("/add",userConttoller.add);
+Router.post("/",userConttoller.getAll);
+Router.route("/:id")
+        .post(userConttoller.getById)
+        .delete(userConttoller.delete)
+        .put(userConttoller.edit);
+        
+Router.post("/sigin",userConttoller.login);
+Router.post("/sigout",userConttoller.logout);
+
 export default Router;

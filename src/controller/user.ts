@@ -1,39 +1,50 @@
-import { Request,Response } from "express";
-import UserService from '../Service/userService';
+import { Request,Response, response } from "express";
+import {ServiceProvider} from '../Service/Service';
 import UserModel,{UserBuilder} from '../Model/User'
-const userService=new UserService();
+import{RoleController} from './controller';
+
+const userservice=new ServiceProvider("user").getService();
 
 const user=new UserBuilder();
-export default class User{
+export default class UserContoller extends RoleController{
+    add(req: Request, res: Response): void {
+       try {
+         const {uid,password,username,religion,firstname,lastname,email,mobile}=req.body;
+        if((email | mobile) && password){
 
-   addUser(req:Request,res:Response){
-        try {
-           const [email,mobile,password]= req.body;
-            user.setEmail(email)
-            .setMobile(mobile)
-            .setPassword(password);
-            userService.addService(user.getUser());          
-        } catch (error) {
-            res.status(404).json(error);
+        }else{
+            res.redirect("/add");
         }
-   }
-   deleteUser(req:Request,res:Response){
 
-   }
-   editUser(req:Request,res:Response){
-
-   }
-   getall(req:Request,res:Response){
-
-   }
-   getOne(req:Request,res:Response){
-
-   }
-    login(req:Request,res:Response){
-
-    }
-    logout(req:Request,res:Response){
         
+       } catch (error) {
+        throw error;
+       }
+    }
+    edit(req: Request, res: Response): void {
+        throw new Error("Method not implemented.");
+    }
+    delete(req: Request, res: Response): void {
+        throw new Error("Method not implemented.");
+    }
+    async getAll(req: Request, res: Response){
+      try{
+         await userservice.getAll();
+      }catch(err){
+        res.json(err);
+      }
+    }
+    getById(req: Request, res: Response): void {
+        throw new Error("Method not implemented.");
+    }
+    login(req: Request, res: Response): void {
+        throw new Error("Method not implemented.");
+    }
+    logout(req: Request, res: Response): void {
+        throw new Error("Method not implemented.");
+    }
+    isexist(req: Request, res: Response): void {
+        throw new Error("Method not implemented.");
     }
 
 }

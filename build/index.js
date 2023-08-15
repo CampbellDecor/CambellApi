@@ -5,7 +5,7 @@ const routes_1 = tslib_1.__importDefault(require("./router/routes"));
 const express_1 = tslib_1.__importDefault(require("express"));
 const connect_timeout_1 = tslib_1.__importDefault(require("connect-timeout"));
 const campellApiApp = (0, express_1.default)();
-campellApiApp.use((0, connect_timeout_1.default)('60s'));
+campellApiApp.use((0, connect_timeout_1.default)('120s'));
 campellApiApp.use(express_1.default.json());
 // Define your routes and other middleware here
 // Error handling for timeout
@@ -20,6 +20,6 @@ campellApiApp.use((req, res, next) => {
 });
 //routing
 campellApiApp.use("/api", routes_1.default);
-campellApiApp.listen(8888, () => {
+campellApiApp.listen(8808, () => {
     console.log("Hello");
 });

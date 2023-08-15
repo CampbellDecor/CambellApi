@@ -1,4 +1,7 @@
-import fire,{firestore,database,auth,storage} from '../src/FireBase/Fire';
+
+import fire from '../src/FireBase/Fire';
+import fireStorage from '../src/FireBase/FireStorage';
+
 
 describe("Testing with firebase ",()=>{
     describe("first test firebase properly connected or not",()=>{
