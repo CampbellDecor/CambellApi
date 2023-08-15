@@ -1,12 +1,12 @@
 import fire, { firestore } from './Fire'
 import { Model } from '../Model/Model';
-class FireStore {
+export default class FireStore {
    FireStoreB = firestore();
    private Entity: any;
    constructor(collection?: string) {
       this.Entity = this.FireStoreB.collection(collection as string);
    }
-   async add(element: Model) {
+   async add(element: Object) {
       try {
          const row = await this.Entity.add(element);
          return row.id;
@@ -14,7 +14,7 @@ class FireStore {
          throw error;
       }
    }
-   async addWithId(element: Model, id: number | string) {
+   async addWithId(element: Object, id: number | string) {
       try {
          const row =this.Entity.doc(id);
          await row.set(Model);
@@ -23,7 +23,7 @@ class FireStore {
          throw error;
       }
    }
-   async addWithIncrement(element: Model) {
+   async addWithIncrement(element: Object) {
       let id:number=0;
       try {
          const snapshot = await this.Entity.orderBy('createdAt', 'desc').limit(1).get();
@@ -65,7 +65,7 @@ class FireStore {
          throw error;
       }
    }
-   async editWithId(element: Model, id: string | number) {
+   async editWithId(element: Object, id: string | number) {
       try {
          const obj=await this.Entity.doc(id);
          obj.update(element);
@@ -107,12 +107,27 @@ class FireStore {
       try {
          const querySnapshot = await this.Entity.get();
 
-         const documents: Array<Model> = [];
+         const documents: Array<any> = [];
          querySnapshot.forEach((doc: any) => {
-            documents.push(Model.setData(doc.data()).fixedId(doc.id));
+            documents.push({id:doc.id,...doc.data()});
          });
 
          return documents;
+      } catch (error) {
+         throw error;
+      }
+   }
+   async getGroup(groups:Array<any>){
+      try {
+         const outputs:Array<any>=[];
+         const ObjectQuery = await this.Entity.where(firestore.FieldPath.documentId(),"in",groups).get();
+         ObjectQuery.forEach((doc:any) => {
+            outputs.push({
+              id: doc.id,
+              data: doc.data(),
+            });
+          });
+      return outputs;
       } catch (error) {
          throw error;
       }

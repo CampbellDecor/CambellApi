@@ -1,3 +1,4 @@
+
 import fire, { storage } from './Fire'
 class FireStorage{
     FireStorageB = storage().bucket();
@@ -6,6 +7,7 @@ class FireStorage{
         this.Folder=Folder??'';
     }
     async add(localFilePath:string,filename?:string){
+
         try {
             let type:string=localFilePath.substr(localFilePath.lastIndexOf("."));
             let storagepath:string=`${this.Folder}/${filename}.${type}`;

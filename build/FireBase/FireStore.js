@@ -173,3 +173,6 @@ class FireStore {
         });
     }
 }
+
+exports.default = FireStore;
+

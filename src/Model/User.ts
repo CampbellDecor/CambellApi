@@ -1,8 +1,12 @@
 import bcryt from 'bcryptjs';
+import {Model,Details} from './Model';
 import validator from 'validator';
+import {Status} from './Extra';
+import random from 'random'
 var salt = bcryt.genSaltSync(10);
-
-export class User {
+//User
+export default class User extends Model{
+   
     private uid?: string | number;
     private firstname?: string;
     private username?: string;
@@ -13,21 +17,30 @@ export class User {
     private mobile?: string
     private religion?: string;
     private isblock?: boolean;
-    private isonline?: boolean;
+    private isonline?:boolean;
 
-    constructor(email?: string, password?: string, mobile?: string, uid?: string | number, religion?: string, firstname
-        ?: string, lastname?: string, username?: string, profile?: string, isblock?: boolean, isonline?: boolean) {
+    constructor(email?: string, password?: string, uid?: string | number, religion?: string, firstname
+        ?: string, lastname?: string, username?: string, profile?: string, isblock?:boolean, isonline?:boolean)  
+        {
+            super();
         this.email = validator.isEmail(email??'')? email:undefined;
         this.password = bcryt.hashSync(password ?? '', salt);
-        this.mobile = validator.isMobilePhone(mobile??'')? mobile:undefined;
+        // this.mobile = validator.isMobilePhone(mobile??'')? mobile:undefined;
         this.firstname = firstname;
         this.lastname = lastname;
         this.uid = uid;
-        this.username = username??email?.substr(email.indexOf("@")),
+        this.username = username??email?.substring(0,email.indexOf("@")),
         this.profile = profile;
         this.religion = religion;
         this.isonline = isonline;
         this.isblock = isblock;
+    }
+    getId(): number | String | undefined {
+        return this.uid;
+    }
+    fixedId(id: string | number): Model {
+        this.uid=id;
+        return this;
     }
     public getIsblock(): boolean | undefined {
         return this.isblock;
@@ -121,12 +134,12 @@ export class User {
     public static InstanceOf(): User {
         return new User();
     }
-    public static UserBuilder() {
-        return new UserBuilder();
+    public selfObj():User{
+        return this;
     }
 
 }
-
+//Builder
 export class UserBuilder {
     private user: User;
     constructor(user?:User) {
@@ -181,4 +194,76 @@ export class UserBuilder {
     public getUser() {
         return this.user;
     }
+}
+export class UserDetails{
+    private user:User|undefined;
+    private userActivity?:userHistory;
+    constructor(user?:User){
+        this.user=user;
+    }
+    toObj():Object{
+        return {
+            ...this.user,
+            activity:this.userActivity
+        }
+    }
+   
+}
+export class userHistory{
+    private useractivities:Array<UserActivity>;
+    constructor(useractivities:Array<UserActivity>){
+            this.useractivities=useractivities;
+    }
+
+
+}
+export class UserActivity{
+    private activityid:number;
+    private dateTime:Date;
+    private activity:String;
+    constructor(activity:String,dateTime:Date=new Date()){
+        this.activity=activity;
+        this.dateTime=dateTime;
+        this.activityid=random.int(0,Number.MAX_SAFE_INTEGER);
+    }
+    public getActivityid(): number {
+        return this.activityid;
+    }
+
+    public setActivityid(activityid: number): void {
+        this.activityid = activityid;
+    }
+
+    public getDate(): Date {
+        return this.dateTime;
+    }
+
+    public setDate(date: Date): void {
+        this.dateTime = date;
+    }
+
+    public getTime(): any {
+        return this.dateTime.getTime();
+    }
+
+  
+    public getActivity(): String {
+        return this.activity;
+    }
+
+    public setActivity(activity: String): void {
+        this.activity = activity;
+    }
+
+    
+}
+class sigoutSiginActivity extends UserActivity{
+        signin(){
+            super.setDate(new Date());
+            super.setActivity("sign in");
+        }
+        signout(){
+            super.setDate(new Date());
+            super.setActivity("sign out");
+        }
 }

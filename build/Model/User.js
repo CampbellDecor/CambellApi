@@ -1,23 +1,33 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserBuilder = exports.User = void 0;
+exports.UserBuilder = void 0;
 const tslib_1 = require("tslib");
 const bcryptjs_1 = tslib_1.__importDefault(require("bcryptjs"));
+const Model_1 = require("./Model");
 const validator_1 = tslib_1.__importDefault(require("validator"));
 var salt = bcryptjs_1.default.genSaltSync(10);
-class User {
-    constructor(email, password, mobile, uid, religion, firstname, lastname, username, profile, isblock, isonline) {
+//User
+class User extends Model_1.Model {
+    constructor(email, password, uid, religion, firstname, lastname, username, profile, isblock, isonline) {
+        super();
         this.email = validator_1.default.isEmail(email !== null && email !== void 0 ? email : '') ? email : undefined;
         this.password = bcryptjs_1.default.hashSync(password !== null && password !== void 0 ? password : '', salt);
-        this.mobile = validator_1.default.isMobilePhone(mobile !== null && mobile !== void 0 ? mobile : '') ? mobile : undefined;
+        // this.mobile = validator.isMobilePhone(mobile??'')? mobile:undefined;
         this.firstname = firstname;
         this.lastname = lastname;
         this.uid = uid;
-        this.username = username !== null && username !== void 0 ? username : email === null || email === void 0 ? void 0 : email.substr(email.indexOf("@")),
+        this.username = username !== null && username !== void 0 ? username : email === null || email === void 0 ? void 0 : email.substring(0, email.indexOf("@")),
             this.profile = profile;
         this.religion = religion;
         this.isonline = isonline;
         this.isblock = isblock;
+    }
+    getId() {
+        return this.uid;
+    }
+    fixedId(id) {
+        this.uid = id;
+        return this;
     }
     getIsblock() {
         return this.isblock;
@@ -92,11 +102,12 @@ class User {
     static InstanceOf() {
         return new User();
     }
-    static UserBuilder() {
-        return new UserBuilder();
+    selfObj() {
+        return this;
     }
 }
-exports.User = User;
+exports.default = User;
+//Builder
 class UserBuilder {
     constructor(user) {
         this.user = user !== null && user !== void 0 ? user : new User();

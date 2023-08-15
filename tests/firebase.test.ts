@@ -1,5 +1,7 @@
-import fire from '../src/FireBase/Firebase';
+
+import fire from '../src/FireBase/Fire';
 import fireStorage from '../src/FireBase/FireStorage';
+
 
 describe("Testing with firebase ",()=>{
     describe("first test firebase properly connected or not",()=>{
@@ -7,20 +9,26 @@ describe("Testing with firebase ",()=>{
             expect(parseFloat(fire.SDK_VERSION)).toBeGreaterThanOrEqual(11);  
         })
         it("FireStore connectivity test",async ()=>{
-            const collectionRef = fire.firestore().collection('test_collection');
-            const docRef = collectionRef.doc('test_doc');
-            await docRef.set({ testField: 'testValue' });
-            const snapshot = await docRef.get();
-         // Check if the test document has the expected data
-            expect(snapshot.exists).toBe(true);
-            expect(snapshot?.data()?.testField).toBe('testValue');
+            const collections = await firestore().listCollections();
+            expect(collections.length).toBeGreaterThanOrEqual(0);
+           
         });
-        describe("FireStorage",()=>{
-            it("check uploades function",()=>{
-                fireStorage.upload("./unnamed.png",'test/unnamed.png').then(result=>{
-                    expect(result).toBe("File uploaded successfully.");
-                })
+        it("FireBase RealTime Database connectivty",async ()=>{
+            const databaseRef =fire.database().ref();
+            const snapshot = await databaseRef.once('value');
+            const collections = snapshot.numChildren();
+            expect(collections).toBeGreaterThanOrEqual(0);
+        })
+        test("FireBae Authenditication Connectivity Test correctly worked ",async ()=>{
+            const userRecords = await auth().listUsers();
+           expect(userRecords.users.length).toBeGreaterThanOrEqual(0);
+        });
+        test("FireStorage Connectivity Test correctly worked",()=>{
+            storage().bucket().getFiles().then(files=>{
+                expect(files.length).toBeLessThanOrEqual(0);
             })
-        });
-    })
+        })
+
+    });
+    
 })

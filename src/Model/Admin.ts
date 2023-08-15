@@ -1,4 +1,4 @@
-import {User,UserBuilder} from './User';
+import User,{UserBuilder} from './User';
 class Admin extends User{
     private isadmin?:boolean;
 
