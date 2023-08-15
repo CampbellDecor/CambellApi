@@ -7,6 +7,8 @@ export abstract class Model{
         return this.data;
     }
 }
+
 export abstract class Details<T>{
    abstract getAll():Array<Details<T>>;
 }
+

@@ -7,7 +7,7 @@ class FireDatabase{
     constructor(collection?:string){
         this.Entity=this.Database.ref(collection);
     }
-    async add(element:Model){
+    async add(element:Object){
        try {
           const row=await this.Entity.push();
           await row.set(element);
@@ -16,7 +16,7 @@ class FireDatabase{
             throw error;
        }
     }
-    async addWithId(element:Model,id:number|string){
+    async addWithId(element:Object,id:number|string){
         try {
            const row=await this.Entity.child(id);
            await row.set(element);
@@ -25,7 +25,7 @@ class FireDatabase{
              throw error;
         }
      }
-     async addWithIncrement(element:Model){
+     async addWithIncrement(element:Object){
       try {
         const  snapshot=await this.Entity.orderByKey().limitToLast(1).once('value');
     // The snapshot will contain the last added element, which you can get the key from.
@@ -42,6 +42,7 @@ class FireDatabase{
      async delete(element:Model){
       try {
         await this.Entity.child(element.getId()).remove();
+        return await this.getAll();
       } catch (error) {
          throw error;
       }
@@ -57,11 +58,12 @@ class FireDatabase{
       try {
          await this.Entity.child(element.getId()).update(element);
          return element;
+         return await this.getAll();
       } catch (error) {
          throw error;
       }
      }
-     async editWithId(element:Model,id:string|number){
+     async editWithId(element:Object,id:string|number){
       try {
          await this.Entity.child(id).update(element);
          return element;
@@ -114,7 +116,7 @@ class FireDatabase{
      }
      async count(){
       try {
-         let itemCount=0;
+         let itemCount:number=0;
          await this.Entity.once('value', (snapshot:any) => {
             itemCount = snapshot.numChildren();
          });

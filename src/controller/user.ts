@@ -15,6 +15,7 @@ export default class UserContoller extends RoleController{
         }else{
             res.redirect("/add");
         }
+
         
        } catch (error) {
         throw error;
@@ -45,6 +46,5 @@ export default class UserContoller extends RoleController{
     isexist(req: Request, res: Response): void {
         throw new Error("Method not implemented.");
     }
-   
 
 }
