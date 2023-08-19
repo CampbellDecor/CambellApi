@@ -1,14 +1,15 @@
-import express  from 'express';
-import UserContoller from '../controller/user';
+const express  =require( 'express');
+const UserContoller =require( '../controller/user');
 const userConttoller=new UserContoller();
 
 const Router=express.Router();
 Router.post("/add",userConttoller.add);
-Router.post("/",userConttoller.getAll);
+Router.route( "/" )
+        .post( userConttoller.getAll );
 Router.route("/:id")
-        .post(userConttoller.getById)
         .delete(userConttoller.delete)
-        .put(userConttoller.edit);
+        .put( userConttoller.edit )
+        .post(userConttoller.)
         
 Router.post("/sigin",userConttoller.login);
 Router.post("/sigout",userConttoller.logout);

@@ -1,5 +1,5 @@
-import fire, { firestore } from './Fire'
-import { Model } from '../Model/Model';
+import fire, { firestore } from './Fire';
+
 export default class FireStore {
    FireStoreB = firestore();
    private Entity: any;

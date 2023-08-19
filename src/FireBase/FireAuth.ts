@@ -1,12 +1,20 @@
-import {auth} from './Fire';
 import validator from 'validator';
+
+import { auth } from './Fire';
+
 export default class FireAuth{
-    async CreateUserWithEmail(email:string,password:string){
+    async CreateUserWithEmail(email:string,password:string,mobile?:string){
             try {
                 const user=await auth().createUser({
                     email,
                     password
-                });
+                } );
+                if ( mobile !== undefined )
+                {
+                    const usermobil = await auth().updateUser( user.uid, {
+                        phoneNumber: mobile
+                    })
+                }
                 return user.uid;
             } catch (error) {
                 throw error;
@@ -141,6 +149,19 @@ export default class FireAuth{
 //         throw error;
 //     }
 //    }
+async loginWithemail(email:string,password:string){
+try {
+    const user=await auth().getUserByEmail(email);
+   const token=await auth().createCustomToken(user.uid,{ expiresIn: '1h'});   
+   return {
+    success:true,token,message:"login",uid:user.uid
+   }
+} catch (error) {
+        throw {
+        success:false,message:error,uid:null      
+    }
+}
+}
 
 }
 
