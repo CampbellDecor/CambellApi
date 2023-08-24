@@ -1,15 +1,15 @@
 const express  =require( 'express');
-const UserContoller =require( '../controller/user');
+const adminContoller =require( '../controller/user');
 
 const Router=express.Router();
 
 // Router.post("/add",userConttoller.add);
 Router.route( "/" )
-        .post( UserContoller.getUsers);
+        .post( adminContoller.getadmins);
 
 Router.route("/:uid")
-.post(UserContoller.getUser)
-.delete(UserContoller.getUser)
+.post(adminContoller.getadmin)
+.delete(UserContoller.getadmin)
         .put( UserContoller.getUser )
 
 export default Router;

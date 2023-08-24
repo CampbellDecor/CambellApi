@@ -1,10 +1,8 @@
-const express =require('express');
-import user from './user';
-// import chat from './chat';
-// import admin from './admin'
+const service = require( "./Service.js" );
 const Router=express.Router();
+Router.all("/",(res,req)=>{
+    
+})
+Router.use( "/service",service);
 
-Router.use("/user",user);
-// Router.use("/chat",chat);
-// Router.use("/admin",admin);
-export default Router;
+module.exports=Router;
