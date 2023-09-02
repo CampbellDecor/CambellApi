@@ -1,9 +1,47 @@
-const User = require( "./user.js" );
-class admin extends User
+const adminDao = require( "../FireBase/admin.js" );
+const randompwd = require( "generate-password" );
+exports.add = async ( request ) =>
+
 {
-    constructor (email, password, uid, mobile, profile, address, isSuper=false,isOnline=false)
+    const {
+        username,
+        profile,
+        email,
+        firstname,
+        lastname,
+        mobile,
+        address,
+        isSuper,
+        isBlock
+    } = request.body;
+    const password = randompwd.generate( {
+        length: 20,
+        uppercase: true,
+        lowercase: true,
+        numbers: true,
+        symbols:true
+    })
+    try
     {
-        super( email, password, uid, mobile, profile, address, isOnline = false );
-        this.isSuper = isSuper;
- }
+        const adminid=await adminDao.add({
+            username,
+            profile,
+            email,
+            firstname,
+            lastname,
+            mobile,
+            address,
+            isSuper,
+            isBlock,
+            password,
+            isOnline:false,
+            activity: [ {
+                action: "created",
+                dateAndTime: new Date()
+            }]
+        })
+        return { ...adminid, password };
+    } catch (error) {
+        throw error;
+    }
 }
