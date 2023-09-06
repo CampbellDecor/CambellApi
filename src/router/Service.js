@@ -5,7 +5,7 @@ const Router=express.Router();
 
 Router.route( "/" )
         .post( serviceContoller.getServices);
-
+Router.post( "/upload", serviceContoller.ImgUpload );
 Router.route("/:sid")
 .post(serviceContoller.getService)
  .delete(serviceContoller.deleteService)

@@ -1,12 +1,11 @@
 const adminmodel = require( "../Model/admin.js" );
-const jwt = require( "jsonwebtoken" );
 const randompassword = require( "generate-password" );
 exports.addAdmin = ( req, res ) =>
 {
     adminmodel.add( req ).then(
         result =>
         {
-            res.status( 204 ).json( result );
+            res.status( 200 ).json( result );
         }
     ).catch( error =>
     {
@@ -21,7 +20,13 @@ exports.getAdmin = (req,res) =>
 
 exports.getAdmins = (req,res) =>
 {
-    
+    adminmodel.all()
+        .then( admins =>
+        {
+            res.status( 200 ).json( admins );
+    }).catch(error=>{
+        throw error;
+    })
 }
 
 exports.deleteAdmin = (req,res) =>
@@ -42,26 +47,18 @@ exports.editAdmin = (req,res) =>
 };
 exports.loginAdmin = ( req, res ) =>
 {
-    const { email } = req.body;
-    Dao.login( email )
+    adminmodel.login( req )
         .then( output =>
         {
-            if ( output.login === "correct" )
+            if ( output?.loginStatus )
             {
-                const currentUser= output.result;
-                res.status(200).json( { auth: true, currentUser} );
-            } else if ( output.login === "not-auth" )
-            {
-                res.status( 501 ).json( "verify first" );
-                
+                res.status( 200 ).json( "sucess" );
+                console.log(output.message);
+
             } else
             {
-                res.status( 404 ).json( "invalid login" );
-        }
+                res.status( 404 ).json( "fail" );
+                console.log(output?.message);
+           }
     })
 };
-exports.logoutAdmin = (req,res) =>
-{
-    res.clearCookie( "access_token" );
-    Dao.logout();
-}

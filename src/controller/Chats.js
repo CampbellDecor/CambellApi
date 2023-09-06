@@ -1,6 +1,15 @@
-exports.addChat = (req,res) =>
+const Chatmodel = require( "../Model/userchats.js" );
+exports.addChat = ( req, res ) =>
 {
-    
+    Chatmodel.add( req ).then(
+        chatinfo =>
+        {
+            req.json( chatinfo );
+        }
+    ).catch( err =>
+    {
+        res.json( err );
+    })
 };
 exports.getChat = (req,res) =>
 {

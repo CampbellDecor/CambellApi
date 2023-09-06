@@ -1,24 +1,31 @@
 const nodemailer = require( "nodemailer" );
-const testAccount = nodemailer.createTestAccount();
+const Function = require( "../../functions/node_modules/firebase-functions" );
 var transporter = nodemailer.createTransport({
-    service:"gmail",
+  service: "gmail",
+   port: 465,
+  secure: true, 
   auth: {
     user: 'campbelldecor087@gmail.com',
-    pass: 'Thanush126'
+    pass: 'zswsgpsfbkjuyrkh'
   }
-});
-
-var mailOptions = {
+} );
+/*
+const sendSingleMail = async (reciver,subject,body) =>
+{*/
+  var mailOptions = {
   from: 'campbelldecor087@gmail.com',
-  to: 'jeeyukatharsa@gmail.com',
-  subject: 'Sending Email using Node.js',
-  text: 'That was easy!'
-};
-
-transporter.sendMail(mailOptions, function(error, info){
+  to: "thanumahee440@gmail.com",
+  subject:"Thelo",
+  text:"hi"
+  };
+  transporter.sendMail(mailOptions, function(error, info){
   if (error) {
     console.log(error);
   } else {
     console.log('Email sent: ' + info.response);
   }
 });
+//}
+
+
+
