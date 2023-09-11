@@ -10,7 +10,7 @@ var transporter = nodemailer.createTransport({
 exports.sendSingleMail = async (reciver,subject,body) =>
 {
   var mailOptions = {
-  from: 'campbelldecor087@gmail.com',
+  from: MailInfo.auth.user,
   to: reciver,
   subject,
   html:body
