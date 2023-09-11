@@ -1,5 +1,4 @@
 const adminmodel = require( "../Model/admin.js" );
-const randompassword = require( "generate-password" );
 exports.addAdmin = ( req, res ) =>
 {
     adminmodel.add( req ).then(

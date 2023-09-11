@@ -8,4 +8,5 @@ Firebase.initializeApp(
         storageBucket:"campbelldecor-c2d1f.appspot.com"
     }
 );
+
 module.exports=Firebase;

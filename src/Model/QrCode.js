@@ -1,9 +1,6 @@
 const Qrcode = require( "qrcode" );
 
-let data = {
-    name: "Thanush",
-    email:"thanumahee440@gmail.com"
-};
+
 exports.genrateQrtxt = (data) =>
 {
     let stJSon = JSON.stringify( data );
@@ -34,4 +31,3 @@ exports.genrateQrUrl = (data) =>
                 return code;
             })
   }
-

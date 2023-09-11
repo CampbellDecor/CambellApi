@@ -36,53 +36,39 @@ exports.all = async () =>
     }
 };
 
-exports.login=async (email)=>{
-try {
-    const logiuser = await Firebase.auth().getUserByEmail( email );
-    if ( logiuser.disabled )
-    {
-        return { login: "block", message: `${ logiuser.displayName } is Blocked` }
-    } else
-    {
-        if ( !logiuser.emailVerified )
-        {
-            const verifylink = await Firebase.auth().generateEmailVerificationLink( email );
-            return {login:"not-verify",message:verifylink}
-        } else
-        {
-          await adminDoc.doc( logiuser.uid ).update( {
-                isOnline: true,
-                activity: FieldValue.arrayUnion( { action: "signin", date: new Date() } )
-          } );
-            const loginUSerCre = await adminDoc.doc( logiuser.uid ).get();
-            return {
-                login: "ok", message: {
-                    aid: loginUSerCre.id,
-                    ...loginUSerCre.data()
-            } };
-        }
-        
-    }
-      
-} catch (error) {
-    throw error;
-}
-}
-exports.logOut = async (aid) =>
+exports.block = async (aid) =>
 {
-    try {
-        await  await adminDoc.doc( aid).update( {
-            isOnline: false,
-            activity: FieldValue.arrayUnion( { action: "signout", date: new Date() } )
-        } );
+    try
+    {
+       const user= await Firebase.auth().updateUser( aid, {
+            disabled: true,
+        })
+            await adminDoc.doc( aid ).update( {isBlock:true} );
+           return  { block:true,email:user.email}
     } catch (error) {
         throw error;
     }
 }
-exports.uploadAdminProf = async (path) =>
+exports.unblock = async (aid) =>
+{
+    try
+    {
+       const user= await Firebase.auth().updateUser( aid, {
+            disabled: false,
+        })
+        await adminDoc.doc( aid ).update( {isBlock:false} );
+        return { unblock:true,email:user.email};
+    } catch (error) {
+        throw error;
+    }
+}
+
+exports.OneAdmin = async ( aid ) =>
 {
     try {
-        await FireStorage.uploadAImage( path, "Admins" );
+        const User = await adminDoc.doc( aid ).get();
+        return { uid: User.id, ...User.data() }
+        
     } catch (error) {
         throw error;
     }

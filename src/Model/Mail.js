@@ -1,31 +1,29 @@
 const nodemailer = require( "nodemailer" );
 const Function = require( "../../functions/node_modules/firebase-functions" );
+const MailInfo = require( "./MailInfo.js" );
 var transporter = nodemailer.createTransport({
   service: "gmail",
-   port: 465,
-  secure: true, 
-  auth: {
-    user: 'campbelldecor087@gmail.com',
-    pass: 'zswsgpsfbkjuyrkh'
-  }
+  auth: MailInfo.auth
 } );
-/*
-const sendSingleMail = async (reciver,subject,body) =>
-{*/
+
+
+exports.sendSingleMail = async (reciver,subject,body) =>
+{
   var mailOptions = {
   from: 'campbelldecor087@gmail.com',
-  to: "thanumahee440@gmail.com",
-  subject:"Thelo",
-  text:"hi"
+  to: reciver,
+  subject,
+  html:body
   };
-  transporter.sendMail(mailOptions, function(error, info){
+  let result;
+  await transporter.sendMail(mailOptions, function(error, info){
   if (error) {
-    console.log(error);
+    throw error;
   } else {
-    console.log('Email sent: ' + info.response);
+    result='Email sent: ' + info.response;
   }
-});
-//}
-
+  } );
+  return result;
+}
 
 

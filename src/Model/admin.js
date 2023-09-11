@@ -117,4 +117,4 @@ exports.login =async (request) =>
     } catch (error) {
         throw error;
     }
-}
+};

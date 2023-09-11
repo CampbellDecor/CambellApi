@@ -1,24 +1,36 @@
-const userDao = require( "../FireBase/userDao/userDao.js" );
-exports.addUser = ( req, res ) =>
+const usermodel = require( "../Model/user.js" );
+exports.adduser = ( req, res ) =>
 {
-    userDao.getusers()
-        .then( user =>
+     usermodel.add( req ).then(
+        result =>
         {
-            res.status(200).json( user );
+            res.status( 200 ).json( result );
         }
-    ).catch( err =>
+    ).catch( (error) =>
     {
-        res.status( 404 ).json( err );
-        })
+        res.status( 404 ).json( error );
+    });
+
+
 };
-exports.getUser = (req,res) =>
+exports.getUser = ( req, res ) =>
 {
-    
+    usermodel.OneUser(req).then(user=>{
+        res.status( 200 ).json( user );
+    }).catch(err=>{
+        res.status( 404 ).json( err );
+    })
 }
 
 exports.getUsers = (req,res) =>
 {
-    
+    usermodel.all()
+        .then( users =>
+        {
+            res.status( 200 ).json( users );
+    }).catch(err=>{
+        res.status( 404 ).json( err );
+    })
 }
 
 exports.deleteUser = (req,res) =>
@@ -27,11 +39,24 @@ exports.deleteUser = (req,res) =>
 };
 exports.blockUser = (req,res) =>
 {
-    
+    usermodel.block( req ).then( result =>
+    {
+        res.status(200).json(result)
+    } ).catch( err =>
+    {
+        res.status( 400 ).json( err );
+    })
 };
 exports.unblockUser = (req,res) =>
 {
-    
+    usermodel.unblock( req )
+        .then( result =>
+        {
+            res.status( 200 ).json( result );
+        } ).catch( err =>
+        {
+            res.status( 404 ).json( err );
+    })
 }
 exports.editUser = (req,res) =>
 {
