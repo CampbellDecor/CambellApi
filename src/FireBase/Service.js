@@ -1,6 +1,7 @@
 const Firebase = require( "./Fire.js" );
 const { FieldValue } = require( "firebase-admin/firestore" );
 const ServiceCol = Firebase.firestore().collection( "services" );
+const SCat = require( "./ServiceCategory.js" );
 const add = async service =>
 {
     try {
@@ -27,29 +28,24 @@ const oneService = async serviceCode =>
         throw error;
     }
 };
-exports.allCategory = async serviceCode =>
-{
-    try
-    {
-        const Categories = [];
-        
-        const service = await ServiceCol.get();
-        service.forEach( servi => Categories.push( Categories =>
-        { 
-            console.log( servi )
-        }));
-        return Categories;
-    } catch (error) {
-        throw error;
-    }
-};
 
-const all = () =>
+
+exports.all = async() =>
 {
     try {
-        
+        const scat = await SCat.categories();
+        const Services=[];
+        for ( const cate of scat )
+        {
+           
+            const servicesNestedCol = await ServiceCol.doc( cate.cid ).collection( cate.cname );
+            const serviceSnapshot = await servicesNestedCol.get();
+        await serviceSnapshot.forEach(serv=>{
+            Services.push({servicecode:serv.id,category:cate,...serv.data()}); 
+        })
+       }
+        return Services;
     } catch (error) {
         
     }
 }
-
