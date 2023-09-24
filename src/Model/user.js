@@ -128,3 +128,21 @@ exports.OneUser = async  (req) =>
         throw error;
     }
 };
+
+exports.block_unblock_user =async (req) =>
+{
+    try
+    {
+        const UserDatas = [];
+        const result = req.params.block;
+        const userCol = await userDao.block_unblock_fillter( result === "block" );
+        userCol.forEach( user =>
+            {
+                const { imgURL, name, phoneNo,...Other } = user;
+                UserDatas.push( { profile: imgURL, username: name, mobile: phoneNo, ...Other } );
+            } )
+        return  UserDatas.length <= 0 ?[] :  UserDatas;
+    } catch (error) {
+        throw error;
+    }
+}

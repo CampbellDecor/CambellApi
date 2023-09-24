@@ -58,6 +58,18 @@ exports.unblockUser = (req,res) =>
             res.status( 404 ).json( err );
     })
 }
+exports.filter_block_unblock = (req,res) =>
+{
+    usermodel.block_unblock_user( req )
+        .then( usermodel =>
+        {
+            res.status( 200 ).json( usermodel );
+        } )
+        .catch( err =>
+        {
+            res.status( 404 ).json( err );
+    })
+}
 exports.editUser = (req,res) =>
 {
     
