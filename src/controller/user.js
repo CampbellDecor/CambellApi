@@ -70,7 +70,22 @@ exports.filter_block_unblock = (req,res) =>
             res.status( 404 ).json( err );
     })
 }
-exports.editUser = (req,res) =>
+exports.religion_filter = (req,res) =>
+{
+    const religion = req.params.relg;
+    usermodel.religions_filter( religion )
+        .then(
+            resu =>
+            {
+                res.status( 200 ).json( resu );
+        }
+    )
+        .catch( err =>
+        {
+            res.status( 404 ).json( err );
+    })
+}
+exports.editUser = ( req, res ) =>
 {
     
 }
