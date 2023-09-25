@@ -2,7 +2,11 @@ const userDao = require( "../FireBase/user.js" );
 const randompwd = require( "generate-password" );
 const Mail = require( "./Mail.js" );
 
-
+const userModel = (userDoc) =>
+{
+    const { imgURL, name, phoneNo,...Other } =userDoc;
+    return { profile: imgURL, username: name, mobile: phoneNo, ...Other };
+}
 exports.add = async ( request ) =>
 {
     const {
@@ -110,8 +114,8 @@ exports.all = async () =>
         const userCol = await userDao.all();
         userCol.forEach( user =>
         {
-            const { imgURL, name, phoneNo,...Other } = user;
-            UserDatas.push( { profile: imgURL, username: name, mobile: phoneNo, ...Other } );
+            const userm=userModel(user)
+            UserDatas.push(userm );
         } )
         return UserDatas;
     } catch (error) {
@@ -127,4 +131,40 @@ exports.OneUser = async  (req) =>
     } catch (error) {
         throw error;
     }
+};
+
+exports.block_unblock_user =async (req) =>
+{
+    try
+    {
+        const UserDatas = [];
+        const result = req.params.block;
+        const userCol = await userDao.block_unblock_fillter( result === "block" );
+        userCol.forEach( user =>
+            {
+                
+            const userm=userModel(user)
+            UserDatas.push(userm );
+            } )
+        return  UserDatas.length <= 0 ?[] :  UserDatas;
+    } catch (error) {
+        throw error;
+    }
+};
+
+exports.religions_filter = async (filter) =>
+{
+    try
+    {
+        const filterdata = [];
+        const users = await userDao.all();
+        users.filter( user => user.religion === filter ).forEach( user =>
+        {
+            filterdata.push( userModel( user ) );
+       })
+        return filterdata;
+    } catch (error) {
+        throw error;
+    }
+    
 };

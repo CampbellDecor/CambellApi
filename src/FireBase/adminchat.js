@@ -5,7 +5,8 @@ const chatCollection = Firebase.firestore().collection( "userchats" );
 const all = async () =>
 {
     try {
-        const chats = await chatCollection.orderBy();
+        const chats = await chatCollection.orderBy()
+        
     } catch (error) {
         throw error;
     }

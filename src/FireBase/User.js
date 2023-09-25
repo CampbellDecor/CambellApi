@@ -122,7 +122,21 @@ try {
     throw error;
 }
 };
-
+exports.block_unblock_fillter = async (block) =>
+{
+    try
+    {
+        const users = [];
+        const userDoc = await userCol.where( "isBlock", "==", block ).get();
+        userDoc.forEach( user =>
+        {
+            users.push( { uid: user.id, ...user.data() } );
+        } )
+        return users;
+    } catch(err) {
+        throw err;
+    }
+}
 exports.ReligionCounts = async () =>
 {
     const Religions = [];
@@ -177,4 +191,4 @@ exports.Online_Offline =async () =>
     } catch (error) {
         throw error;
     }
-}
+};
