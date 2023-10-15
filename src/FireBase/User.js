@@ -29,7 +29,7 @@ exports.add = async ( user ) =>
             await Firebase.auth().deleteUser( userauth.uid );
             uid = null;
         }
-       
+
         return { uid ,verifylink};
     } catch (error) {
         throw error;
@@ -43,7 +43,7 @@ exports.all = async () =>
         snapshot.forEach( async user =>
         {
             users.unshift( { uid: user.id, ...user.data() } );
-          
+
         } )
         return users;
     } catch (error) {
@@ -82,7 +82,7 @@ exports.OneUser = async ( uid ) =>
     try {
         const User = await userCol.doc( uid ).get();
         return { uid: User.id, ...User.data() }
-        
+
     } catch (error) {
         throw error;
     }
@@ -100,15 +100,15 @@ exports.Religions = async () =>
 
                 const rel = user.data().religion??"unknown";
                 Religions.push( rel?.at( 0 )?.toUpperCase() + rel?.substring( 1, rel.length ).toLowerCase() );
-                
-               
+
+
             }
         )
         return Religions.length <= 0 ? "" : new Set( Religions );
     } catch (error) {
         throw error;
     }
-    
+
 }
 
 
@@ -149,8 +149,8 @@ exports.ReligionCounts = async () =>
 
                 const rel = user.data().religion ?? "unknown";
                 Religions.push( rel?.at( 0 )?.toUpperCase() + rel?.substring( 1, rel.length ).toLowerCase() );
-                
-               
+
+
             } );
         const UNIq = new Set( Religions );
         UNIq.forEach( ele =>
@@ -158,13 +158,13 @@ exports.ReligionCounts = async () =>
             ReligionsCount[ 0 ].push( ele );
             const count = Religions.filter( value => value === ele ).length;
             ReligionsCount[ 1 ].push( count );
-            
+
         } );
         return ReligionsCount
     } catch (error) {
         throw error;
     }
-    
+
 }
 exports.Online_Offline =async () =>
 {
@@ -177,16 +177,16 @@ exports.Online_Offline =async () =>
             if(u.metadata.lastSignInTime >=new Date())
                 userlist[ 0 ].push( {
                     uid: u.uid,
-                    OnlineTime: u.metadata.lastSignInTime 
+                    OnlineTime: u.metadata.lastSignInTime
                 } );
             else
             userlist[ 1 ].push( {
                 uid: u.uid,
-                OfflineTime: u.metadata.lastSignInTime 
+                OfflineTime: u.metadata.lastSignInTime
             } );
-            
+
         })
-        
+
         return  userlist;
     } catch (error) {
         throw error;

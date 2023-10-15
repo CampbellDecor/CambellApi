@@ -58,13 +58,13 @@ exports.add = async ( request ) =>
         try {
             await Mail.sendSingleMail( email, "Cambell Decor Registration", adduser );
         } catch (error) {
-            
+
             throw error;
         } finally
         {
             userDao.deleteUser( useradd.uid );
         }
-        
+
         return { uid:useradd.uid};
     } catch (error) {
         throw error;
@@ -86,7 +86,7 @@ exports.block = async ( request ) =>
     } catch (error) {
         throw error;
     }
-  
+
 
 }
 exports.unblock = async ( request ) =>
@@ -103,7 +103,7 @@ exports.unblock = async ( request ) =>
     } catch (error) {
         throw error;
     }
-  
+
 
 }
 
@@ -119,7 +119,7 @@ exports.all = async () =>
         } )
         return UserDatas;
     } catch (error) {
-        
+
     }
 }
 exports.OneUser = async  (req) =>
@@ -142,7 +142,7 @@ exports.block_unblock_user =async (req) =>
         const userCol = await userDao.block_unblock_fillter( result === "block" );
         userCol.forEach( user =>
             {
-                
+
             const userm=userModel(user)
             UserDatas.push(userm );
             } )
@@ -166,5 +166,11 @@ exports.religions_filter = async (filter) =>
     } catch (error) {
         throw error;
     }
-    
+
 };
+
+exports.relCount =async () =>
+{
+    const relcount = await userDao.ReligionCounts();
+    return relcount;
+}

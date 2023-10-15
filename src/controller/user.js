@@ -35,7 +35,7 @@ exports.getUsers = (req,res) =>
 
 exports.deleteUser = (req,res) =>
 {
-    
+
 };
 exports.blockUser = (req,res) =>
 {
@@ -87,9 +87,24 @@ exports.religion_filter = (req,res) =>
 }
 exports.editUser = ( req, res ) =>
 {
-    
+
 }
 exports.UserCount = (req,res) =>
 {
-    
+
+}
+exports.religionCount = (req, res) =>
+{
+    usermodel.relCount().then(
+        count =>
+        {
+            res.status(200).json(count);
+        }
+    )
+        .catch(
+            err =>
+            {
+                res.status(404).json(err);
+        }
+    )
 }
