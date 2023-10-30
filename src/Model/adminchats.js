@@ -7,19 +7,19 @@ exports.adminchatlist = async (req) => {
         const chats = await chatDao.alladminchat(token);
         return chats.map(element => {
             const {
-                lastchat,
+                last,
                 ...others
             } = element;
             const {
                 date,
                 ...otherdet
-            } = lastchat;
-            const last = {
+            } = last;
+            const lastchat = {
                 dateTime: TimeHandle.diffTimeString(date),
                 ...otherdet
             }
             return {
-                last,
+                lastchat,
                 ...others
             }
         });

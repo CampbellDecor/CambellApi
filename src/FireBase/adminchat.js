@@ -1,53 +1,61 @@
 const Firebase = require("./Fire.js");
 const Auth = Firebase.auth();
-const {
-    FieldValue,
-    FieldPath,
-    Timestamp
-} = require("firebase-admin/firestore");
 const adminchatCol = Firebase.firestore().collection("adminchat");
 const adminCol = Firebase.firestore().collection("admins");
 
 exports.alladminchat = async (token) => {
     try {
-        const {
-            uid
-        } = await Auth.verifyIdToken(token);
+        const { uid } = await Auth.verifyIdToken(token);
         const adminchatsCol = await adminchatCol.get();
         const adminchats = [];
         adminchatsCol.forEach(ele => {
-            adminchats.push(ele.id);
+            adminchats.push({
+                achatid: ele.id,
+                ...ele.data()
+            });
+
         })
-        const chattings = [];
-        for (const iterator of adminchats) {
-            const admin = await adminCol.doc(iterator).get();
+        const thisadminchats = adminchats.filter(element => element.sender === uid || element.reciver === uid).map(element => {
             const {
-                email,
-                mobile,
-                activity,
-                address,
+                sender,
+                reciver,
+                date,
                 ...other
-            } = admin.data();
-            const AdminChatDoc = await adminchatCol.doc(iterator).collection('messages').orderBy('date', 'desc').limit(1).get();
-            const AdminChatDoccount = (await adminchatCol.doc(iterator).collection('messages').where('status', '==', 'unread').get()).size;
-            let chat = {}
-            AdminChatDoc.forEach(ele => {
-                const {
-                    date,
-                    ...otherdetails
-                } = ele.data();
-                const t = date.toDate();
-                chat = {
-                    cid: ele.id,
-                    ...otherdetails,
-                    date: t
-                }
-            })
+            } = element;
+            return sender === uid ? {
+                type: 'sent',
+                date: date.toDate(),
+                reciver,
+                date: date.toDate(),
+                ...other
+            } : {
+                type: 'recive',
+                date: date.toDate(),
+                sender,
+                ...other
+            }
+        })
+        const chatids = [];
+        thisadminchats.forEach(chats => {
+            chatids.push(chats.type === 'sent' ? chats.reciver : chats.sender);
+        })
+        const uniqids = new Set(chatids);
+        const chattings = [];
+        for (const id of uniqids) {
+            const snapshot = await adminCol.doc(id).get();
+            const {
+                firstname,
+                lastname,
+                ...others
+            } = snapshot.data();
+            const thisadminchats3 = thisadminchats.filter(element => element.sender === id || element.reciver === id).sort((ele1, ele2) => {
+                return ele1.date - ele2.date;
+            });
+            const unread = thisadminchats3.filter(ele => ele.status === 'unread').length;
             chattings.push({
-                chatID: iterator,
-                unread: AdminChatDoccount,
-                lastchat: chat,
-                ...other
+                last: thisadminchats3[0],
+                ...others,
+                unread
             })
         }
 
