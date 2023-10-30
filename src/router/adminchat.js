@@ -1,10 +1,8 @@
-const userChatController = require( "../Model/adminchats" );
+const adminChatController = require( "../controller/adminchat" );
 const express  =require( 'express');
 
 const Router=express.Router();
 
-// Router.post("/add",userConttoller.add);
-Router.route( "/:uid" )
-        .post(userChatController.add);
+Router.get('/', adminChatController.chatlist);
 
 module.exports=Router;

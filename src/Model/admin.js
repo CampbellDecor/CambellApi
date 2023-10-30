@@ -1,30 +1,10 @@
-const adminDao = require( "../FireBase/admin.js" );
-const randompwd = require( "generate-password" );
-const Mail = require( "./Mail.js" );
-exports.add = async ( request ) =>
+const adminDao = require("../FireBase/admin.js");
+const randompwd = require("generate-password");
+const Mail = require("./Mail.js");
+exports.add = async (request) =>
 
-{
-    const {
-        username,
-        profile,
-        email,
-        firstname,
-        lastname,
-        mobile,
-        address,
-        isSuper,
-        isBlock
-    } = request.body;
-    const password = randompwd.generate( {
-        length: 20,
-        uppercase: true,
-        lowercase: true,
-        numbers: true,
-        symbols:true
-    })
-    try
     {
-        const adminadd=await adminDao.add({
+        const {
             username,
             profile,
             email,
@@ -33,15 +13,34 @@ exports.add = async ( request ) =>
             mobile,
             address,
             isSuper,
-            isBlock,
-            password,
-            isOnline:false,
-            activity: [ {
-                action: "created",
-                dateAndTime: new Date()
-            }]
-        } )
-        const addAdmin = `
+            isBlock
+        } = request.body;
+        const password = randompwd.generate({
+            length: 20,
+            uppercase: true,
+            lowercase: true,
+            numbers: true,
+            symbols: true
+        })
+        try {
+            const adminadd = await adminDao.add({
+                username,
+                profile,
+                email,
+                firstname,
+                lastname,
+                mobile,
+                address,
+                isSuper,
+                isBlock,
+                password,
+                isOnline: false,
+                activity: [{
+                    action: "created",
+                    dateAndTime: new Date()
+                }]
+            })
+            const addAdmin = `
         <html>
         <head>
         </head>
@@ -54,41 +53,42 @@ exports.add = async ( request ) =>
         </body>
         </html>
         `
-        Mail.sendSingleMail(email,"Cambell Decor Registration",addAdmin)
-        return { aid:adminadd.aid};
-    } catch (error) {
-        throw error;
-    }
-};
+            Mail.sendSingleMail(email, "Cambell Decor Registration", addAdmin)
+            return {
+                aid: adminadd.aid
+            };
+        } catch (error) {
+            throw error;
+        }
+    };
 
-exports.all =  async (res) =>
-{
+exports.all = async (req) => {
     try {
-        const admins = await adminDao.all();
-        if ( admins.length <= 0 ) throw Error( "No Admins" );
+        const access_token = req.cookies.access_token;
+        const admins = await adminDao.all(access_token);
+        if (admins.length <= 0) throw Error("No Admins");
         else return admins;
     } catch (error) {
         throw error;
     }
 };
-exports.login =async (request) =>
-{
-    const { email } = request.body;
+exports.login = async (request) => {
+    const {
+        email
+    } = request.body;
     try {
-        const result = await adminDao.login( email );
-        if ( result.login === "block" )
-        {
-            await Mail.sendSingleMail( email, "Blocked Account ", `
+        const result = await adminDao.login(email);
+        if (result.login === "block") {
+            await Mail.sendSingleMail(email, "Blocked Account ", `
             <h1>Your Account is Blocked</h1>
             <p>Hi user Your Account is Blocked please Contact with Adminstator</p>
             `);
             return {
                 message: result.message,
-                loginStatus:false
+                loginStatus: false
             };
-        } 
-        if ( result.login === "not-verify" )
-        {
+        }
+        if (result.login === "not-verify") {
             const loginAdmin = `
             <html>
             <head>
@@ -101,19 +101,18 @@ exports.login =async (request) =>
             </body>
             </html>
             `
-            await Mail.sendSingleMail(email, "Verify Account", loginAdmin );
+            await Mail.sendSingleMail(email, "Verify Account", loginAdmin);
             return {
                 message: "User Must be Verified",
-                loginStatus:false
+                loginStatus: false
             };
         }
-        if ( result.login === "ok" )
-        {
+        if (result.login === "ok") {
             return {
                 message: result.message,
-                loginStatus:true
-           }
-       }
+                loginStatus: true
+            }
+        }
     } catch (error) {
         throw error;
     }

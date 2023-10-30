@@ -1,5 +1,4 @@
 const nodemailer = require( "nodemailer" );
-const Function = require( "../../functions/node_modules/firebase-functions" );
 const MailInfo = require( "./MailInfo.js" );
 var transporter = nodemailer.createTransport({
   service: "gmail",
@@ -25,5 +24,3 @@ exports.sendSingleMail = async (reciver,subject,body) =>
   } );
   return result;
 }
-
-

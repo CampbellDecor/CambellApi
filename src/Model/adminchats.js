@@ -1,11 +1,28 @@
-const chatDao = require( "../FireBase/adminchat.js" );
-exports.add = async ( request ) =>
-{
+const chatDao = require("../FireBase/adminchat.js");
+const TimeHandle = require('./Timehandle.js');
+
+exports.adminchatlist = async (req) => {
+    const token = req.cookies.access_token;
     try {
-        const { message } = request.body;
-        const uid = request.params.uid;
-        const chat = await chatDao.addchat( message, uid );
-        return { cid: chat.cid, scuss: chat.scuss };
+        const chats = await chatDao.alladminchat(token);
+        return chats.map(element => {
+            const {
+                lastchat,
+                ...others
+            } = element;
+            const {
+                date,
+                ...otherdet
+            } = lastchat;
+            const last = {
+                dateTime: TimeHandle.diffTimeString(date),
+                ...otherdet
+            }
+            return {
+                last,
+                ...others
+            }
+        });
     } catch (error) {
         throw error;
     }
