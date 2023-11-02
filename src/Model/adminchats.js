@@ -27,3 +27,25 @@ exports.adminchatlist = async (req) => {
         throw error;
     }
 }
+
+exports.unreadmessages = async () => {
+    try {
+        return await chatDao.unreadchatcount();
+    } catch (error) {
+        throw error;
+    }
+}
+
+exports.Chats = async (req) => {
+    const {
+        senderid
+    } = req.params;
+    const token = req.cookies.access_token;
+    try {
+        const chats = chatDao.chats(senderid, token);
+        return chats;
+
+    } catch (error) {
+        throw error;
+    }
+}

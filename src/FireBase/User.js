@@ -42,7 +42,7 @@ exports.all = async () =>
         const snapshot = await userCol.get();
         snapshot.forEach( async user =>
         {
-            users.unshift( { uid: user.id, ...user.data() } );
+            users.push( { uid: user.id, ...user.data() } );
 
         } )
         return users;
@@ -50,27 +50,33 @@ exports.all = async () =>
         throw error;
     }
 };
-exports.block = async (uid) =>
+exports.block = async (uid,token,reason='Anwanted Activity') =>
 {
     try
     {
        const user= await Firebase.auth().updateUser( uid, {
-            disabled: true,
+           disabled: true
         })
-            await userCol.doc( uid ).update( {isBlock:true} );
+            await userCol.doc(uid).update({
+                isBlock: true,
+                activity: FieldValue.arrayUnion(`**${uid}** Blocked By **${aid}** for ${reason}`)
+            });
            return  { block:true,email:user.email}
     } catch (error) {
         throw error;
     }
 }
-exports.unblock = async (uid) =>
+exports.unblock = async (uid,token,note='conatact with email') =>
 {
     try
     {
        const user= await Firebase.auth().updateUser( uid, {
             disabled: false,
         })
-        await userCol.doc( uid ).update( {isBlock:false} );
+        await userCol.doc(uid).update({
+            isBlock: false,
+            activity: FieldValue.arrayUnion(`**${uid}** unBlocked By **${aid}** for ${note}`)
+        });
         return { unblock:true,email:user.email};
     } catch (error) {
         throw error;
@@ -111,7 +117,29 @@ exports.Religions = async () =>
 
 }
 
+exports.usercount =async () =>
+{
+    try {
+        const adminsnap = await userCol.get();
+        return adminsnap.size;
+    } catch (error) {
 
+    }
+}
+exports.block_unblock_count = async () =>
+{
+    try {
+        const user = { block: 0, unblock: 0 };
+        const usersnap = await userCol.get();
+        usersnap.forEach(ele =>
+        {
+            ele.isBlock ? user.block++ : user.unblock++;
+        })
+        return user;
+    } catch (error) {
+        throw error;
+    }
+}
 exports.deleteUser = async(uid) =>
 {
 try {
@@ -135,6 +163,23 @@ exports.block_unblock_fillter = async (block) =>
         return users;
     } catch(err) {
         throw err;
+    }
+}
+exports.religionFilter = async(religion) =>
+{
+    try {
+        const regx = new RegExp(religion, 'ig');
+        const usersnap = await userCol.get();
+        const relUser = [];
+        usersnap.forEach(
+            ele =>
+            {
+                relUser.push({uid:ele.id,...ele.data()});
+            }
+        )
+        return relUser.filter(element=>regx.test(element?.religion))
+    } catch (error) {
+        throw error;
     }
 }
 exports.ReligionCounts = async () =>
@@ -192,3 +237,21 @@ exports.Online_Offline =async () =>
         throw error;
     }
 };
+exports.search = async(search) =>
+{
+     try {
+         if (typeof (search) !== 'string') throw new TypeError("String are valid")
+         const rex = new RegExp(search, 'gi');
+         const adminsnap = await userCol.get();
+         const searchresult = [];
+         adminsnap.forEach(user => {
+             searchresult.push({
+                 aid: user.id,
+                 ...user.data()
+             });
+         })
+         return searchresult.filter(Element => rex.test(Element?.username) || rex.test(Element?.name) || rex.test(Element?.firstname) || rex.test(Element?.lastname) || rex.test(toString(Element?.phoneNo)) || rex.test(Element?.email) || rex.test(Element?.address)) ?? [];
+     } catch (error) {
+         throw error;
+     }
+}

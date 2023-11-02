@@ -1,9 +1,8 @@
-const UserchatDao = require( "../FireBase/userChat" );
+const UserchatDao = require("../FireBase/userChat");
 
-exports.allchat = async () =>
-{
+exports.allchat = async (req) => {
     try {
-        const allchat = UserchatDao.all();
+        const allchat = await UserchatDao.listofChat()
         return allchat;
     } catch (error) {
         throw error;

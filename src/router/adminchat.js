@@ -1,8 +1,9 @@
-const adminChatController = require( "../controller/adminchat" );
-const express  =require( 'express');
+const adminChatController = require("../controller/adminchat");
+const express = require('express');
 
-const Router=express.Router();
+const Router = express.Router();
 
 Router.get('/', adminChatController.chatlist);
-
-module.exports=Router;
+Router.get('/unreadcount', adminChatController.unreadcount);
+Router.get("/:senderid",adminChatController.chatssender);
+module.exports = Router;
