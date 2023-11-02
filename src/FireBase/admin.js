@@ -8,6 +8,7 @@ const adminDoc = Firebase.firestore().collection("admins");
 
 exports.add = async (admin) => {
     try {
+        const {password,...otherAdmin}=admin
         if (admin.email !== undefined && admin.password !== undefined) {
             const adminauth = await Firebase.auth().createUser({
                 phoneNumber: admin?.mobile,
@@ -17,7 +18,7 @@ exports.add = async (admin) => {
                 photoURL: admin?.profile
             });
             const admindata = await adminDoc.doc(adminauth.uid);
-            admindata.set(admin);
+            admindata.set(otherAdmin);
             const verifylink = await Firebase.auth().generateEmailVerificationLink(admin?.email);
             return {
                 aid: admindata.id,
