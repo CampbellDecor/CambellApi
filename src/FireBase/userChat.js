@@ -49,15 +49,17 @@ exports.listofChat = async () => {
         const Chattings = []
         for (const iterator of chats) {
             const user = await userCol.doc(iterator).get();
-            const {
-                name,
-                imgURL,
-                isBlock
-            } = user.data();
+            if (user.data()){
+                const {
+                    name,
+                    imgURL,
+                    isBlock
+                } = user?.data() ?? {};
             const userchat = {
                 username: name,
                 profile: imgURL,
                 isBlock,
+                id:user.id,
                 last: {},
                 unread: 0
             };
@@ -84,6 +86,7 @@ exports.listofChat = async () => {
             });
             Chattings.push(userchat)
         }
+        }
 
         return Chattings;
 
@@ -99,15 +102,25 @@ exports.oneUSerChat = async (user) => {
             imgURL,
             name,
             isBlock
-    }=usersnap.data();
+        } = usersnap.data();
         const userchat = await userchatCol.doc(user).collection('message').orderBy('timestamp', 'desc').get();
         const USerChats = [];
-        userchat.forEach(ele =>
-        {
-            const {text,timestamp,receiverId} = ele.data();
-            USerChats.push({ profile:imgURL,username:name,isBlock, chatid: ele.id, dateTime: timestamp.toDate(), status: receiverId === 0,message:text });
-            }
-        )
+        userchat.forEach(ele => {
+            const {
+                text,
+                timestamp,
+                receiverId
+            } = ele.data();
+            USerChats.push({
+                profile: imgURL,
+                username: name,
+                isBlock,
+                chatid: ele.id,
+                dateTime: timestamp.toDate(),
+                status: receiverId === 0,
+                message: text
+            });
+        })
         return USerChats;
     } catch (error) {
         throw error

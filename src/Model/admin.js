@@ -1,9 +1,11 @@
 const adminDao = require("../FireBase/admin.js");
 const randompwd = require("generate-password");
+const Fire = require('../FireBase/Fire.js');
 const Mail = require("./Mail.js");
 exports.add = async (request) =>
 
     {
+
         const {
             username,
             profile,
@@ -22,6 +24,8 @@ exports.add = async (request) =>
             numbers: true,
             symbols: true
         })
+        isSuper ??= false;
+        isBlock ??= false;
         try {
             const adminadd = await adminDao.add({
                 username,
@@ -73,47 +77,105 @@ exports.all = async (req) => {
     }
 };
 exports.login = async (request) => {
-    const {
-        email
-    } = request.body;
     try {
-        const result = await adminDao.login(email);
-        if (result.login === "block") {
-            await Mail.sendSingleMail(email, "Blocked Account ", `
-            <h1>Your Account is Blocked</h1>
-            <p>Hi user Your Account is Blocked please Contact with Adminstator</p>
-            `);
-            return {
-                message: result.message,
-                loginStatus: false
-            };
-        }
-        if (result.login === "not-verify") {
-            const loginAdmin = `
-            <html>
-            <head>
-            </head>
-            <body>
-            <h6>Hi,Admin</h6>
-            <h1 style="text-align:'center'">Admin Verfication</h1>
-            <p>Your Email didn't verfied First Verified it</p>
-            <p><a href="${result.message}">verify Me</a></p>
-            </body>
-            </html>
-            `
-            await Mail.sendSingleMail(email, "Verify Account", loginAdmin);
-            return {
-                message: "User Must be Verified",
-                loginStatus: false
-            };
-        }
-        if (result.login === "ok") {
-            return {
-                message: result.message,
-                loginStatus: true
-            }
-        }
+        const result = await adminDao.login(request);
+        return result;
     } catch (error) {
         throw error;
+    }
+};
+
+exports.logout = async (req) => {
+    try {
+        const result = await adminDao.logout(req);
+        return result;
+    } catch (error) {
+        throw error;
+    }
+}
+exports.findByID = async (req) => {
+    try {
+        const id = req.params?.aid;
+        let aid;
+        if (id === 'self') {
+            const {
+                uid
+            } = await Fire.auth().verifyIdToken(req.cookies.access_token);
+            aid = uid;
+        } else {
+            aid = id;
+        }
+        const result = await adminDao.findById(aid);
+        return result;
+    } catch (error) {
+        throw error;
+    }
+}
+
+exports.editAdmin = async (req) => {
+    try {
+        const {
+            params,
+            body
+        } = req;
+        const {
+            aid
+        } = params;
+        const admindoc = await adminDao.editAdmin(aid, body);
+    } catch (error) {
+        throw error;
+    }
+}
+exports.blockAdmin = async (req) => {
+    try {
+        const {
+            aid
+        } = req.params;
+        const reason = req.body.reason;
+        const admin = await adminDao.findById(aid);
+        const blockadmin = await adminDao.block(aid, reason);
+        const addAdmin = `
+        <html>
+        <head>
+        </head>
+        <body>
+        <h6>Hi,${admin.username}</h6>
+        <h1>Account Blocked</h1>
+    <p>Mr.${admin.firstname} ${admin.lastname} We have been Blocked Your account from ${new Date().toDateString()} for ${reason}, you can't access our system . if you want to continue Your Work please contact with CambellDecor High Authorized</p>
+
+        </body>
+        </html>
+        `
+        Mail.sendSingleMail(admin.email, "Cambell Decor Block Admin", addAdmin);
+        return blockadmin;
+    } catch (error) {
+        throw error;
+    }
+
+}
+exports.unblockAdmin = async (req) => {
+    try {
+        const {
+            aid
+        } = req.params;
+        const reason = req.body.note;
+        const admin = await adminDao.findById(aid);
+        const blockadmin = await adminDao.unblock(aid, reason);
+        const addAdmin = `
+        <html>
+        <head>
+        </head>
+        <body>
+        <h6>Hi,${admin.username}</h6>
+        <h1>Account Unblocked</h1>
+    <p>Mr.${admin.firstname} ${admin.lastname} We have been unBlocked Your account from you  can continue your work</p>
+
+        </body>
+        </html>
+        `
+        Mail.sendSingleMail(admin.email, "Cambell Decor Block Admin", addAdmin);
+        return blockadmin;
+    } catch (error) {
+
     }
 };

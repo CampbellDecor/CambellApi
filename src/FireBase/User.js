@@ -2,7 +2,8 @@
 const Firebase = require( "./Fire.js" );
 const { FieldValue } = require( "firebase-admin/firestore" );
 const FireStorage = require( "./Storage.js" );
-const userCol = Firebase.firestore().collection( "users" );
+const userCol = Firebase.firestore().collection("users");
+const { addActivity} = require('./admin.js');
 exports.add = async ( user ) =>
 {
     try
@@ -35,6 +36,7 @@ exports.add = async ( user ) =>
         throw error;
     }
 };
+
 exports.all = async () =>
 {
     try {
@@ -50,33 +52,39 @@ exports.all = async () =>
         throw error;
     }
 };
-exports.block = async (uid,token,reason='Anwanted Activity') =>
+exports.block = async (userid,req,reason='Anwanted Activity') =>
 {
     try
     {
-       const user= await Firebase.auth().updateUser( uid, {
+        const {uid } =Firebase.auth().verifyIdToken(req.cookies.access_token);
+       const user= await Firebase.auth().updateUser( userid, {
            disabled: true
         })
-            await userCol.doc(uid).update({
+            await userCol.doc(userid).update({
                 isBlock: true,
-                activity: FieldValue.arrayUnion(`**${uid}** Blocked By **${aid}** for ${reason}`)
+                activity: FieldValue.arrayUnion(`Blocked By **${uid}** for ${reason}`)
             });
+        await addActivity(req, `**${userid}** Blocked for ${reason}`);
            return  { block:true,email:user.email}
     } catch (error) {
         throw error;
     }
 }
-exports.unblock = async (uid,token,note='conatact with email') =>
+exports.unblock = async (userid,req,note='conatact with email') =>
 {
     try
     {
-       const user= await Firebase.auth().updateUser( uid, {
+          const {
+              uid
+          } = Firebase.auth().verifyIdToken(req.cookies.access_token);
+       const user= await Firebase.auth().updateUser( userid, {
             disabled: false,
         })
-        await userCol.doc(uid).update({
+        await userCol.doc(userid).update({
             isBlock: false,
-            activity: FieldValue.arrayUnion(`**${uid}** unBlocked By **${aid}** for ${note}`)
+            activity: FieldValue.arrayUnion(` unBlocked By **${uid}** for ${note}`)
         });
+             await addActivity(req, `**${userid}** Blocked for ${note}`);
         return { unblock:true,email:user.email};
     } catch (error) {
         throw error;
@@ -123,7 +131,7 @@ exports.usercount =async () =>
         const adminsnap = await userCol.get();
         return adminsnap.size;
     } catch (error) {
-
+        throw error;
     }
 }
 exports.block_unblock_count = async () =>
@@ -255,3 +263,13 @@ exports.search = async(search) =>
          throw error;
      }
 }
+const isOnline = async (uid) =>
+{
+    try {
+        const users = (await Firebase.auth().listUsers()).users;
+        console.log(users)
+    } catch (error) {
+        throw error;
+    }
+}
+isOnline('3vdUxKLMXzdsK3VsHvJ2ODwS7HK2');

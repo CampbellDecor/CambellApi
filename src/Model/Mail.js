@@ -6,7 +6,7 @@ var transporter = nodemailer.createTransport({
 } );
 
 
-const sendSingleMail = async (reciver,subject,body) =>
+exports.sendSingleMail = async (reciver,subject,body) =>
 {
   var mailOptions = {
   from: MailInfo.auth.user,

@@ -1,14 +1,22 @@
-const userDao = require( "../FireBase/user.js" );
-const randompwd = require( "generate-password" );
-const Mail = require( "./Mail.js" );
+const userDao = require("../FireBase/user.js");
+const randompwd = require("generate-password");
+const Mail = require("./Mail.js");
 
-const userModel = (userDoc) =>
-{
-    const { imgURL, name, phoneNo,...Other } =userDoc;
-    return { profile: imgURL, username: name, mobile: phoneNo, ...Other };
+const userModel = (userDoc) => {
+    const {
+        imgURL,
+        name,
+        phoneNo,
+        ...Other
+    } = userDoc;
+    return {
+        profile: imgURL,
+        username: name,
+        mobile: phoneNo,
+        ...Other
+    };
 }
-exports.add = async ( request ) =>
-{
+exports.add = async (request) => {
     const {
         username,
         profile,
@@ -18,30 +26,29 @@ exports.add = async ( request ) =>
         religion
     } = request.body;
     religion ?? "unknown";
-    const password = randompwd.generate( {
+    const password = randompwd.generate({
         length: 20,
         uppercase: true,
         lowercase: true,
         numbers: true,
-        symbols:true
+        symbols: true
     })
-    try
-    {
-        const useradd=await userDao.add({
+    try {
+        const useradd = await userDao.add({
             username,
             profile,
             email,
             religion,
             mobile,
             address,
-            isBlock:false,
+            isBlock: false,
             password,
-            isOnline:false,
-            activity: [ {
+            isOnline: false,
+            activity: [{
                 action: "created",
                 dateAndTime: new Date()
             }]
-        } )
+        })
         const adduser = `
         <html>
         <head>
@@ -56,32 +63,35 @@ exports.add = async ( request ) =>
         </html>
         `
         try {
-            await Mail.sendSingleMail( email, "Cambell Decor Registration", adduser );
+            await Mail.sendSingleMail(email, "Cambell Decor Registration", adduser);
         } catch (error) {
 
             throw error;
-        } finally
-        {
-            userDao.deleteUser( useradd.uid );
+        } finally {
+            userDao.deleteUser(useradd.uid);
         }
 
-        return { uid:useradd.uid};
+        return {
+            uid: useradd.uid
+        };
     } catch (error) {
         throw error;
     }
 };
 
-exports.block = async ( request ) =>
-{
+exports.block = async (request) => {
     try {
-        const { uid, reason } = request.body;
+        const {
+            uid,
+            reason
+        } = request.body;
         reason ?? "UnNessary Activity";
-        const blocked = await userDao.block( uid );
-        await Mail.sendSingleMail( blocked.email, "Account Freezed", `<html>
+        const blocked = await userDao.block(uid);
+        await Mail.sendSingleMail(blocked.email, "Account Freezed", `<html>
         <h1>Account Blocked</h1>
         Hi, ${blocked.email?.substring( 0, blocked.email.indexOf( "@" ) )}<br/>
         Your Account have freezed for Your ${reason} .if You continue your Work Please Contact with Our team With In <b>30</b> Days
-        </html>` );
+        </html>`);
         return blocked.block;
     } catch (error) {
         throw error;
@@ -89,16 +99,17 @@ exports.block = async ( request ) =>
 
 
 }
-exports.unblock = async ( request ) =>
-{
+exports.unblock = async (request) => {
     try {
-        const { uid } = request.body;
-        const blocked = await userDao.unblock( uid );
-        await Mail.sendSingleMail( blocked.email, "Account unFreezed", `<html>
+        const {
+            uid
+        } = request.body;
+        const blocked = await userDao.unblock(uid);
+        await Mail.sendSingleMail(blocked.email, "Account unFreezed", `<html>
         <h1>Account UnBlock</h1>
         Hi, ${blocked.email?.substring( 0, blocked.email.indexOf( "@" ) )}<br/>
         Your Account have resume for Your request .if You can continue your Work .
-        </html>` );
+        </html>`);
         return blocked.unblock;
     } catch (error) {
         throw error;
@@ -107,61 +118,52 @@ exports.unblock = async ( request ) =>
 
 }
 
-exports.all = async () =>
-{
+exports.all = async () => {
     try {
         const UserDatas = [];
         const userCol = await userDao.all();
-        userCol.forEach( user =>
-        {
-            const userm=userModel(user)
-            UserDatas.push(userm );
-        } )
+        userCol.forEach(user => {
+            const userm = userModel(user)
+            UserDatas.push(userm);
+        })
         return UserDatas;
     } catch (error) {
 
     }
 }
-exports.OneUser = async  (req) =>
-{
+exports.OneUser = async (req) => {
     try {
         const uid = req.params.uid;
-        const user=await userDao.OneUser( uid );
+        const user = await userDao.OneUser(uid);
         return user;
     } catch (error) {
         throw error;
     }
 };
 
-exports.block_unblock_user =async (req) =>
-{
-    try
-    {
+exports.block_unblock_user = async (req) => {
+    try {
         const UserDatas = [];
         const result = req.params.block;
-        const userCol = await userDao.block_unblock_fillter( result === "block" );
-        userCol.forEach( user =>
-            {
+        const userCol = await userDao.block_unblock_fillter(result === "block");
+        userCol.forEach(user => {
 
-            const userm=userModel(user)
-            UserDatas.push(userm );
-            } )
-        return  UserDatas.length <= 0 ?[] :  UserDatas;
+            const userm = userModel(user)
+            UserDatas.push(userm);
+        })
+        return UserDatas.length <= 0 ? [] : UserDatas;
     } catch (error) {
         throw error;
     }
 };
 
-exports.religions_filter = async (filter) =>
-{
-    try
-    {
+exports.religions_filter = async (filter) => {
+    try {
         const filterdata = [];
         const users = await userDao.all();
-        users.filter( user => user.religion === filter ).forEach( user =>
-        {
-            filterdata.push( userModel( user ) );
-       })
+        users.filter(user => user.religion === filter).forEach(user => {
+            filterdata.push(userModel(user));
+        })
         return filterdata;
     } catch (error) {
         throw error;
@@ -169,8 +171,16 @@ exports.religions_filter = async (filter) =>
 
 };
 
-exports.relCount =async () =>
-{
+exports.relCount = async () => {
     const relcount = await userDao.ReligionCounts();
     return relcount;
+}
+
+exports.userCount = async () => {
+    try {
+        const users = await userDao.userCount();
+        return users ?? 0;
+    } catch (error) {
+        throw error;
+    }
 }

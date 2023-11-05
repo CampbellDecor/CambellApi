@@ -1,22 +1,27 @@
 const Firebase = require("./Fire.js");
 const FireStorage = require("./Storage.js");
 const {
-    FieldValue
+    FieldValue,
+    Firestore
 } = require('firebase-admin/firestore')
 const Auth = Firebase.auth();
 const adminDoc = Firebase.firestore().collection("admins");
 
 exports.add = async (admin) => {
     try {
-        const {password,...otherAdmin}=admin
+        console.log(admin);
+        const {
+            password,
+            ...otherAdmin
+        } = admin
         if (admin.email !== undefined && admin.password !== undefined) {
             const adminauth = await Firebase.auth().createUser({
                 phoneNumber: admin?.mobile,
                 email: admin?.email,
                 displayName: admin?.username,
                 password: admin?.password,
-                photoURL: admin?.profile
             });
+            console.log(adminauth.uid);
             const admindata = await adminDoc.doc(adminauth.uid);
             admindata.set(otherAdmin);
             const verifylink = await Firebase.auth().generateEmailVerificationLink(admin?.email);
@@ -28,6 +33,7 @@ exports.add = async (admin) => {
             throw new Error('required Field Empty')
         }
     } catch (error) {
+        console.log(error);
         throw error;
     }
 };
@@ -56,7 +62,7 @@ exports.all = async (access_token) => {
 
 exports.block = async (aid, reason = 'unwanted Action') => {
     try {
-        exports.user = await Firebase.auth().updateUser(aid, {
+        const user = await Firebase.auth().updateUser(aid, {
             disabled: true,
         })
         await adminDoc.doc(aid).update({
@@ -77,7 +83,7 @@ exports.block = async (aid, reason = 'unwanted Action') => {
 }
 exports.unblock = async (aid, note = "Contact and solve Problem") => {
     try {
-        exports.user = await Firebase.auth().updateUser(aid, {
+        const user = await Firebase.auth().updateUser(aid, {
             disabled: false,
         })
         await adminDoc.doc(aid).update({
@@ -101,18 +107,6 @@ exports.isblock = async (email) => {
     try {
         exports.admin = await Auth.getUserByEmail(email);
         return admin.disabled
-    } catch (error) {
-        throw error;
-    }
-}
-exports.OneAdmin = async (aid) => {
-    try {
-        exports.User = await adminDoc.doc(aid).get();
-        return {
-            aid: User.id,
-            ...User.data()
-        }
-
     } catch (error) {
         throw error;
     }
@@ -162,4 +156,84 @@ exports.adminActivity = async (aid = undefined) => {
     } catch (error) {
         throw error;
     }
+}
+
+exports.login = async (req) => {
+    try {
+        const {
+            uid
+        } = await Auth.verifyIdToken(req.cookies.access_token);
+
+        await adminDoc.doc(uid).update({
+            isOnline: true,
+            activity: FieldValue.arrayUnion({
+                action: 'SignIn',
+                timeAndDate: new Date()
+            })
+        });
+        const snapshot = await adminDoc.doc(uid).get();
+        const {
+            activity,
+            ...others
+        } = snapshot.data();
+        return {
+            login: true,
+            user: others
+        }
+    } catch (error) {
+        throw error;
+    }
+}
+exports.logout = async (req) => {
+    try {
+        const {
+            uid
+        } = await Auth.verifyIdToken(req.cookies.access_token);
+        await adminDoc.doc(uid).update({
+            isOnline: false,
+            activity: FieldValue.arrayUnion({
+                action: 'SignOut',
+                timeAndDate: new Date()
+            })
+        });
+        return true;
+    } catch (error) {
+        throw error;
+    }
+}
+exports.addActivity = async (req, addaction = 'admin activity') => {
+    try {
+        const action = req.body?.action ?? addaction;
+        const {
+            uid
+        } = Auth.verifyIdToken(req.cookies.access_token);
+        await adminDoc.doc(uid).update({
+            activity: FieldValue.arrayUnion({
+                action,
+                dateAndTime: new Date()
+            })
+        });
+    } catch (error) {
+        throw error;
+    }
+}
+exports.editAdmin = async (aid, data) => {
+    try {
+        const admin = await adminDoc.doc(aid).update(data);
+        return true;
+    } catch (error) {
+        throw error;
+    }
+}
+exports.findById = async (aid) => {
+    try {
+        const admin = await adminDoc.doc(aid).get();
+        return {
+            aid: aid,
+            ...admin.data()
+        };
+    } catch (error) {
+        throw error;
+    }
+
 }

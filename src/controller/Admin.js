@@ -10,7 +10,13 @@ exports.addAdmin = (req, res) => {
 
 };
 exports.getAdmin = (req, res) => {
-
+    adminmodel.findByID(req).
+    then(result => {
+            res.status(200).json(result);
+        })
+        .catch(error => {
+            res.status(404).json(error);
+        })
 }
 
 exports.getAdmins = (req, res) => {
@@ -35,18 +41,22 @@ exports.editAdmin = (req, res) => {
 
 };
 exports.AuthAdmin = (req, res) => {
-    // adminmodel.login( req )
-    //     .then( output =>
-    //     {
-    //         if ( output?.loginStatus )
-    //         {
-    //             res.status( 200 ).json( "sucess" );
-    //             console.log(output.message);
-
-    //         } else
-    //         {
-    //             res.status( 404 ).json( "fail" );
-    //             console.log(output?.message);
-    //        }
-    // })
+    adminmodel.login(req)
+        .then(result => {
+            res.status(200).json(result);
+        })
+        .catch(error => {
+            res.status(404).json(error);
+        })
 };
+
+exports.LogoutAdmin = (req, res) => {
+    console.log('controller' + req.cookies);
+    adminmodel.logout(req)
+        .then(result => {
+            res.status(200).json(result);
+        })
+        .catch(err => {
+            res.status(404).json(err);
+        })
+}

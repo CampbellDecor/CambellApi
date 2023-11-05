@@ -1,9 +1,11 @@
-const express  =require( 'express');
-const adminContoller =require( '../controller/Admin.js');
+const express = require('express');
+const adminContoller = require('../controller/Admin.js');
 
-const Router=express.Router();
+const Router = express.Router();
 
-Router.post("/login", adminContoller.AuthAdmin);
-Router.post( "/add", adminContoller.addAdmin );
-Router.get( "/", adminContoller.getAdmins);
-module.exports=Router;
+Router.get("/login", adminContoller.AuthAdmin);
+Router.get("/logout", adminContoller.LogoutAdmin);
+Router.post("/add", adminContoller.addAdmin);
+Router.get("/:aid", adminContoller.getAdmin);
+Router.get("/", adminContoller.getAdmins);
+module.exports = Router;
