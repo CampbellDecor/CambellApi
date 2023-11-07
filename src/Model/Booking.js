@@ -1,4 +1,5 @@
 const BookingDoa = require('../FireBase/Booking.js');
+const TodoDoa = require('../FireBase/Todo.js');
 const userModel = require('./user.js');
 exports.DayBookCount = async () => {
     try {
@@ -41,6 +42,21 @@ exports.recentBookings = async () => {
             })
         }
         return RecentBooked;
+    } catch (error) {
+        throw error;
+    }
+}
+exports.addTask = async (req) => {
+    try {
+        const {
+            bookid,
+            ...task
+        } = req.body;
+        const TodoAdd = await TodoDoa.addTask(bookid, {
+            ...task,
+            createDate: new Date()
+        });
+        return TodoAdd !== undefined;
     } catch (error) {
         throw error;
     }

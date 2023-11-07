@@ -22,8 +22,15 @@ exports.recentBooking = (req, res) => {
     res.json(7766)
 
 };
-exports.unblockBooking = (req, res) => {
-
+exports.addTask = (req, res) => {
+    BookingModel.addTask(req)
+        .then(result => {
+            res.status(200).json(result);
+        })
+        .catch(error => {
+            console.error(error)
+            res.status(404).json(error);
+        })
 }
 exports.editBooking = (req, res) => {
 
