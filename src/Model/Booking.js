@@ -16,4 +16,3 @@ exports.DayBookCount = async () =>
         throw error;
     }
 }
-

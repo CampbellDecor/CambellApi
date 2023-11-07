@@ -9,3 +9,14 @@ exports.allchat = (req, res) => {
             res.status(404).json(err);
         })
 }
+
+exports.userchat = (req, res) =>
+{
+    UserModel.oneUSerChat(req)
+     .then(chat => {
+             res.status(200).json(chat);
+         })
+         .catch(err => {
+             res.status(404).json(err);
+         })
+}

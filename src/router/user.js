@@ -1,14 +1,17 @@
-const express  =require( 'express');
-const UserContoller =require( '../controller/user.js');
+const express = require('express');
+const UserContoller = require('../controller/user.js');
 
-const Router=express.Router();
+const Router = express.Router();
 
 
-Router.post( "/add", UserContoller.adduser);
-Router.post( "/block", UserContoller.blockUser );
-Router.get( "/block/:block", UserContoller.filter_block_unblock);
-Router.post( "/unblock", UserContoller.unblockUser );
-Router.get( "/", UserContoller.getUsers );
-Router.post("/:uid", UserContoller.getUser);
-Router.get( "/religion", UserContoller.religionCount );
-module.exports=Router;
+Router.post("/add", UserContoller.adduser);
+Router.post("/block", UserContoller.blockUser);
+Router.get("/block/:block", UserContoller.filter_block_unblock);
+Router.post("/unblock", UserContoller.unblockUser);
+Router.get("/", UserContoller.getUsers);
+Router.get("/:uid", UserContoller.getUser);
+Router.get("/religion/:relg", UserContoller.religion_filter)
+Router.put('/edit', UserContoller.editUser);
+Router.get('/hints/list', UserContoller.seachHint);
+Router.get('/search/:search', UserContoller.search);
+module.exports = Router;

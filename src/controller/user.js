@@ -5,6 +5,7 @@ exports.adduser = (req, res) => {
             res.status(200).json(result);
         }
     ).catch((error) => {
+        console.error(error);
         res.status(404).json(error);
     });
 
@@ -27,9 +28,6 @@ exports.getUsers = (req, res) => {
         })
 }
 
-exports.deleteUser = (req, res) => {
-
-};
 exports.blockUser = (req, res) => {
     usermodel.block(req).then(result => {
         res.status(200).json(result)
@@ -42,6 +40,7 @@ exports.unblockUser = (req, res) => {
         .then(result => {
             res.status(200).json(result);
         }).catch(err => {
+            console.error(err);
             res.status(404).json(err);
         })
 }
@@ -67,27 +66,33 @@ exports.religion_filter = (req, res) => {
         })
 }
 exports.editUser = (req, res) => {
-
+    usermodel.editUser(req)
+        .then(resu => res.status(200).json(resu))
+        .catch(err => res.status(404).json(err));
 }
 exports.UserCount = (req, res) => {
     usermodel.userCount().then(result => {
         res.status(200).json(result);
-    }).catch(error =>
-    {
- res.status(404).json(error);
-    }
+    }).catch(error => {
+            res.status(404).json(error);
+        }
 
     )
 }
-exports.religionCount = (req, res) => {
-    usermodel.relCount().then(
-            count => {
-                res.status(200).json(count);
-            }
-        )
-        .catch(
-            err => {
-                res.status(404).json(err);
-            }
-        )
+exports.seachHint = (req, res) => {
+    usermodel.userHints()
+        .then(result => res.status(200).json(result))
+        .catch(error => res.status(404).json(error));
+}
+
+exports.search = (req, res) => {
+    console.log(req.params.search)
+    usermodel.userSearch(req)
+        .then(result => res.status(200).json(result))
+        .catch(error =>
+        {
+            res.status(404).json(error);
+            console.log(error);
+        });
+
 }

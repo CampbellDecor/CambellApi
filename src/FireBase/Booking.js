@@ -34,7 +34,7 @@ exports.rejectedBooking = async (bookcode) => {
         throw error;
     }
 }
-exports.allBookings = async () => {
+const allBookings = async () => {
     try {
         const bookingsnap = await BookingCol.get();
         const status = ['pending', 'rejected', 'cancelled', 'active'];
@@ -95,7 +95,8 @@ exports.DayBookHistory = async () => {
         const listdate = []
         DaYHistory.forEach(ele => {
             const {
-                eventdate,...otherdetails
+                eventdate,
+                ...otherdetails
             } = ele.data();
             bookHis.push({
                 hisid: ele.id,
@@ -108,7 +109,7 @@ exports.DayBookHistory = async () => {
         for (const iterator of uniqdate) {
             BookingAssemple.push({
                 date: iterator,
-                events:bookHis.filter(ele => ele.eventdate === iterator)
+                events: bookHis.filter(ele => ele.eventdate === iterator)
             });
 
         }
@@ -117,3 +118,37 @@ exports.DayBookHistory = async () => {
         throw error;
     }
 }
+exports.userBookingCount = async (uid) => {
+    try {
+        const booking = [];
+        const Book = await BookingCol.where('userID', '==', uid).get();
+        Book.forEach(ele => {
+            const {
+                userID,
+                status,
+                ...other
+            } = ele.data();
+            if (status !== 'cart') {
+                booking.push(other);
+            }
+
+        });
+        return booking.length;
+    } catch (error) {
+        throw error;
+    }
+}
+
+const recentBookings = async () => {
+    try {
+        const bookings = await BookingCol.get();
+        bookings.forEach(ele =>
+        {
+            console.log(ele.data());
+        })
+        return  bookings.size;
+    } catch (error) {
+        throw error;
+    }
+}
+

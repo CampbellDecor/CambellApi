@@ -206,13 +206,15 @@ exports.addActivity = async (req, addaction = 'admin activity') => {
         const action = req.body?.action ?? addaction;
         const {
             uid
-        } = Auth.verifyIdToken(req.cookies.access_token);
-        await adminDoc.doc(uid).update({
+        } =await Auth.verifyIdToken(req.cookies.access_token);
+
+         await adminDoc.doc(uid).update({
             activity: FieldValue.arrayUnion({
                 action,
                 dateAndTime: new Date()
             })
         });
+       
     } catch (error) {
         throw error;
     }

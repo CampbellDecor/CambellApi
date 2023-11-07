@@ -44,7 +44,6 @@ exports.Chats = async (req) => {
     try {
         const chats = chatDao.chats(senderid, token);
         return chats;
-
     } catch (error) {
         throw error;
     }

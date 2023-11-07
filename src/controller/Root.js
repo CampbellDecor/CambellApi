@@ -1,4 +1,4 @@
-const usermodel = require("../Model/user.js");
+const Rootmodel = require("../Model/Root.js");
 
 exports.countpanel = async () => {
     try {
@@ -12,4 +12,10 @@ exports.countpanel = async () => {
     } catch (error) {
         throw error;
     }
+}
+exports.religionNames = (req,res) =>
+{
+    Rootmodel.ReligionNames()
+        .then(result => res.status(200).json(result))
+    .catch(err => res.status(404).json(err))
 }

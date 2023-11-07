@@ -90,7 +90,7 @@ exports.chats = async (senderid, token = "") => {
         const adminchats = [];
         adminchatsCol.forEach(ele => {
             adminchats.push({
-                achatid: ele.id,
+                chatid: ele.id,
                 ...ele.data()
             });
 

@@ -1,37 +1,29 @@
 const BookingModel = require('../Model/Booking.js');
-exports.getBooking = (req,res) =>
-{
+exports.getRecentBooking = (req, res) => {
 
 }
 
-exports.getBookings = (req,res) =>
-{
+exports.getBookings = (req, res) => {
     BookingModel.DayBookCount()
-        .then(result =>
-        {
+        .then(result => {
             res.status(200).json(result);
         })
         .catch(
-            error =>
-            {
+            error => {
                 res.status(404).json(error);
             }
         )
 }
 
-exports.deleteBooking = (req,res) =>
-{
+exports.deleteBooking = (req, res) => {
 
 };
-exports.blockBooking = (req,res) =>
-{
+exports.blockBooking = (req, res) => {
 
 };
-exports.unblockBooking = (req,res) =>
-{
+exports.unblockBooking = (req, res) => {
 
 }
-exports.editBooking = (req,res) =>
-{
+exports.editBooking = (req, res) => {
 
 }

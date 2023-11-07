@@ -109,7 +109,8 @@ exports.oneUSerChat = async (user) => {
             const {
                 text,
                 timestamp,
-                receiverId
+                receiverId,
+                senderId
             } = ele.data();
             USerChats.push({
                 profile: imgURL,
@@ -117,7 +118,8 @@ exports.oneUSerChat = async (user) => {
                 isBlock,
                 chatid: ele.id,
                 dateTime: timestamp.toDate(),
-                status: receiverId === 0,
+                status: receiverId === 10,
+                senderId,
                 message: text
             });
         })

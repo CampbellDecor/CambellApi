@@ -1,11 +1,14 @@
 const userDao = require("../FireBase/user.js");
+const BookDao = require("../FireBase/Booking.js");
 const randompwd = require("generate-password");
 const Mail = require("./Mail.js");
 
 const userModel = (userDoc) => {
     const {
+        activity,
         imgURL,
         name,
+        isOnline,
         phoneNo,
         ...Other
     } = userDoc;
@@ -15,6 +18,20 @@ const userModel = (userDoc) => {
         mobile: phoneNo,
         ...Other
     };
+}
+const userSetModel = async (user) => {
+    try {
+        const usermodel = userModel(user);
+        const isOnline = await userDao.isOnline(user.uid);
+        const booking = await BookDao.userBookingCount(user.uid);
+        return {
+            ...usermodel,
+            isOnline,
+            booking
+        }
+    } catch (error) {
+        throw error;
+    }
 }
 exports.add = async (request) => {
     const {
@@ -35,11 +52,11 @@ exports.add = async (request) => {
     })
     try {
         const useradd = await userDao.add({
-            username,
-            profile,
+            name: username,
+            imgURL: profile ?? "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp",
             email,
-            religion,
-            mobile,
+            religion: religion ?? 'unknown',
+            phoneNo: mobile,
             address,
             isBlock: false,
             password,
@@ -62,18 +79,8 @@ exports.add = async (request) => {
         </body>
         </html>
         `
-        try {
-            await Mail.sendSingleMail(email, "Cambell Decor Registration", adduser);
-        } catch (error) {
-
-            throw error;
-        } finally {
-            userDao.deleteUser(useradd.uid);
-        }
-
-        return {
-            uid: useradd.uid
-        };
+        await Mail.sendSingleMail(email, "Cambell Decor Registration", adduser);
+        return useradd.uid;
     } catch (error) {
         throw error;
     }
@@ -86,7 +93,7 @@ exports.block = async (request) => {
             reason
         } = request.body;
         reason ?? "UnNessary Activity";
-        const blocked = await userDao.block(uid);
+        const blocked = await userDao.block(uid, request, reason);
         await Mail.sendSingleMail(blocked.email, "Account Freezed", `<html>
         <h1>Account Blocked</h1>
         Hi, ${blocked.email?.substring( 0, blocked.email.indexOf( "@" ) )}<br/>
@@ -102,9 +109,10 @@ exports.block = async (request) => {
 exports.unblock = async (request) => {
     try {
         const {
-            uid
+            uid,
+            note
         } = request.body;
-        const blocked = await userDao.unblock(uid);
+        const blocked = await userDao.unblock(uid, request, note);
         await Mail.sendSingleMail(blocked.email, "Account unFreezed", `<html>
         <h1>Account UnBlock</h1>
         Hi, ${blocked.email?.substring( 0, blocked.email.indexOf( "@" ) )}<br/>
@@ -121,21 +129,25 @@ exports.unblock = async (request) => {
 exports.all = async () => {
     try {
         const UserDatas = [];
+        const userSetData = [];
         const userCol = await userDao.all();
         userCol.forEach(user => {
-            const userm = userModel(user)
-            UserDatas.push(userm);
+            UserDatas.push(user);
         })
-        return UserDatas;
+        for (const iterator of UserDatas) {
+            const u = await userSetModel(iterator);
+            userSetData.push(u);
+        }
+        return userSetData;
     } catch (error) {
-
+        throw error;
     }
 }
 exports.OneUser = async (req) => {
     try {
         const uid = req.params.uid;
         const user = await userDao.OneUser(uid);
-        return user;
+        return userModel(user);
     } catch (error) {
         throw error;
     }
@@ -147,11 +159,14 @@ exports.block_unblock_user = async (req) => {
         const result = req.params.block;
         const userCol = await userDao.block_unblock_fillter(result === "block");
         userCol.forEach(user => {
-
-            const userm = userModel(user)
-            UserDatas.push(userm);
+            UserDatas.push(user);
         })
-        return UserDatas.length <= 0 ? [] : UserDatas;
+        const datas = []
+        for (const iterator of UserDatas) {
+            const u = await userSetModel(iterator);
+            datas.push(u);
+        }
+        return datas.length <= 0 ? [] : datas;
     } catch (error) {
         throw error;
     }
@@ -159,12 +174,13 @@ exports.block_unblock_user = async (req) => {
 
 exports.religions_filter = async (filter) => {
     try {
-        const filterdata = [];
-        const users = await userDao.all();
-        users.filter(user => user.religion === filter).forEach(user => {
-            filterdata.push(userModel(user));
-        })
-        return filterdata;
+        const users = await userDao.religionFilter(filter);
+        console.log(users)
+        const data = users.map(ele => {
+            return userModel(ele)
+        });
+        console.log(data);
+        return data;
     } catch (error) {
         throw error;
     }
@@ -180,6 +196,36 @@ exports.userCount = async () => {
     try {
         const users = await userDao.userCount();
         return users ?? 0;
+    } catch (error) {
+        throw error;
+    }
+}
+exports.editUser = async (req) => {
+    try {
+        const body = req.body;
+        const user = await userDao.edit(body);
+    } catch (error) {
+        throw error;
+    }
+}
+exports.userHints = async () => {
+    try {
+        const userHints = await userDao.searchHint();
+        return userHints.filter(ele => ele !== undefined);
+    } catch (error) {
+        throw error;
+    }
+}
+exports.userSearch = async (req) => {
+    const searchres = req.params.search;
+    try {
+        const searchuser = await userDao.search(searchres);
+        const datas = [];
+        for (const iterator of searchuser) {
+            const u = await userModel(iterator);
+            datas.push(u);
+        }
+        return datas.length > 0 ? datas : [];
     } catch (error) {
         throw error;
     }
