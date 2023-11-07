@@ -15,10 +15,11 @@ exports.getBookings = (req, res) => {
         )
 }
 
-exports.deleteBooking = (req, res) => {
-
+exports.allBooking = (req, res) => {
+    res.json("jkgfccvc");
 };
-exports.blockBooking = (req, res) => {
+exports.recentBooking = (req, res) => {
+    res.json(7766)
 
 };
 exports.unblockBooking = (req, res) => {

@@ -11,8 +11,10 @@ exports.adduser = (req, res) => {
 
 
 };
-exports.getUser = (req, res) => {
-    usermodel.OneUser(req).then(user => {
+exports.getUser = (req, res) =>
+{
+    const uid = req.params.uid;
+    usermodel.OneUser(uid).then(user => {
         res.status(200).json(user);
     }).catch(err => {
         res.status(404).json(err);

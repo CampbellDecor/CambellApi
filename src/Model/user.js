@@ -143,9 +143,8 @@ exports.all = async () => {
         throw error;
     }
 }
-exports.OneUser = async (req) => {
+exports.OneUser = async (uid) => {
     try {
-        const uid = req.params.uid;
         const user = await userDao.OneUser(uid);
         return userModel(user);
     } catch (error) {

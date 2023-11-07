@@ -139,16 +139,14 @@ exports.userBookingCount = async (uid) => {
     }
 }
 
-const recentBookings = async () => {
+exports.recentBookings = async () => {
     try {
-        const bookings = await BookingCol.get();
-        bookings.forEach(ele =>
-        {
-            console.log(ele.data());
-        })
-        return  bookings.size;
+        const bookingsDoc = await BookingCol.orderBy('date','desc').limit(10).get();
+        const RecentSnap = [];
+        bookingsDoc.forEach(ele => RecentSnap.push({ bookcode: ele.id, ...ele.data() }));
+        const Bookings =RecentSnap.filter(ele => ele.status !== 'cart');
+        return Bookings;
     } catch (error) {
         throw error;
     }
 }
-
