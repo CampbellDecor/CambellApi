@@ -61,3 +61,46 @@ exports.addTask = async (req) => {
         throw error;
     }
 }
+exports.deleteTask = async ({
+    bookid,
+    taskid
+}) => {
+    try {
+        const Delcol = await TodoDoa.deleteTask(bookid, taskid);
+        return Delcol;
+    } catch (error) {
+        throw error
+    }
+}
+
+exports.editTask = async (Body) => {
+    const {
+        bookid,
+        taskid,
+        ...other
+    } = Book;
+    try {
+        console.log(Body);
+        const Edit = await TodoDoa.editTask(bookid, taskid,other);
+        return Edit;
+    } catch (error) {
+        console.log(error)
+        throw error;
+    }
+}
+
+exports.all = async () =>
+{
+    try {
+        const Bookings = await BookingDoa.all();
+        const BookMap = [];
+        Bookings.forEach(ele =>
+        {
+            const { eventDate, bookDate,...others } = ele;
+            BookMap.push({...others,eventDate:eventDate.toDate().toLocaleDateString(),bookDate:bookDate.toDate().toDateString()})
+        })
+        return BookMap;
+    } catch (error) {
+        throw error;
+    }
+}

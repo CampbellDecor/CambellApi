@@ -141,12 +141,55 @@ exports.userBookingCount = async (uid) => {
 
 exports.recentBookings = async () => {
     try {
-        const bookingsDoc = await BookingCol.orderBy('date','desc').limit(10).get();
+        const bookingsDoc = await BookingCol.orderBy('date', 'desc').limit(10).get();
         const RecentSnap = [];
-        bookingsDoc.forEach(ele => RecentSnap.push({ bookcode: ele.id, ...ele.data() }));
-        const Bookings =RecentSnap.filter(ele => ele.status !== 'cart');
+        bookingsDoc.forEach(ele => RecentSnap.push({
+            bookcode: ele.id,
+            ...ele.data()
+        }));
+        const Bookings = RecentSnap.filter(ele => ele.status !== 'cart');
         return Bookings;
     } catch (error) {
         throw error;
     }
 }
+
+exports.deleteTask = async (bookid, taskid) => {
+    try {
+        const BookDoc = await BookingCol.doc(bookid).collection('todo').doc(taskid).delete();
+        return BookDoc.writeTime;
+    } catch (error) {
+        throw error;
+    }
+}
+
+exports.all = async () => {
+    try {
+        const allBooking = [];
+        const bookings = await BookingCol.get()
+        bookings.forEach(ele => {
+            const {
+                eventDate,
+                status,
+                date,
+                name,
+                PaymentAmount
+            } = ele.data();
+            if (status !== 'cart' && eventDate) {
+                allBooking.push({
+                    bookid: ele.id,
+                    eventname: name??"unknown",
+                    eventDate,
+                    bookDate: date,
+                    status,
+                    paid: PaymentAmount !== undefined
+
+                });
+            }
+        })
+        return allBooking;
+    } catch (error) {
+        throw error
+    }
+}
+

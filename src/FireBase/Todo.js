@@ -1,10 +1,11 @@
-const Firebase = require( "./Fire.js" );
-const { FieldValue } = require("firebase-admin/firestore");
+const Firebase = require("./Fire.js");
+const {
+    FieldValue
+} = require("firebase-admin/firestore");
 const FireStore = Firebase.firestore();
 const BookingCol = FireStore.collection('bookings');
 
-exports.addTask = async (bookid, task = {}) =>
-{
+exports.addTask = async (bookid, task = {}) => {
     try {
         const todoDoc = await BookingCol.doc(bookid).collection('todo').add(task);
         return todoDoc.id;
@@ -13,18 +14,16 @@ exports.addTask = async (bookid, task = {}) =>
     }
 };
 
-exports.deleteTask =async (bookid,taskid) =>
-{
-    try
-    {
+exports.deleteTask = async (bookid, taskid) => {
+    try {
         const todoDoc = await BookingCol.doc(bookid).collection('todo').doc(taskid).delete();
 
-        return true;
+        return todoDoc.writeTime !== undefined;
     } catch (error) {
         throw error;
     }
 };
-exports.editTask = async (bookid,taskid,data) => {
+exports.editTask = async (bookid, taskid, data) => {
     try {
         const todoDoc = await BookingCol.doc(bookid).collection('todo').doc(taskid);
         await todoDoc.update(data);
@@ -33,15 +32,16 @@ exports.editTask = async (bookid,taskid,data) => {
         throw error;
     }
 };
-exports.ShowTodo =async (bookid) =>
-{
+exports.ShowTodo = async (bookid) => {
     try {
         const todoDoc = await BookingCol.doc(bookid).collection('todo').get();
         const todos = [];
-        todoDoc.forEach(ele => todos.push({ taskid: ele.id, ...ele.data() }));
+        todoDoc.forEach(ele => todos.push({
+            taskid: ele.id,
+            ...ele.data()
+        }));
         return todos;
     } catch (error) {
         throw error;
     }
 }
-

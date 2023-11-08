@@ -3,6 +3,8 @@ const express = require('express');
 
 const Router = express.Router();
 Router.get('/', BookController.getBookings);
-Router.get('/recent', BookController.getRecentBooking);
 Router.post('/todoTask', BookController.addTask);
+Router.delete('/todoTask', BookController.deleteTask);
+Router.put("/todoTask", BookController.editTask)
+Router.get('/all', BookController.allBooking);
 module.exports = Router;
