@@ -5,7 +5,7 @@ const SCat = require( "./ServiceCategory.js" );
 const add = async (category,service) =>
 {
     try {
-        const serviceadd = await ServiceCol.doc(category.catid).collection(category.name).add(service);
+        const serviceadd = await ServiceCol.doc(category.catid).collection(category.catname).add(service);
         return serviceadd.id;
     } catch (error) {
         throw error;
@@ -15,8 +15,24 @@ const add = async (category,service) =>
 const oneService = async serviceCode =>
 {
     try {
-        const service = await ServiceCol.doc( serviceCode ).get();
-        return {sid:service.id,...service.data()};
+        const service = await findbyid(serviceCode);
+           const {
+               name,
+               imgURL,
+               culture,
+               desc,
+               Events,
+               ...otherdata
+
+           } = service;
+           return {
+               servicename: name,
+               url: imgURL ?? otherdata.category.catURL,
+               Culture: culture ?? ['common', "Hindu"],
+               description: desc ?? "good Service",
+               relatedEvents: Events?.length ?? 0,
+               ...otherdata
+           }
     } catch (error) {
         throw error;
     }
@@ -60,4 +76,9 @@ exports.deleteSer = async (servicecode) => {
         throw error;
     }
 };
-module.exports={all,findbyid}
+module.exports = {
+    all,
+    findbyid,
+    oneService,
+    add
+}

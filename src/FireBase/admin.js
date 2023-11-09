@@ -1,15 +1,14 @@
 const Firebase = require("./Fire.js");
 const FireStorage = require("./Storage.js");
 const {
-    FieldValue,
-    Firestore
+    FieldValue
 } = require('firebase-admin/firestore')
 const Auth = Firebase.auth();
 const adminDoc = Firebase.firestore().collection("admins");
 
 exports.add = async (admin) => {
     try {
-        console.log(admin);
+
         const {
             password,
             ...otherAdmin
@@ -21,7 +20,6 @@ exports.add = async (admin) => {
                 displayName: admin?.username,
                 password: admin?.password,
             });
-            console.log(adminauth.uid);
             const admindata = await adminDoc.doc(adminauth.uid);
             admindata.set(otherAdmin);
             const verifylink = await Firebase.auth().generateEmailVerificationLink(admin?.email);
@@ -40,10 +38,12 @@ exports.add = async (admin) => {
 
 exports.all = async (access_token) => {
     try {
+
         const admins = [];
         const snapshot = await adminDoc.get();
         const {
-            uid
+            uid,
+            ...other
         } = await Auth.verifyIdToken(access_token);
         snapshot.forEach(admin => {
             if (admin.id !== uid) {
@@ -113,7 +113,7 @@ exports.isblock = async (email) => {
 }
 exports.deleteAdmin = async (aid) => {
     try {
-        exports.admin = await adminDoc.doc(aid);
+        const admin = await adminDoc.doc(aid);
         admin.delete();
         await Auth.deleteUser(aid);
         return true;
@@ -168,7 +168,7 @@ exports.login = async (req) => {
             isOnline: true,
             activity: FieldValue.arrayUnion({
                 action: 'SignIn',
-                timeAndDate: new Date()
+                timeAndDate: new Date().toLocaleDateString()
             })
         });
         const snapshot = await adminDoc.doc(uid).get();
@@ -193,7 +193,7 @@ exports.logout = async (req) => {
             isOnline: false,
             activity: FieldValue.arrayUnion({
                 action: 'SignOut',
-                timeAndDate: new Date()
+                timeAndDate: new Date().toLocaleDateString()
             })
         });
         return true;
@@ -206,15 +206,15 @@ exports.addActivity = async (req, addaction = 'admin activity') => {
         const action = req.body?.action ?? addaction;
         const {
             uid
-        } =await Auth.verifyIdToken(req.cookies.access_token);
+        } = await Auth.verifyIdToken(req.cookies.access_token);
 
-         await adminDoc.doc(uid).update({
+        await adminDoc.doc(uid).update({
             activity: FieldValue.arrayUnion({
                 action,
-                dateAndTime: new Date()
+                dateAndTime: new Date().toLocaleDateString()
             })
         });
-       
+
     } catch (error) {
         throw error;
     }
@@ -222,7 +222,7 @@ exports.addActivity = async (req, addaction = 'admin activity') => {
 exports.editAdmin = async (aid, data) => {
     try {
         const admin = await adminDoc.doc(aid).update(data);
-        return true;
+        return aid;
     } catch (error) {
         throw error;
     }
@@ -238,4 +238,24 @@ exports.findById = async (aid) => {
         throw error;
     }
 
+}
+
+exports.showAdminActivity = async (aid) => {
+    try {
+        exports.activities = await adminDoc.doc(aid).get();
+        const {
+            activity
+        } = activities.data();
+        const act = [];
+        activity?.forEach(ele => {
+            act.push({
+                activity: ele.action,
+                dateTime: ele.datetime,
+                other: ele?.reason ?? ele?.note ?? ele?.other ?? ""
+            })
+        })
+        return act ?? [];
+    } catch (error) {
+        throw error;
+    }
 }

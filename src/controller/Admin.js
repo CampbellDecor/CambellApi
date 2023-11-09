@@ -5,6 +5,7 @@ exports.addAdmin = (req, res) => {
             res.status(200).json(result);
         }
     ).catch(error => {
+        console.error(error)
         res.status(404).json(error);
     })
 
@@ -29,16 +30,36 @@ exports.getAdmins = (req, res) => {
 }
 
 exports.deleteAdmin = (req, res) => {
-
+    adminmodel.deleteAdmin(req)
+     .then(result => res.status(200).json(result))
+         .catch(error => {
+             console.error(error);
+             res.status(404).json(error);
+         })
 };
 exports.blockAdmin = (req, res) => {
-
+    adminmodel.blockAdmin(req)
+        .then(result => res.status(200).json(result))
+        .catch(error => {
+            console.error(error);
+            res.status(404).json(error);
+        })
 };
 exports.unblockAdmin = (req, res) => {
-
+    adminmodel.unblockAdmin(req)
+        .then(result => res.status(200).json(result))
+        .catch(error => {
+            console.error(error);
+            res.status(404).json(error);
+        })
 }
 exports.editAdmin = (req, res) => {
-
+ adminmodel.editAdmin(req)
+     .then(result => res.status(200).json(result))
+     .catch(error => {
+         console.error(error);
+         res.status(404).json(error);
+     })
 };
 exports.AuthAdmin = (req, res) => {
     adminmodel.login(req)

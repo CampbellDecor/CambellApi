@@ -14,3 +14,12 @@ exports.all = async () => {
         throw error;
     }
 }
+
+exports.names=async()=>{
+    try{
+        const Catnames = await Categorydao.categoryName();
+        return Catnames;
+    }catch(error){
+        throw error;
+    }
+}

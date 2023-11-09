@@ -2,7 +2,7 @@ const userDao = require("../FireBase/user.js");
 const BookDao = require("../FireBase/Booking.js");
 const randompwd = require("generate-password");
 const Mail = require("./Mail.js");
-
+const BookingDao = require('../FireBase/Booking.js')
 const userModel = (userDoc) => {
     const {
         activity,
@@ -22,11 +22,14 @@ const userModel = (userDoc) => {
 const userSetModel = async (user) => {
     try {
         const usermodel = userModel(user);
-        const isOnline = await userDao.isOnline(user.uid);
+
+        const Online = await userDao.isOnline(user.uid);
         const booking = await BookDao.userBookingCount(user.uid);
         return {
             ...usermodel,
-            isOnline,
+            isOnline: Online.isOnline,
+            lastSignin: Online.lastOnline,
+            isVerfied: Online.isemailVerfied,
             booking
         }
     } catch (error) {
@@ -146,7 +149,8 @@ exports.all = async () => {
 exports.OneUser = async (uid) => {
     try {
         const user = await userDao.OneUser(uid);
-        return userModel(user);
+        return await userSetModel(user);
+
     } catch (error) {
         throw error;
     }
@@ -225,6 +229,15 @@ exports.userSearch = async (req) => {
             datas.push(u);
         }
         return datas.length > 0 ? datas : [];
+    } catch (error) {
+        throw error;
+    }
+}
+
+exports.OneUserBookingHistroy = async (uid) => {
+    try {
+        const Book = await BookDao.UserBookDetails(uid);
+        return Book;
     } catch (error) {
         throw error;
     }

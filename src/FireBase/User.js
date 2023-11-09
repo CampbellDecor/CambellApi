@@ -300,15 +300,17 @@ exports.edit = async (data) => {
         throw error;
     }
 }
-exports.searchHint = async () =>
-{
-    try
-    {
+exports.searchHint = async () => {
+    try {
         const Hints = [];
         const users = await userCol.get();
-        users.forEach(element =>
-        {
-            const { name, email, phoneNo, address } = element.data();
+        users.forEach(element => {
+            const {
+                name,
+                email,
+                phoneNo,
+                address
+            } = element.data();
             Hints.push(name, email, phoneNo, address);
 
         })
@@ -317,16 +319,18 @@ exports.searchHint = async () =>
         throw error;
     }
 }
-exports.isOnline = async (uid) =>
-{
+exports.isOnline = async (uid) => {
     try {
         const users = await Firebase.auth().getUser(uid);
         const date = new Date();
-        return users.metadata.lastSignInTime >= date;
+        return {
+            isOnline: users.metadata.lastSignInTime >= date,
+            lastOnline: users.metadata.lastSignInTime,
+            isemailVerfied: users.emailVerified
+        };
 
 
-    } catch (error)
-    {
+    } catch (error) {
         return false;
     }
 }

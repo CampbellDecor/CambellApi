@@ -7,4 +7,5 @@ Router.post('/todoTask', BookController.addTask);
 Router.delete('/todoTask', BookController.deleteTask);
 Router.put("/todoTask", BookController.editTask)
 Router.get('/all', BookController.allBooking);
+Router.get('/one/:bookid',BookController.getBooking)
 module.exports = Router;

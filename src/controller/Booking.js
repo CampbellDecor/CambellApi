@@ -55,3 +55,9 @@ exports.deleteTask = (req, res) => {
             res.status(404).json(error)
         })
 }
+
+exports.getBooking = (req, res) =>
+{
+    const bookid = req.params.bookid;
+    
+}

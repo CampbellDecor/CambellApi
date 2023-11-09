@@ -3,6 +3,7 @@ const FireStore = Firebase.firestore();
 const BookingCol = FireStore.collection('bookings');
 const BookingHisCol = FireStore.collection('BookingHistory');
 const USerCol = FireStore.collection('users');
+const Service = require('./Service.js')
 
 exports.approveBooking = async (bookcode) => {
     try {
@@ -178,7 +179,7 @@ exports.all = async () => {
             if (status !== 'cart' && eventDate) {
                 allBooking.push({
                     bookid: ele.id,
-                    eventname: name??"unknown",
+                    eventname: name ?? "unknown",
                     eventDate,
                     bookDate: date,
                     status,
@@ -190,6 +191,50 @@ exports.all = async () => {
         return allBooking;
     } catch (error) {
         throw error
+    }
+}
+
+const oneBooking = async (bookid) => {
+    try {
+        const book = await BookingCol.doc(bookid);
+        const bookDetails = await book.get();
+
+    } catch (error) {
+        throw error
+    }
+}
+exports.UserBookDetails = async (uid) => {
+    try {
+        const Bookings = await BookingCol.where('userID', '!=', uid).get();
+        const bookings = [];
+        Bookings.forEach(ele => {
+            const {
+                name,
+                PaymentAmount,
+                eventDate,
+                status
+            } = ele.data();
+            if (status !== 'cart') {
+                bookings.push({
+                    bookid: ele.id,
+                    event: name,
+                    payment: PaymentAmount ?? 0,
+                    eventDate: eventDate.toDate().toDateString(),
+                    status
+                });
+            }
+        })
+        return bookings;
+    } catch (error) {
+        throw error;
+    }
+}
+
+const ServiceBookDetails = async (serviceid) => {
+    try {
+
+    } catch (error) {
+        throw error;
     }
 }
 

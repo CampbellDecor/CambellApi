@@ -8,4 +8,8 @@ Router.get("/logout", adminContoller.LogoutAdmin);
 Router.post("/add", adminContoller.addAdmin);
 Router.get("/:aid", adminContoller.getAdmin);
 Router.get("/", adminContoller.getAdmins);
+Router.delete("/:aid", adminContoller.deleteAdmin);
+Router.put("/", adminContoller.editAdmin);
+Router.post("/block/:aid", adminContoller.blockAdmin);
+Router.post("/unblock/:aid", adminContoller.unblockAdmin);
 module.exports = Router;

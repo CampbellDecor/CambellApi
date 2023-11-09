@@ -24,8 +24,8 @@ exports.add = async (request) =>
             numbers: true,
             symbols: true
         })
-        isSuper ??= false;
-        isBlock ??= false;
+
+
         try {
             const adminadd = await adminDao.add({
                 username,
@@ -35,13 +35,13 @@ exports.add = async (request) =>
                 lastname,
                 mobile,
                 address,
-                isSuper,
-                isBlock,
+                isSuper: isSuper ?? false,
+                isBlock: isBlock ?? false,
                 password,
                 isOnline: false,
                 activity: [{
                     action: "created",
-                    dateAndTime: new Date()
+                    datetime: new Date().toLocaleDateString()
                 }]
             })
             const addAdmin = `
@@ -57,11 +57,12 @@ exports.add = async (request) =>
         </body>
         </html>
         `
-            Mail.sendSingleMail(email, "Cambell Decor Registration", addAdmin)
+            await Mail.sendSingleMail(email, "Cambell Decor Registration", addAdmin)
             return {
                 aid: adminadd.aid
             };
         } catch (error) {
+            console.log(error);
             throw error;
         }
     };
@@ -70,7 +71,7 @@ exports.all = async (req) => {
     try {
         const access_token = req.cookies.access_token;
         const admins = await adminDao.all(access_token);
-        if (admins.length <= 0) throw Error("No Admins");
+        if (admins.length <= 0) return [];
         else return admins;
     } catch (error) {
         throw error;
@@ -115,13 +116,17 @@ exports.findByID = async (req) => {
 exports.editAdmin = async (req) => {
     try {
         const {
-            params,
-            body
+            body,
         } = req;
         const {
-            aid
-        } = params;
-        const admindoc = await adminDao.editAdmin(aid, body);
+            aid,
+            ...other
+        } = body;
+        const {
+            uid
+        } = Fire.auth().verifyIdToken(req.cookies.access_token);
+        const admindoc = await adminDao.editAdmin(aid, other);
+        return admindoc === uid ? 'self' : admindoc;
     } catch (error) {
         throw error;
     }
@@ -146,7 +151,7 @@ exports.blockAdmin = async (req) => {
         </body>
         </html>
         `
-        Mail.sendSingleMail(admin.email, "Cambell Decor Block Admin", addAdmin);
+        await Mail.sendSingleMail(admin.email, "Cambell Decor Block Admin", addAdmin);
         return blockadmin;
     } catch (error) {
         throw error;
@@ -173,9 +178,52 @@ exports.unblockAdmin = async (req) => {
         </body>
         </html>
         `
-        Mail.sendSingleMail(admin.email, "Cambell Decor Block Admin", addAdmin);
+        await Mail.sendSingleMail(admin.email, "Cambell Decor Block Admin", addAdmin);
         return blockadmin;
     } catch (error) {
-
+        throw error;
     }
 };
+
+exports.deleteAdmin = async (req) => {
+    try {
+        const {
+            aid
+        } = req.params;
+
+        const admin = await adminDao.findById(aid);
+        const addAdmin = `
+            <html>
+            <head>
+            </head>
+            <body>
+            <h6>Hi,${admin.username}</h6>
+            <h1>Account Deleted</h1>
+        <p>Mr.${admin.firstname} ${admin.lastname} We have been unBlocked Your account from you  can continue your work</p>
+
+            </body>
+            </html>
+            `
+        if (admin.email) {
+            await Mail.sendSingleMail(admin.email, "Cambell Decor Delete Admin", addAdmin);
+        }
+        const deleteadmin = await adminDao.deleteAdmin(aid);
+
+
+
+        return deleteadmin;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const adminactivity = async (req) => {
+    try {
+        const aid = req.params.aid;
+        const activi = await adminDao.showAdminActivity(aid);
+        return activi;
+    } catch (error) {
+        throw error;
+    }
+}
+

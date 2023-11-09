@@ -98,3 +98,20 @@ exports.search = (req, res) => {
         });
 
 }
+exports.userBook = (req, res) =>
+{
+    const uid = req.params.uid;
+    try {
+        usermodel.OneUserBookingHistroy(uid)
+            .then(result =>
+            {
+                res.status(200).json(result);
+            }).catch(error =>
+            {
+                res.status(404).json(error);
+        })
+
+    } catch (error) {
+        throw error;
+    }
+}
