@@ -1,130 +1,92 @@
-const Firebase = require("./Fire.js");
-const {
-    FieldValue
-} = require("firebase-admin/firestore");
-const userchatCol = Firebase.firestore().collection("messages");
-const userCol = Firebase.firestore().collection("users");
-
-exports.sendmessage = async (aid, reciverid, data) => {
+const Fire = require('../FireBase/Fire.js');
+const UserChatsCol = Fire.firestore().collection("messages");
+const User = Fire.firestore().collection("users");
+const {} = require('random-avatar-generator');
+exports.sendMessage = async ({
+    userid,
+    message,
+    access_token,
+    username
+}) => {
     try {
-        const userchat = await userchatCol.doc(reciverid).collection('message').add({
-            senderId: aid,
-            receiverId: reciverid,
-            timestamp: new Date(),
-            ...data
-        });
-        return userchat.id;
-    } catch (error) {
-        throw error;
-    }
-}
-exports.deletemessage = async (uchatid, receiverId) => {
-    try {
-        const userchat = await userchatCol.doc(receiverId).collection('message').doc(uchatid);
-
-        await userchat.delete();
-        return true;
-
-    } catch (error) {
-        throw error;
-    }
-}
-exports.editmessage = async (uchatid, receiverId, data) => {
-    try {
-        const userchat = await userchatCol.doc(receiverId).collection('message').doc(uchatid);
-
-        await userchat.update(data);
-        return true;
-
-    } catch (error) {
-        throw error;
-    }
-}
-
-exports.listofChat = async () => {
-    try {
-        const userchats = await userchatCol.get();
-        const chats = [];
-        userchats.forEach(chat => chats.push(chat.id));
-        const Chattings = []
-        for (const iterator of chats) {
-            const user = await userCol.doc(iterator).get();
-            if (user.data()){
-                const {
-                    name,
-                    imgURL,
-                    isBlock
-                } = user?.data() ?? {};
-            const userchat = {
-                username: name,
-                profile: imgURL,
-                isBlock,
-                id:user.id,
-                last: {},
-                unread: 0
-            };
-            const userChatMEssage = await userchatCol.doc(iterator).collection('message').orderBy('timestamp', 'desc');
-            const userchatsnap = await userChatMEssage.limit(1).get();
-            const userchatunread = await userChatMEssage.get();
-            userchatunread.forEach(ele => {
-                if (ele.data().receiverId === 0) {
-                    userchat.unread++;
-                }
-
-            });
-            userchatsnap.forEach(ele => {
-                const {
-                    text,
-                    timestamp,
-                    receiverId
-                } = ele.data();
-                userchat.last = {
-                    chatid: ele.id,
-                    message: text,
-                    dateTime: timestamp.toDate()
-                };
-            });
-            Chattings.push(userchat)
-        }
-        }
-
-        return Chattings;
-
-    } catch (error) {
-        throw error
-    }
-}
-
-exports.oneUSerChat = async (user) => {
-    try {
-        const usersnap = await userCol.doc(user).get();
         const {
-            imgURL,
-            name,
-            isBlock
-        } = usersnap.data();
-        const userchat = await userchatCol.doc(user).collection('message').orderBy('timestamp', 'desc').get();
-        const USerChats = [];
-        userchat.forEach(ele => {
-            const {
-                text,
-                timestamp,
-                receiverId,
-                senderId
-            } = ele.data();
-            USerChats.push({
-                profile: imgURL,
-                username: name,
-                isBlock,
-                chatid: ele.id,
-                dateTime: timestamp.toDate(),
-                status: receiverId === 10,
-                senderId,
-                message: text
-            });
+            uid
+        } = await Fire.auth().verifyIdToken(access_token);
+        await UserChatsCol.doc(userid).collection("message").add({
+            receiverId: userid,
+            senderId: uid,
+            text: message,
+            timestamp: new Date(),
+            username: username
         })
-        return USerChats;
+        return true;
     } catch (error) {
-        throw error
+        throw error;
+    }
+}
+exports.chatList = async () => {
+    try {
+        const userchats = [];
+        const chats = await UserChatsCol.get();
+        chats.forEach(ele => {
+            userchats.push(ele.id);
+        })
+        const chatuserlist = [];
+        for (const iterator of userchats) {
+            const u = await User.doc(iterator).get();
+            if (u.data()) {
+                const {
+                    imgURL,
+                    name
+                } = u.data();
+                chatuserlist.push({
+                    profile: imgURL,
+                    id: u.id,
+                    username: name
+                })
+            }
+
+        }
+        return chatuserlist;
+
+    } catch (error) {
+        throw error;
+    }
+}
+
+exports.allchats = async (uid) => {
+    try {
+        const userDoc = await User.doc(uid).get();
+        const {
+            imgURL
+        } = userDoc?.data() ?? {};
+        const chats = await UserChatsCol.doc(uid).collection("message").orderBy('timestamp').get();
+        const chat = [];
+        chats.forEach(c => {
+            const {
+                receiverId,
+                text,
+                timestamp
+            } = c.data();
+
+            if (text) {
+                const Dtime = {
+                    date: new Date(timestamp.toDate()).toLocaleDateString(),
+                    time: new Date(timestamp.toDate()).toLocaleTimeString()
+                }
+                const type = receiverId === uid ? 'recive' : 'sent';
+                chat.push({
+                    ...Dtime,
+                    type,
+                    message: text,
+                    profile: imgURL,
+                    uid
+                });
+
+            }
+        })
+        return chat;
+    } catch (error) {
+        throw error;
     }
 }

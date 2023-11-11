@@ -1,8 +1,11 @@
-const UserModel = require("../Model/userchat.js");
+const {
+    chatListuser,
+    sendMessage,all
+
+} = require("../Model/userchat.js");
 
 exports.allchat = (req, res) => {
-    UserModel.allchat()
-        .then(chat => {
+    chatListuser(req).then(chat => {
             res.status(200).json(chat);
         })
         .catch(err => {
@@ -10,13 +13,22 @@ exports.allchat = (req, res) => {
         })
 }
 
-exports.userchat = (req, res) =>
+exports.send = (req, res) =>
 {
-    UserModel.oneUSerChat(req)
-     .then(chat => {
-             res.status(200).json(chat);
-         })
-         .catch(err => {
-             res.status(404).json(err);
-         })
+sendMessage(req).then(chat => {
+        res.status(200).json(chat);
+    })
+    .catch(err => {
+        res.status(404).json(err);
+    })
+}
+
+exports.all = (req, res) =>
+{
+    all(req).then(chat => {
+            res.status(200).json(chat);
+        })
+        .catch(err => {
+            res.status(404).json(err);
+        })
 }

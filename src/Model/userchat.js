@@ -1,51 +1,78 @@
-const UserchatDao = require("../FireBase/userChat");
-const adminChatDao = require('../FireBase/adminchat.js')
 const {
-    diffTimeString
-} = require('./Timehandle.js');
-const Fire=require('../FireBase/Fire.js')
-exports.allchat = async (req) => {
-    try {
+    chatList,
+    sendMessage,
+    allchats
+} = require("../FireBase/userChat.js");
+const admin = require("../FireBase/adminchat.js");
+const Fire = require("../FireBase/Fire.js");
+const adminChat = Fire.firestore().collection("admins");
 
-        const allchat = await UserchatDao.listofChat();
-        const chatings = [];
-        allchat.forEach(ele => {
-            const {
-                last,
-                ...otherdetails
-            } = ele;
-            const {
-                dateTime,
-                ...otherchatdetails
-            } = last;
-            chatings.push({
-                ...otherdetails,
-                lastchat: {
-                    ...otherchatdetails,
-                    dateTime: diffTimeString(dateTime)
-                }
-            })
-        })
-        return chatings;
+exports.chatListuser = async ({
+    cookies
+}) => {
+    try {
+        const {
+            uid
+        } = await Fire.auth().verifyIdToken(cookies.access_token);
+        const admin = await adminChat.doc("CuXlAV6HTGYn3hVyYDaSSIj0nqx1").get();
+        const {
+            profile,
+            username
+        } = admin.data();
+        const chatlist = await chatList();
+        return [{
+            profile,
+            username,
+            id: uid
+        }, ...chatlist];
     } catch (error) {
         throw error;
     }
-};
+}
+exports.sendMessage = async ({
+    cookies,
+    body
+}) => {
+    try {
+        const access_token = cookies.access_token;
+        const {
+            uid
+        } = await Fire.auth().verifyIdToken(access_token);
+        const {
+            userid,
+            username,
+            message
+        } = body;
+        let result = false;
+        if (userid === uid) {
+            result = await admin.sendMessage({
 
-exports.oneUSerChat = async (req) =>
-{
-    const senderid = req.params.senderId;
-    const { uid } =Fire.auth().verifyIdToken(req.cookies.access_token) ;
-    try
-    {
-        const userchats = [];
-        const chats = await UserchatDao.oneUSerChat(senderid);
-        chats.forEach(ele =>
-        {
-            const { senderId, ...otherdetails } = ele;
-            userchats.push({...otherdetails, type: senderId === uid ? 'sent' : 'recive' });
-        })
-        return userchats;
+                aid: uid,
+                access_token
+            });
+        } else {
+            result = await sendMessage({
+                access_token,
+                userid,
+                username,
+                message
+            });
+        }
+        return result;
+    } catch (error) {
+        throw error;
+    }
+
+}
+exports.all = async ({
+    params
+}) => {
+    const {
+        uid
+    } = params;
+    try {
+        const chats = await allchats(uid);
+        return chats;
     } catch (error) {
         throw error;
     }

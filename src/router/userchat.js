@@ -1,7 +1,8 @@
 const express  =require( 'express');
-const UserChatContoller =require( '../controller/UserChat.js');
+const {allchat,send,all} =require( '../controller/UserChat.js');
 
 const Router=express.Router();
-Router.get( "/", UserChatContoller.allchat );
-Router.get("/:senderId", UserChatContoller.userchat);
+Router.get( "/", allchat );
+Router.post("/", send);
+Router.get("/:uid", all);
 module.exports=Router;

@@ -12,7 +12,7 @@ exports.sendMessage = async ({
         const chatting = {
             message,
             date: new Date().toLocaleDateString(),
-            time: new Date().toTimeString(),
+            time: new Date().toLocalTimeString(),
             type: aid === uid ? 'sent' : 'recive'
         }
         const Admindoc = await adminchatcol.doc(aid).collection("chat").add(chatting);
