@@ -11,8 +11,7 @@ exports.adduser = (req, res) => {
 
 
 };
-exports.getUser = (req, res) =>
-{
+exports.getUser = (req, res) => {
     const uid = req.params.uid;
     usermodel.OneUser(uid).then(user => {
         res.status(200).json(user);
@@ -91,27 +90,32 @@ exports.search = (req, res) => {
     console.log(req.params.search)
     usermodel.userSearch(req)
         .then(result => res.status(200).json(result))
-        .catch(error =>
-        {
+        .catch(error => {
             res.status(404).json(error);
             console.log(error);
         });
 
 }
-exports.userBook = (req, res) =>
-{
+exports.userBook = (req, res) => {
     const uid = req.params.uid;
     try {
         usermodel.OneUserBookingHistroy(uid)
-            .then(result =>
-            {
+            .then(result => {
                 res.status(200).json(result);
-            }).catch(error =>
-            {
+            }).catch(error => {
                 res.status(404).json(error);
-        })
+            })
 
     } catch (error) {
         throw error;
     }
+}
+
+exports.BookUser = (req, res) => {
+    usermodel.BookUSerDetails(req)
+        .then(result => res.status(200).json(result))
+        .catch(error => {
+            console.error(error);
+            res.status(404).json(error);
+        });
 }

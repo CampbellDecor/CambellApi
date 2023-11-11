@@ -3,7 +3,8 @@ const FireStore = Firebase.firestore();
 const BookingCol = FireStore.collection('bookings');
 const BookingHisCol = FireStore.collection('BookingHistory');
 const USerCol = FireStore.collection('users');
-const Service = require('./Service.js')
+const Service = require('./Service.js');
+const Event = require('../FireBase/Events.js');
 
 exports.approveBooking = async (bookcode) => {
     try {
@@ -194,10 +195,37 @@ exports.all = async () => {
     }
 }
 
-const oneBooking = async (bookid) => {
+exports.oneBooking = async (bookid) => {
     try {
         const book = await BookingCol.doc(bookid);
         const bookDetails = await book.get();
+        const {
+            date,
+            eventDate,
+            userID,
+            paymentAmount,
+            status,
+            isRated,
+            name,
+        } = bookDetails.data();
+        const EventDoc = await Event.all();
+        const evnt = {};
+        EventDoc.forEach(e => {
+            if (name.search(e.name) > 0 || e.name === name || e.name.search(name)>0) {
+                evnt.eventUrl = e.imgURL;
+                evnt.eventid = e.eventid;
+            }
+        })
+        return {
+            bookDate: new Date(date.toDate()).toLocaleDateString(),
+            eventDate: new Date(eventDate.toDate()).toLocaleDateString(),
+            user: userID,
+            payment: paymentAmount,
+            eventName: name,
+            status,
+            isRated,
+            ...evnt
+        }
 
     } catch (error) {
         throw error
@@ -237,4 +265,35 @@ const ServiceBookDetails = async (serviceid) => {
         throw error;
     }
 }
-
+exports.BookUser = async (uid) => {
+    try {
+        const Bookuser = await Firebase.auth().getUser(uid);
+        const {
+            creationTime,
+            lastSignInTime
+        } = Bookuser.metadata
+        const Time = {};
+        Time.join = new Date(creationTime).toDateString();
+        Time.isOnline = new Date(lastSignInTime) > new Date();
+        const BookDoc = await USerCol.doc(uid).get();
+        const {
+            name,
+            imgURL,
+            address,
+            phoneNo,
+            email
+        } = BookDoc.data();
+        const bookcountusers = (await BookingCol.where('userID', '==', uid).get()).size;
+        return {
+            username: name,
+            profile: imgURL,
+            address,
+            mobile: phoneNo,
+            ...Time,
+            email,
+            No_book: bookcountusers
+        };
+    } catch (error) {
+        throw error;
+    }
+}

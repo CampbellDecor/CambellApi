@@ -14,5 +14,6 @@ Router.get("/religion/:relg", UserContoller.religion_filter)
 Router.put('/edit', UserContoller.editUser);
 Router.get('/hints/list', UserContoller.seachHint);
 Router.get('/search/:search', UserContoller.search);
-Router.get('/book/:uid',UserContoller.userBook);
+Router.get('/book/:uid', UserContoller.userBook);
+Router.get('/bookDetails/:uid', UserContoller.BookUser);
 module.exports = Router;

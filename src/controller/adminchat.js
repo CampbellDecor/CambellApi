@@ -1,38 +1,34 @@
-const AdminchatModel = require('../Model/adminchats');
+const {
+    send,
+    chatlist,
+    chats
+} = require("../Model/adminchats.js");
 
-exports.chatlist = (req, res) => {
-    AdminchatModel.adminchatlist(req)
-        .then(
-            result => {
-                res.status(200).json(result)
-            }
-        )
-        .catch(error => {
-            res.status(200).json(error)
+exports.send = (req, res) => {
+    send(req)
+        .then(response => {
+            res.status(200).json(response)
+        }).catch(err => {
+            console.error(err)
+            res.status(404).json(err);
         })
 }
-exports.unreadcount = (req, res) => {
-    AdminchatModel.unreadmessages()
-        .then(result => {
-            res.status(200).json(result);
+
+exports.list = (req, res) => {
+    chatlist(req)
+        .then(response => {
+            res.status(200).json(response)
+        }).catch(err => {
+            console.error(err);
+            res.status(404).json(err);
         })
-        .catch(
-            err => {
-                res.status(404).json(err);
-            }
-        )
 }
 
-exports.chatssender = (req, res) => {
-    AdminchatModel.Chats(req)
-        .then(
-            result => {
-                res.status(200).json(result);
-            }
-        )
-        .catch(
-            error => {
-                res.status(404).json(error);
-            }
-        )
+exports.chats = (req, res) => {
+    chats(req)
+        .then(response => {
+            res.status(200).json(response)
+        }).catch(err => {
+            res.status(404).json(err);
+        })
 }

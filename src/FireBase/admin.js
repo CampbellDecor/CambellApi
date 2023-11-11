@@ -5,7 +5,7 @@ const {
 } = require('firebase-admin/firestore')
 const Auth = Firebase.auth();
 const adminDoc = Firebase.firestore().collection("admins");
-
+const adminchat = Firebase.firestore().collection("adminchats");
 exports.add = async (admin) => {
     try {
 
@@ -22,10 +22,24 @@ exports.add = async (admin) => {
             });
             const admindata = await adminDoc.doc(adminauth.uid);
             admindata.set(otherAdmin);
+            const adminc = await adminchat.doc(adminauth.uid);
+            await adminc.set({
+                username: admin?.username,
+                profile: admin?.profile
+            })
+            const chatting = {
+                message: `Welcome ${admin?.username} you can continue this chat box also`,
+                date: new Date().toLocaleDateString(),
+                time: new Date().toTimeString(),
+                type: 'sent'
+            }
+            await adminc.collection("chat").add(chatting)
             const verifylink = await Firebase.auth().generateEmailVerificationLink(admin?.email);
+            const reset = await Firebase.auth().generatePasswordResetLink(admin?.email);
             return {
                 aid: admindata.id,
-                verifylink
+                verifylink,
+                 reset
             };
         } else {
             throw new Error('required Field Empty')
@@ -116,6 +130,7 @@ exports.deleteAdmin = async (aid) => {
         const admin = await adminDoc.doc(aid);
         admin.delete();
         await Auth.deleteUser(aid);
+        await adminchat.doc(aid).delete();
         return true;
     } catch (error) {
         throw error;
@@ -222,6 +237,20 @@ exports.addActivity = async (req, addaction = 'admin activity') => {
 exports.editAdmin = async (aid, data) => {
     try {
         const admin = await adminDoc.doc(aid).update(data);
+        const {
+            username,
+            profile
+        } = data;
+        if (username) {
+            await adminchat.doc(aid).update({
+                username
+            });
+        }
+         if (profile) {
+             await adminchat.doc(aid).update({
+                 profile
+             });
+         }
         return aid;
     } catch (error) {
         throw error;

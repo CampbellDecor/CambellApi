@@ -24,13 +24,11 @@ exports.getBookings = (req, res) => {
 
 exports.allBooking = (req, res) => {
     BookingModel.all()
-        .then(result =>
-        {
+        .then(result => {
             res.status(200).json(result);
-        }).catch(error =>
-        {
+        }).catch(error => {
             res.status(404).json(error);
-    })
+        })
 };
 exports.recentBooking = (req, res) => {
     res.json(7766)
@@ -56,8 +54,14 @@ exports.deleteTask = (req, res) => {
         })
 }
 
-exports.getBooking = (req, res) =>
-{
-    const bookid = req.params.bookid;
-    
+exports.getBooking = (req, res) => {
+    BookingModel.OneBooking(req)
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(error => {
+            console.error(error)
+            res.status(404).json(error)
+        })
+
 }

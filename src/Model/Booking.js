@@ -81,7 +81,7 @@ exports.editTask = async (Body) => {
     } = Book;
     try {
         console.log(Body);
-        const Edit = await TodoDoa.editTask(bookid, taskid,other);
+        const Edit = await TodoDoa.editTask(bookid, taskid, other);
         return Edit;
     } catch (error) {
         console.log(error)
@@ -89,17 +89,34 @@ exports.editTask = async (Body) => {
     }
 }
 
-exports.all = async () =>
-{
+exports.all = async () => {
     try {
         const Bookings = await BookingDoa.all();
         const BookMap = [];
-        Bookings.forEach(ele =>
-        {
-            const { eventDate, bookDate,...others } = ele;
-            BookMap.push({...others,eventDate:eventDate.toDate().toLocaleDateString(),bookDate:bookDate.toDate().toDateString()})
+        Bookings.forEach(ele => {
+            const {
+                eventDate,
+                bookDate,
+                ...others
+            } = ele;
+            BookMap.push({
+                ...others,
+                eventDate: eventDate.toDate().toLocaleDateString(),
+                bookDate: bookDate.toDate().toDateString()
+            })
         })
         return BookMap;
+    } catch (error) {
+        throw error;
+    }
+}
+
+exports.OneBooking = async ({
+    params
+}) => {
+    try {
+        const book = await BookingDoa.oneBooking(params.bookid);
+        return book;
     } catch (error) {
         throw error;
     }

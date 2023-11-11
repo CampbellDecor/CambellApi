@@ -1,49 +1,47 @@
-const chatDao = require("../FireBase/adminchat.js");
-const TimeHandle = require('./Timehandle.js');
+const {
+    showchatllist,
+    sendMessage,
+    adminchats
+} = require('../FireBase/adminchat.js');
 
-exports.adminchatlist = async (req) => {
-    const token = req.cookies.access_token;
+
+exports.send = async ({
+    body,
+    cookies,
+}) => {
     try {
-        const chats = await chatDao.alladminchat(token);
-        return chats.map(element => {
-            const {
-                last,
-                ...others
-            } = element;
-            const {
-                date,
-                ...otherdet
-            } = last;
-            const lastchat = {
-                dateTime: TimeHandle.diffTimeString(date),
-                ...otherdet
-            }
-            return {
-                lastchat,
-                ...others
-            }
-        });
+        const {
+            message,
+            aid
+        } = body;
+
+        const result = await sendMessage({ message, aid, access_token:cookies.access_token });
+        return result;
     } catch (error) {
         throw error;
     }
 }
 
-exports.unreadmessages = async () => {
+exports.chatlist = async ({
+    cookies
+}) => {
     try {
-        return await chatDao.unreadchatcount();
+        const result = await showchatllist(cookies);
+        return result;
     } catch (error) {
         throw error;
     }
 }
 
-exports.Chats = async (req) => {
-    const {
-        senderid
-    } = req.params;
-    const token = req.cookies.access_token;
+exports.chats = async ({
+    params
+}) => {
     try {
-        const chats = chatDao.chats(senderid, token);
-        return chats;
+        const {
+            aid
+        } = params;
+        const result = await adminchats(aid);
+        return result;
     } catch (error) {
         throw error;
     }

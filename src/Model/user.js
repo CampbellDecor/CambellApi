@@ -1,5 +1,4 @@
-const userDao = require("../FireBase/user.js");
-const BookDao = require("../FireBase/Booking.js");
+const userDao = require("../FireBase/User.js");
 const randompwd = require("generate-password");
 const Mail = require("./Mail.js");
 const BookingDao = require('../FireBase/Booking.js')
@@ -97,11 +96,56 @@ exports.block = async (request) => {
         } = request.body;
         reason ?? "UnNessary Activity";
         const blocked = await userDao.block(uid, request, reason);
-        await Mail.sendSingleMail(blocked.email, "Account Freezed", `<html>
-        <h1>Account Blocked</h1>
-        Hi, ${blocked.email?.substring( 0, blocked.email.indexOf( "@" ) )}<br/>
-        Your Account have freezed for Your ${reason} .if You continue your Work Please Contact with Our team With In <b>30</b> Days
-        </html>`);
+        const addAdmin = `<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Locked</title>
+</head>
+
+<body style="margin: 0; padding: 0; font-family: 'Arial', sans-serif; background-color: #f4f4f4;">
+
+  <header style="background: linear-gradient(to right, #111be6, #8f91fb); color: white; text-align: center; padding: 10px;">
+    <img src="https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/logo.png?alt=media&token=8beb4a91-6495-41c9-941d-3b26d1403757" alt="Logo" style="max-width: px; height:100px;">
+    <h1>Campbell Decor</h1>
+  </header>
+
+  <main style="padding: 30px; margin: 5px 20px;text-align: justify;display: flex;align-items: center;justify-content: center;">
+    <div style="width: 90%;">
+    <h2>Account Blocked</h2>
+    <h5>Hi, ${blocked.email.substring(0,blocked.email.indexOf('@')-1)}</h5>
+    <p>We hope this message finds you well. We regret to inform you that your user account with Campbell Decor has been temporarily blocked because of multiple suspicious activity or violation of terms of service.
+
+We understand the inconvenience this may cause and apologize for any disruption to your experience with Campbell Decor. Our primary concern is the security of your account and your data.  If you believe this block is in error, do not hesitate to reach out to us for further assistance.  </p>
+<p>
+    Thank you
+for your understanding and cooperation.We look forward to resolving this matter promptly and having you back as a valued customer. </p>
+</div>
+  </main>
+
+  <footer style="background-color: #333; color: white; text-align: center; padding: 10px; position: fixed; bottom: 0; width: 100%;">
+    <div style="display: flex; justify-content: center; align-items: center;">
+      <div style="margin-right: 20px;">
+        <img src="https://img.icons8.com/material-outlined/24/ffffff/phone.png" alt="Phone Icon" style="margin-bottom: -5px;">
+        <span style="margin-left: 5px;">+61410734436</span>
+      </div>
+      <div style="margin-right: 20px;">
+        <img src="https://img.icons8.com/ios/24/ffffff/email.png" alt="Email Icon" style="margin-bottom: -5px;">
+        <a href="mailto:campbelldecorau@gmail.com"  style="margin-left: 5px; text-decoration: none ;color:#f4f4f4;">campbelldecorau@gmail.com</a>
+      </div>
+      <div>
+        <img src="https://img.icons8.com/material-outlined/24/ffffff/domain.png" alt="Website Icon" style="margin-bottom: -5px;">
+        <a href="http://www.campbelldecor.com.au/" style="margin-left: 5px;; text-decoration: none ;color:#f4f4f4;">www.campbelldecor.com</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
+`
+        await Mail.sendSingleMail(blocked.email, "Account Freezed", addAdmin);
         return blocked.block;
     } catch (error) {
         throw error;
@@ -116,11 +160,56 @@ exports.unblock = async (request) => {
             note
         } = request.body;
         const blocked = await userDao.unblock(uid, request, note);
-        await Mail.sendSingleMail(blocked.email, "Account unFreezed", `<html>
-        <h1>Account UnBlock</h1>
-        Hi, ${blocked.email?.substring( 0, blocked.email.indexOf( "@" ) )}<br/>
-        Your Account have resume for Your request .if You can continue your Work .
-        </html>`);
+        const addAdmin = `<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Locked</title>
+</head>
+
+<body style="margin: 0; padding: 0; font-family: 'Arial', sans-serif; background-color: #f4f4f4;">
+
+  <header style="background: linear-gradient(to right, #111be6, #8f91fb); color: white; text-align: center; padding: 10px;">
+    <img src="https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/logo.png?alt=media&token=8beb4a91-6495-41c9-941d-3b26d1403757" alt="Logo" style="max-width: px; height:100px;">
+    <h1>Campbell Decor</h1>
+  </header>
+
+  <main style="padding: 30px; margin: 5px 20px;text-align: justify;display: flex;align-items: center;justify-content: center;">
+    <div style="width: 90%;">
+    <h2>Account unBlocked</h2>
+    <h5>Hi, ${blocked.email.substring(0,blocked.email.indexOf('@')-1)}</h5>
+    <p>We hope this message finds you well. We regret to inform you that your user account with Campbell Decor has been temporarily blocked because of multiple suspicious activity or violation of terms of service.
+
+We understand the inconvenience this may cause and apologize for any disruption to your experience with Campbell Decor. Our primary concern is the security of your account and your data.  If you believe this block is in error, do not hesitate to reach out to us for further assistance.  </p>
+<p>
+    Thank you
+for your understanding and cooperation.We look forward to resolving this matter promptly and having you back as a valued customer. </p>
+</div>
+  </main>
+
+  <footer style="background-color: #333; color: white; text-align: center; padding: 10px; position: fixed; bottom: 0; width: 100%;">
+    <div style="display: flex; justify-content: center; align-items: center;">
+      <div style="margin-right: 20px;">
+        <img src="https://img.icons8.com/material-outlined/24/ffffff/phone.png" alt="Phone Icon" style="margin-bottom: -5px;">
+        <span style="margin-left: 5px;">+61410734436</span>
+      </div>
+      <div style="margin-right: 20px;">
+        <img src="https://img.icons8.com/ios/24/ffffff/email.png" alt="Email Icon" style="margin-bottom: -5px;">
+        <a href="mailto:campbelldecorau@gmail.com"  style="margin-left: 5px; text-decoration: none ;color:#f4f4f4;">campbelldecorau@gmail.com</a>
+      </div>
+      <div>
+        <img src="https://img.icons8.com/material-outlined/24/ffffff/domain.png" alt="Website Icon" style="margin-bottom: -5px;">
+        <a href="http://www.campbelldecor.com.au/" style="margin-left: 5px;; text-decoration: none ;color:#f4f4f4;">www.campbelldecor.com</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
+`
+        await Mail.sendSingleMail(blocked.email, "Account unFreezed", addAdmin);
         return blocked.unblock;
     } catch (error) {
         throw error;
@@ -238,6 +327,18 @@ exports.OneUserBookingHistroy = async (uid) => {
     try {
         const Book = await BookDao.UserBookDetails(uid);
         return Book;
+    } catch (error) {
+        throw error;
+    }
+}
+
+exports.BookUSerDetails = async (req) =>
+{
+    try
+    {
+        const { uid } = req.params;
+        const bookuser = await BookingDao.BookUser(uid);
+        return bookuser;
     } catch (error) {
         throw error;
     }

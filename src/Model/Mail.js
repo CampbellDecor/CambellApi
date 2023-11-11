@@ -5,7 +5,6 @@ var transporter = nodemailer.createTransport({
   auth: MailInfo.auth
 });
 
-
 exports.sendSingleMail = async (reciver, subject, body) => {
   try {
     var mailOptions = {
@@ -25,3 +24,6 @@ exports.sendSingleMail = async (reciver, subject, body) => {
     throw error;
   };
 }
+
+
+  // sendSingleMail('mtthanu126@gmail.com', "style", html).then(console.log).catch(console.error)
