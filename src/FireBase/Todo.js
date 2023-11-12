@@ -1,7 +1,4 @@
 const Firebase = require("./Fire.js");
-const {
-    FieldValue
-} = require("firebase-admin/firestore");
 const FireStore = Firebase.firestore();
 const BookingCol = FireStore.collection('bookings');
 
@@ -40,7 +37,7 @@ exports.ShowTodo = async (bookid) => {
             taskid: ele.id,
             ...ele.data()
         }));
-        return todos;
+        return todos??[];
     } catch (error) {
         throw error;
     }

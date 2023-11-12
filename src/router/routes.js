@@ -9,7 +9,6 @@ const Booking = require('./Bookings.js');
 const Root = require('./Root.js');
 const Event = require('./Event.js');
 const Package = require('./Package.js');
-const Todo = require('./Todo.js');
 const express = require('express');
 const Router = express.Router();
 
@@ -24,5 +23,7 @@ Router.use('/userchat', usercat);
 Router.use('/payment', payment);
 Router.use('/event', Event);
 Router.use('/pack', Package);
-Router.use('/todo', Todo);
+Router.use('payment', Payment)
+Router.use('SocialMedia', Social)
+Router.use('Mail', Mail)
 module.exports = Router;

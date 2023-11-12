@@ -88,7 +88,15 @@ exports.editTask = async (Body) => {
         throw error;
     }
 }
-
+exports.showTask = async ({params}) =>
+{
+try {
+    const Todolist = await TodoDoa.ShowTodo(params.bookid);
+    return Todolist??[];
+} catch (error) {
+    throw error;
+}
+}
 exports.all = async () => {
     try {
         const Bookings = await BookingDoa.all();

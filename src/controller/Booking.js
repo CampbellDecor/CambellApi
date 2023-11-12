@@ -65,3 +65,13 @@ exports.getBooking = (req, res) => {
         })
 
 }
+
+exports.getTasks = (req, res) => {
+    BookingModel.showTask(req)
+        .then(result => {
+            res.status(200).json(result);
+        }).catch(error => {
+            console.error(error)
+            res.status(404).json(error);
+        })
+}

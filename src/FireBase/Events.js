@@ -6,7 +6,14 @@ exports.all = async () =>
     try {
         const result = []
         const eventsSnap = await eventCol.get();
-        eventsSnap.forEach(event => result.push({ eventid: event.id, ...event.data() }));
+        eventsSnap.forEach(event =>
+        {
+            result.push({
+                eventid: event.id,
+                ...event.data(),
+                added: new Date(event.createTime.toDate()).toLocaleDateString()
+            });
+        });
         return result;
     } catch (error) {
         throw error;
@@ -65,3 +72,6 @@ exports.count = async () => {
         throw error;
     }
 }
+
+
+

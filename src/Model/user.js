@@ -23,7 +23,7 @@ const userSetModel = async (user) => {
         const usermodel = userModel(user);
 
         const Online = await userDao.isOnline(user.uid);
-        const booking = await BookDao.userBookingCount(user.uid);
+        const booking = await BookingDao.userBookingCount(user.uid);
         return {
             ...usermodel,
             isOnline: Online.isOnline,
@@ -238,7 +238,12 @@ exports.all = async () => {
 exports.OneUser = async (uid) => {
     try {
         const user = await userDao.OneUser(uid);
-        return await userSetModel(user);
+        if (user) {
+            return await userSetModel(user);
+        } else {
+            return {};
+        }
+
 
     } catch (error) {
         throw error;
@@ -332,11 +337,11 @@ exports.OneUserBookingHistroy = async (uid) => {
     }
 }
 
-exports.BookUSerDetails = async (req) =>
-{
-    try
-    {
-        const { uid } = req.params;
+exports.BookUSerDetails = async (req) => {
+    try {
+        const {
+            uid
+        } = req.params;
         const bookuser = await BookingDao.BookUser(uid);
         return bookuser;
     } catch (error) {

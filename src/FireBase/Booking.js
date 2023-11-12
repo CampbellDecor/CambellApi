@@ -5,6 +5,7 @@ const BookingHisCol = FireStore.collection('BookingHistory');
 const USerCol = FireStore.collection('users');
 const Service = require('./Service.js');
 const Event = require('../FireBase/Events.js');
+const Packages = FireStore.collection("users");
 
 exports.approveBooking = async (bookcode) => {
     try {
@@ -208,23 +209,15 @@ exports.oneBooking = async (bookid) => {
             isRated,
             name,
         } = bookDetails.data();
-        const EventDoc = await Event.all();
-        const evnt = {};
-        EventDoc.forEach(e => {
-            if (name.search(e.name) > 0 || e.name === name || e.name.search(name)>0) {
-                evnt.eventUrl = e.imgURL;
-                evnt.eventid = e.eventid;
-            }
-        })
         return {
             bookDate: new Date(date.toDate()).toLocaleDateString(),
             eventDate: new Date(eventDate.toDate()).toLocaleDateString(),
             user: userID,
             payment: paymentAmount,
-            eventName: name,
+            PackageName: name,
             status,
             isRated,
-            ...evnt
+            bookid
         }
 
     } catch (error) {

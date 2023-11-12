@@ -105,12 +105,18 @@ exports.unblock = async (userid, req, note = 'conatact with email') => {
 exports.OneUser = async (uid) => {
     try {
         const User = await userCol.doc(uid).get();
-        return {
-            uid: User.id,
-            ...User.data()
+        if (User?.data()) {
+            return {
+                uid: User.id,
+                ...User?.data() ?? {}
+            }
+        } else {
+            return {};
         }
 
-    } catch (error) {
+
+    } catch (error)
+    {
         throw error;
     }
 }
@@ -334,5 +340,3 @@ exports.isOnline = async (uid) => {
         return false;
     }
 }
-
-

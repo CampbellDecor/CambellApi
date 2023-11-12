@@ -1,33 +1,15 @@
-exports.addEvent = (req,res) =>
-{
+const {
+    allEvents
+} = require("../Model/Event.js");
 
-};
-exports.getEvent = (req,res) =>
-{
 
-}
-
-exports.getEvents = (req,res) =>
-{
-
-}
-
-exports.deleteEvent = (req,res) =>
-{
-
-};
-exports.blockEvent = (req,res) =>
-{
-
-};
-exports.unblockEvent = (req,res) =>
-{
-
-}
-exports.editEvent = (req,res) =>
-{
-
-}
-exports.search = (req, res) => {
-
+exports.allEvents = (req, res) => {
+    allEvents()
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(err => {
+            console.error(err)
+            res.status(404).json(error);
+        })
 }
