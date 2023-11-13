@@ -102,7 +102,9 @@ exports.userBook = (req, res) => {
         usermodel.OneUserBookingHistroy(uid)
             .then(result => {
                 res.status(200).json(result);
-            }).catch(error => {
+            }).catch(error =>
+            {
+                console.error(error)
                 res.status(404).json(error);
             })
 

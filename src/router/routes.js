@@ -23,7 +23,4 @@ Router.use('/userchat', usercat);
 Router.use('/payment', payment);
 Router.use('/event', Event);
 Router.use('/pack', Package);
-Router.use('payment', Payment)
-Router.use('SocialMedia', Social)
-Router.use('Mail', Mail)
 module.exports = Router;

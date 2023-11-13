@@ -90,33 +90,30 @@ exports.addBooking = async (booking) => {
         throw error;
     }
 }
-exports.DayBookHistory = async () => {
+exports.DayBookHistory = async (month) => {
     try {
-        const BookingAssemple = [];
-        const DaYHistory = await BookingHisCol.get();
-        const bookHis = [];
-        const listdate = []
-        DaYHistory.forEach(ele => {
+        const BookDoc = await BookingCol.where('status', 'not-in', ["cart", "cancelled"]).get();
+        const bookings = [];
+        BookDoc.forEach(ele => {
             const {
-                eventdate,
-                ...otherdetails
+                eventDate,
+                status,
+                name,
+                date
             } = ele.data();
-            bookHis.push({
-                hisid: ele.id,
-                ...otherdetails,
-                eventdate: eventdate.toDate().toLocaleDateString()
-            });
-            listdate.push(eventdate.toDate().toLocaleDateString());
-        })
-        const uniqdate = new Set(listdate);
-        for (const iterator of uniqdate) {
-            BookingAssemple.push({
-                date: iterator,
-                events: bookHis.filter(ele => ele.eventdate === iterator)
-            });
+            const dater = new Date(eventDate.toDate());
+            if ((dater.getMonth() + 1) ===parseInt(month)) {
+                bookings.push({
+                    bookid: ele.id,
+                    eventDate: dater.toLocaleDateString(),
+                    status,
+                    name,
+                    bookdate: date
+                })
+            }
 
-        }
-        return BookingAssemple;
+        })
+        return bookings;
     } catch (error) {
         throw error;
     }
@@ -144,14 +141,27 @@ exports.userBookingCount = async (uid) => {
 
 exports.recentBookings = async () => {
     try {
-        const bookingsDoc = await BookingCol.orderBy('date', 'desc').limit(10).get();
+        const bookingsDoc = await BookingCol.where('status', 'in', ['active', 'pending']).limit(8).get();
         const RecentSnap = [];
-        bookingsDoc.forEach(ele => RecentSnap.push({
-            bookcode: ele.id,
-            ...ele.data()
-        }));
-        const Bookings = RecentSnap.filter(ele => ele.status !== 'cart');
-        return Bookings;
+        bookingsDoc.forEach(ele => {
+            const {
+                name,
+                eventDate,
+                date,
+                status,
+                userID
+            } = ele?.data() ?? {}
+            RecentSnap.push({
+                bookid: ele.id,
+                eventDate: eventDate.toDate().toLocaleDateString(),
+                bookdate: eventDate.toDate(),
+                name,
+                status,
+                userID
+            });
+        });
+
+        return RecentSnap.sort((ele1, ele2) => ele1.bookdate - ele2.bookdate);
     } catch (error) {
         throw error;
     }
@@ -200,24 +210,28 @@ exports.oneBooking = async (bookid) => {
     try {
         const book = await BookingCol.doc(bookid);
         const bookDetails = await book.get();
-        const {
-            date,
-            eventDate,
-            userID,
-            paymentAmount,
-            status,
-            isRated,
-            name,
-        } = bookDetails.data();
-        return {
-            bookDate: new Date(date.toDate()).toLocaleDateString(),
-            eventDate: new Date(eventDate.toDate()).toLocaleDateString(),
-            user: userID,
-            payment: paymentAmount,
-            PackageName: name,
-            status,
-            isRated,
-            bookid
+        if (bookDetails?.data()) {
+            const {
+                date,
+                eventDate,
+                userID,
+                paymentAmount,
+                status,
+                isRated,
+                name,
+            } = bookDetails.data();
+            return {
+                bookDate: new Date(date.toDate()).toLocaleDateString(),
+                eventDate: new Date(eventDate.toDate()).toLocaleDateString(),
+                user: userID,
+                payment: paymentAmount,
+                PackageName: name,
+                status,
+                isRated,
+                bookid
+            };
+        } else {
+            return null;
         }
 
     } catch (error) {

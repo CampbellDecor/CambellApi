@@ -115,8 +115,7 @@ exports.OneUser = async (uid) => {
         }
 
 
-    } catch (error)
-    {
+    } catch (error) {
         throw error;
     }
 }
@@ -340,3 +339,5 @@ exports.isOnline = async (uid) => {
         return false;
     }
 }
+
+

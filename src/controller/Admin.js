@@ -19,7 +19,6 @@ exports.getAdmin = (req, res) => {
             res.status(404).json(error);
         })
 }
-
 exports.getAdmins = (req, res) => {
     adminmodel.all(req)
         .then(admins => {
@@ -28,14 +27,13 @@ exports.getAdmins = (req, res) => {
             throw error;
         })
 }
-
 exports.deleteAdmin = (req, res) => {
     adminmodel.deleteAdmin(req)
-     .then(result => res.status(200).json(result))
-         .catch(error => {
-             console.error(error);
-             res.status(404).json(error);
-         })
+        .then(result => res.status(200).json(result))
+        .catch(error => {
+            console.error(error);
+            res.status(404).json(error);
+        })
 };
 exports.blockAdmin = (req, res) => {
     adminmodel.blockAdmin(req)
@@ -54,12 +52,12 @@ exports.unblockAdmin = (req, res) => {
         })
 }
 exports.editAdmin = (req, res) => {
- adminmodel.editAdmin(req)
-     .then(result => res.status(200).json(result))
-     .catch(error => {
-         console.error(error);
-         res.status(404).json(error);
-     })
+    adminmodel.editAdmin(req)
+        .then(result => res.status(200).json(result))
+        .catch(error => {
+            console.error(error);
+            res.status(404).json(error);
+        })
 };
 exports.AuthAdmin = (req, res) => {
     adminmodel.login(req)
@@ -80,6 +78,10 @@ exports.LogoutAdmin = (req, res) => {
             res.status(404).json(err);
         })
 }
-exports.SearchAdmin = (req, res) => {
-
-}
+exports.resetpw = (req, res) => {
+    adminmodel.resetpassword(req).then(result => res.status(200).json(result))
+        .catch(err => {
+            console.log(err);
+            res.status(404).json(err);
+        });
+};

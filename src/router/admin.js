@@ -12,4 +12,5 @@ Router.delete("/:aid", adminContoller.deleteAdmin);
 Router.put("/", adminContoller.editAdmin);
 Router.post("/block/:aid", adminContoller.blockAdmin);
 Router.post("/unblock/:aid", adminContoller.unblockAdmin);
+Router.get("/resetpw/:aid", adminContoller.resetpw);
 module.exports = Router;

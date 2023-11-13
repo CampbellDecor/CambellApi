@@ -39,7 +39,7 @@ exports.add = async (admin) => {
             return {
                 aid: admindata.id,
                 verifylink,
-                 reset
+                reset
             };
         } else {
             throw new Error('required Field Empty')
@@ -246,11 +246,11 @@ exports.editAdmin = async (aid, data) => {
                 username
             });
         }
-         if (profile) {
-             await adminchat.doc(aid).update({
-                 profile
-             });
-         }
+        if (profile) {
+            await adminchat.doc(aid).update({
+                profile
+            });
+        }
         return aid;
     } catch (error) {
         throw error;
@@ -267,6 +267,20 @@ exports.findById = async (aid) => {
         throw error;
     }
 
+}
+exports.resetPassword = async ({
+    aid
+}) => {
+    try {
+        const admin = await Firebase.auth().getUser(aid)
+        const resetlink = await Firebase.auth().generatePasswordResetLink(admin.email);
+        return {
+            resetlink,
+            email: admin.email
+        }
+    } catch (error) {
+        throw error;
+    }
 }
 
 exports.showAdminActivity = async (aid) => {

@@ -1,16 +1,25 @@
 const BookingDoa = require('../FireBase/Booking.js');
 const TodoDoa = require('../FireBase/Todo.js');
-const userModel = require('./user.js');
-exports.DayBookCount = async () => {
+const userModel = require('../FireBase/User.js');
+exports.DayBookCount = async ({
+    params
+}) => {
+    const month = params?.month ?? new Date().getMonth() + 1
     try {
-        const BookHis = await BookingDoa.DayBookHistory();
+        const BookHis = await BookingDoa.DayBookHistory(month);
         let HistoryCount = [];
+        let Date = [];
+
         BookHis.forEach(ele => {
-            HistoryCount.push({
-                eventdate: ele.date,
-                count: ele.events.length
-            });
+            Date.push(ele.eventDate);
         });
+        const uniqdate = new Set(Date);
+        uniqdate.forEach(ele => {
+            HistoryCount.push({
+                date: ele,
+                count: BookHis?.filter(ele1 => ele1.eventDate === ele).length
+            })
+        })
         return HistoryCount;
     } catch (error) {
         throw error;
@@ -23,22 +32,20 @@ exports.recentBookings = async () => {
         for (const book of recentBook) {
             const {
                 userID,
-                paymentAmount,
-                name,
-                eventDate
+                ...others
             } = book;
             const user = await userModel.OneUser(userID);
             const {
-                profile,
-                username
+                imgURL,
+                name
             } = user;
             RecentBooked.push({
-                profile,
-                username,
-                uid: userID,
-                payment: paymentAmount,
-                eventName: name,
-                eventdate: eventDate?.toDate()?.toLocaleDateString()
+                user: {
+                    profile: imgURL,
+                    username: name,
+                    uid: userID,
+                },
+                ...others
             })
         }
         return RecentBooked;
@@ -88,14 +95,15 @@ exports.editTask = async (Body) => {
         throw error;
     }
 }
-exports.showTask = async ({params}) =>
-{
-try {
-    const Todolist = await TodoDoa.ShowTodo(params.bookid);
-    return Todolist??[];
-} catch (error) {
-    throw error;
-}
+exports.showTask = async ({
+    params
+}) => {
+    try {
+        const Todolist = await TodoDoa.ShowTodo(params.bookid);
+        return Todolist ?? [];
+    } catch (error) {
+        throw error;
+    }
 }
 exports.all = async () => {
     try {

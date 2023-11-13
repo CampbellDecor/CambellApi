@@ -10,13 +10,14 @@ exports.editTask = (req, res) => {
         })
 }
 
-exports.getBookings = (req, res) => {
-    BookingModel.DayBookCount()
+exports.getMonthBookingsSummary = (req, res) => {
+    BookingModel.DayBookCount(req)
         .then(result => {
             res.status(200).json(result);
         })
         .catch(
             error => {
+                console.log(error);
                 res.status(404).json(error);
             }
         )
@@ -31,7 +32,13 @@ exports.allBooking = (req, res) => {
         })
 };
 exports.recentBooking = (req, res) => {
-    res.json(7766)
+    BookingModel.recentBookings()
+    .then(result =>
+    {
+         res.status(200).json(result);
+     }).catch(error => {
+         res.status(404).json(error);
+     })
 
 };
 exports.addTask = (req, res) => {

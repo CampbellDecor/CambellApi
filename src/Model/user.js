@@ -330,7 +330,7 @@ exports.userSearch = async (req) => {
 
 exports.OneUserBookingHistroy = async (uid) => {
     try {
-        const Book = await BookDao.UserBookDetails(uid);
+        const Book = await BookingDao.UserBookDetails(uid);
         return Book;
     } catch (error) {
         throw error;
