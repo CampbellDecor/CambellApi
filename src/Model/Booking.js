@@ -25,6 +25,8 @@ exports.DayBookCount = async ({
         throw error;
     }
 }
+
+//recent Bookings
 exports.recentBookings = async () => {
     try {
         const recentBook = await BookingDoa.recentBookings();
@@ -49,6 +51,39 @@ exports.recentBookings = async () => {
             })
         }
         return RecentBooked;
+    } catch (error) {
+        throw error;
+    }
+}
+//Booking ByID
+exports.OneBooking = async ({
+    params
+}) => {
+    try {
+        const book = await BookingDoa.oneBooking(params.bookid);
+        return book;
+    } catch (error) {
+        throw error;
+    }
+}
+//All Booking Details
+exports.all = async () => {
+    try {
+        const Bookings = await BookingDoa.all();
+        const BookMap = [];
+        Bookings.forEach(ele => {
+            const {
+                eventDate,
+                bookDate,
+                ...others
+            } = ele;
+            BookMap.push({
+                ...others,
+                eventDate: eventDate.toDate().toLocaleDateString(),
+                bookDate: bookDate.toDate().toDateString()
+            })
+        })
+        return BookMap;
     } catch (error) {
         throw error;
     }
@@ -101,38 +136,6 @@ exports.showTask = async ({
     try {
         const Todolist = await TodoDoa.ShowTodo(params.bookid);
         return Todolist ?? [];
-    } catch (error) {
-        throw error;
-    }
-}
-exports.all = async () => {
-    try {
-        const Bookings = await BookingDoa.all();
-        const BookMap = [];
-        Bookings.forEach(ele => {
-            const {
-                eventDate,
-                bookDate,
-                ...others
-            } = ele;
-            BookMap.push({
-                ...others,
-                eventDate: eventDate.toDate().toLocaleDateString(),
-                bookDate: bookDate.toDate().toDateString()
-            })
-        })
-        return BookMap;
-    } catch (error) {
-        throw error;
-    }
-}
-
-exports.OneBooking = async ({
-    params
-}) => {
-    try {
-        const book = await BookingDoa.oneBooking(params.bookid);
-        return book;
     } catch (error) {
         throw error;
     }

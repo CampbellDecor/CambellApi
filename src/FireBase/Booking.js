@@ -81,6 +81,39 @@ const allBookings = async () => {
         throw error;
     }
 }
+//when one booking user details
+exports.BookUser = async (uid) => {
+    try {
+        const Bookuser = await Firebase.auth().getUser(uid);
+        const {
+            creationTime,
+            lastSignInTime
+        } = Bookuser.metadata
+        const Time = {};
+        Time.join = new Date(creationTime).toDateString();
+        Time.isOnline = new Date(lastSignInTime) > new Date();
+        const BookDoc = await USerCol.doc(uid).get();
+        const {
+            name,
+            imgURL,
+            address,
+            phoneNo,
+            email
+        } = BookDoc.data();
+        const bookcountusers = (await BookingCol.where('userID', '==', uid).get()).size;
+        return {
+            username: name,
+            profile: imgURL,
+            address,
+            mobile: phoneNo,
+            ...Time,
+            email,
+            No_book: bookcountusers
+        };
+    } catch (error) {
+        throw error;
+    }
+}
 
 exports.addBooking = async (booking) => {
     try {
@@ -90,55 +123,7 @@ exports.addBooking = async (booking) => {
         throw error;
     }
 }
-exports.DayBookHistory = async (month) => {
-    try {
-        const BookDoc = await BookingCol.where('status', 'not-in', ["cart", "cancelled"]).get();
-        const bookings = [];
-        BookDoc.forEach(ele => {
-            const {
-                eventDate,
-                status,
-                name,
-                date
-            } = ele.data();
-            const dater = new Date(eventDate.toDate());
-            if ((dater.getMonth() + 1) ===parseInt(month)) {
-                bookings.push({
-                    bookid: ele.id,
-                    eventDate: dater.toLocaleDateString(),
-                    status,
-                    name,
-                    bookdate: date
-                })
-            }
-
-        })
-        return bookings;
-    } catch (error) {
-        throw error;
-    }
-}
-exports.userBookingCount = async (uid) => {
-    try {
-        const booking = [];
-        const Book = await BookingCol.where('userID', '==', uid).get();
-        Book.forEach(ele => {
-            const {
-                userID,
-                status,
-                ...other
-            } = ele.data();
-            if (status !== 'cart') {
-                booking.push(other);
-            }
-
-        });
-        return booking.length;
-    } catch (error) {
-        throw error;
-    }
-}
-
+//recent 10 booking pending and active stage
 exports.recentBookings = async () => {
     try {
         const bookingsDoc = await BookingCol.where('status', 'in', ['active', 'pending']).limit(8).get();
@@ -166,46 +151,7 @@ exports.recentBookings = async () => {
         throw error;
     }
 }
-
-exports.deleteTask = async (bookid, taskid) => {
-    try {
-        const BookDoc = await BookingCol.doc(bookid).collection('todo').doc(taskid).delete();
-        return BookDoc.writeTime;
-    } catch (error) {
-        throw error;
-    }
-}
-
-exports.all = async () => {
-    try {
-        const allBooking = [];
-        const bookings = await BookingCol.get()
-        bookings.forEach(ele => {
-            const {
-                eventDate,
-                status,
-                date,
-                name,
-                PaymentAmount
-            } = ele.data();
-            if (status !== 'cart' && eventDate) {
-                allBooking.push({
-                    bookid: ele.id,
-                    eventname: name ?? "unknown",
-                    eventDate,
-                    bookDate: date,
-                    status,
-                    paid: PaymentAmount !== undefined
-
-                });
-            }
-        })
-        return allBooking;
-    } catch (error) {
-        throw error
-    }
-}
-
+//book by id one booking
 exports.oneBooking = async (bookid) => {
     try {
         const book = await BookingCol.doc(bookid);
@@ -238,6 +184,107 @@ exports.oneBooking = async (bookid) => {
         throw error
     }
 }
+//for show how many book in a number and month wise show
+exports.DayBookHistory = async (month) => {
+    try {
+        const BookDoc = await BookingCol.where('status', 'not-in', ["cart", "cancelled"]).get();
+        const bookings = [];
+        BookDoc.forEach(ele => {
+            const {
+                eventDate,
+                status,
+                name,
+                date
+            } = ele.data();
+            const dater = new Date(eventDate.toDate());
+            if ((dater.getMonth() + 1) ===parseInt(month)) {
+                bookings.push({
+                    bookid: ele.id,
+                    eventDate: dater.toLocaleDateString(),
+                    status,
+                    name,
+                    bookdate: date
+                })
+            }
+
+        })
+        return bookings;
+    } catch (error) {
+        throw error;
+    }
+}
+//booking count
+exports.bookcountall = async () =>
+{
+    try {
+        const bookings = await BookingCol.where('status', 'not-in', ['cart', 'cancelled']).get();
+        return bookings.size;
+    } catch (error) {
+        throw error;
+    }
+}
+//one user booking counts
+exports.userBookingCount = async (uid) => {
+    try {
+        const booking = [];
+        const Book = await BookingCol.where('userID', '==', uid).get();
+        Book.forEach(ele => {
+            const {
+                userID,
+                status,
+                ...other
+            } = ele.data();
+            if (status !== 'cart' || status !== 'cancelled') {
+                booking.push(other);
+            }
+
+        });
+        return booking.length;
+    } catch (error) {
+        throw error;
+    }
+}
+//all Bookings
+exports.all = async () => {
+    try {
+        const allBooking = [];
+        const bookings = await BookingCol.get()
+        bookings.forEach(ele => {
+            const {
+                eventDate,
+                status,
+                date,
+                name,
+                PaymentAmount
+            } = ele.data();
+            if (status !== 'cart' && eventDate) {
+                allBooking.push({
+                    bookid: ele.id,
+                    eventname: name ?? "unknown",
+                    eventDate,
+                    bookDate: date,
+                    status,
+                    paid: PaymentAmount !== undefined
+
+                });
+            }
+        })
+        return allBooking;
+    } catch (error) {
+        throw error
+    }
+}
+
+exports.deleteTask = async (bookid, taskid) => {
+    try {
+        const BookDoc = await BookingCol.doc(bookid).collection('todo').doc(taskid).delete();
+        return BookDoc.writeTime;
+    } catch (error) {
+        throw error;
+    }
+}
+
+
 exports.UserBookDetails = async (uid) => {
     try {
         const Bookings = await BookingCol.where('userID', '!=', uid).get();
@@ -260,46 +307,6 @@ exports.UserBookDetails = async (uid) => {
             }
         })
         return bookings;
-    } catch (error) {
-        throw error;
-    }
-}
-
-const ServiceBookDetails = async (serviceid) => {
-    try {
-
-    } catch (error) {
-        throw error;
-    }
-}
-exports.BookUser = async (uid) => {
-    try {
-        const Bookuser = await Firebase.auth().getUser(uid);
-        const {
-            creationTime,
-            lastSignInTime
-        } = Bookuser.metadata
-        const Time = {};
-        Time.join = new Date(creationTime).toDateString();
-        Time.isOnline = new Date(lastSignInTime) > new Date();
-        const BookDoc = await USerCol.doc(uid).get();
-        const {
-            name,
-            imgURL,
-            address,
-            phoneNo,
-            email
-        } = BookDoc.data();
-        const bookcountusers = (await BookingCol.where('userID', '==', uid).get()).size;
-        return {
-            username: name,
-            profile: imgURL,
-            address,
-            mobile: phoneNo,
-            ...Time,
-            email,
-            No_book: bookcountusers
-        };
     } catch (error) {
         throw error;
     }

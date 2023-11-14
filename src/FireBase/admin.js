@@ -302,3 +302,13 @@ exports.showAdminActivity = async (aid) => {
         throw error;
     }
 }
+
+exports.admincount = async () =>
+{
+    try {
+        const admins = await adminDoc.get();
+        return admins?.size??0
+    } catch (error) {
+        throw error;
+    }
+}
