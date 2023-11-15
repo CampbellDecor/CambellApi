@@ -218,7 +218,8 @@ exports.bookcountall = async () =>
 {
     try {
         const bookings = await BookingCol.where('status', 'not-in', ['cart', 'cancelled']).get();
-        return bookings.size;
+        return await bookings.size;
+
     } catch (error) {
         throw error;
     }

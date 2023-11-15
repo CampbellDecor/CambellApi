@@ -139,11 +139,11 @@ exports.Religions = async () => {
     }
 
 }
-
+//user count
 exports.usercount = async () => {
     try {
-        const adminsnap = await userCol.get();
-        return adminsnap.size;
+        const usernap = await userCol.get();
+        return usernap.size;
     } catch (error) {
         throw error;
     }
@@ -339,5 +339,3 @@ exports.isOnline = async (uid) => {
         return false;
     }
 }
-
-
