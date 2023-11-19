@@ -1,7 +1,8 @@
 const {
     showchatllist,
     sendMessage,
-    adminchats
+    adminchats,
+    searchA
 } = require('../FireBase/adminchat.js');
 
 
@@ -15,7 +16,11 @@ exports.send = async ({
             aid
         } = body;
 
-        const result = await sendMessage({ message, aid, access_token:cookies.access_token });
+        const result = await sendMessage({
+            message,
+            aid,
+            access_token: cookies.access_token
+        });
         return result;
     } catch (error) {
         throw error;
@@ -41,6 +46,16 @@ exports.chats = async ({
             aid
         } = params;
         const result = await adminchats(aid);
+        return result;
+    } catch (error) {
+        throw error;
+    }
+}
+exports.search = async ({
+    params
+}) => {
+    try {
+        const result = await searchA(params.search);
         return result;
     } catch (error) {
         throw error;

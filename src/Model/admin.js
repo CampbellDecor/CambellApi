@@ -2,6 +2,7 @@ const adminDao = require("../FireBase/admin.js");
 const randompwd = require("generate-password");
 const Fire = require('../FireBase/Fire.js');
 const Mail = require("./Mail.js");
+const Authu = require("../FireBase/Auth.js");
 exports.add = async (request) =>
 
   {
@@ -351,6 +352,15 @@ exports.resetpassword = async ({
     const rest = await adminDao.resetPassword(params);
     await Mail.sendSingleMail(rest.email, "password Reset", `<h5>${rest?.resetlink}</h6>`);
     return true;
+  } catch (error) {
+    throw error;
+  }
+}
+
+exports.auth = async () =>
+{
+  try {
+    return await Authu.alluser() ?? [];
   } catch (error) {
     throw error;
   }

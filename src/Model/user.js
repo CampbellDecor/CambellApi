@@ -227,13 +227,12 @@ exports.all = async () => {
             UserDatas.push(user);
         })
         for (const iterator of UserDatas) {
-            const u = await userSetModel(iterator);
-            userSetData.push(u);
-        }
-        return userSetData;
-    } catch (error) {
-        throw error;
+            userSetData.push(iterator);
     }
+    return userSetData;
+} catch (error) {
+    throw error;
+}
 }
 exports.OneUser = async (uid) => {
     try {

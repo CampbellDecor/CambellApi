@@ -94,11 +94,8 @@ exports.addTask = async (req) => {
             bookid,
             ...task
         } = req.body;
-        const TodoAdd = await TodoDoa.addTask(bookid, {
-            ...task,
-            createDate: new Date()
-        });
-        return TodoAdd !== undefined;
+        const TodoAdd = await TodoDoa.addTask(bookid, task);
+        return TodoAdd ?? {};
     } catch (error) {
         throw error;
     }

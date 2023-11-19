@@ -1,9 +1,9 @@
-const Firebase = require( "./Fire.js" );
-const { FieldValue } = require( "firebase-admin/firestore" );
-const ServiceCol = Firebase.firestore().collection( "services" );
-const SCat = require( "./ServiceCategory.js" );
-const add = async (category,service) =>
-{
+const Firebase = require("./Fire.js");
+const {
+    FieldValue
+} = require("firebase-admin/firestore");
+const ServiceCol = Firebase.firestore().collection("services");
+const add = async (category, service) => {
     try {
         const serviceadd = await ServiceCol.doc(category.catid).collection(category.catname).add(service);
         return serviceadd.id;
@@ -12,57 +12,59 @@ const add = async (category,service) =>
     }
 };
 
-const oneService = async serviceCode =>
-{
+const oneService = async serviceCode => {
     try {
         const service = await findbyid(serviceCode);
-           const {
-               name,
-               imgURL,
-               culture,
-               desc,
-               Events,
-               ...otherdata
+        const {
+            name,
+            imgURL,
+            culture,
+            desc,
+            Events,
+            ...otherdata
 
-           } = service;
-           return {
-               servicename: name,
-               url: imgURL ?? otherdata.category.catURL,
-               Culture: culture ?? ['common', "Hindu"],
-               description: desc ?? "good Service",
-               relatedEvents: Events?.length ?? 0,
-               ...otherdata
-           }
+        } = service;
+        return {
+            servicename: name,
+            url: imgURL ?? otherdata.category.catURL,
+            Culture: culture ?? ['common', "Hindu"],
+            description: desc ?? "good Service",
+            relatedEvents: Events?.length ?? 0,
+            ...otherdata
+        }
     } catch (error) {
         throw error;
     }
 };
 
 
-const all = async() =>
-{
+const all = async () => {
     try {
-        const scat = await SCat.categoryName();
-        const Services=[];
-        for ( const cate of scat )
-        {
+        const scat = await ServiceCol.get();
+        const catset = []
+        scat.forEach(ele => catset.push(`/services/${ele.id}/${ele.data().name}`))
+        const Services = [];
+        for (const cate of catset) {
 
-            const servicesNestedCol = await ServiceCol.doc( cate.cid ).collection( cate.cname );
+            const servicesNestedCol = await Firebase.doc(cate);
             const serviceSnapshot = await servicesNestedCol.get();
-        await serviceSnapshot.forEach(serv=>{
-            Services.push({servicecode:serv.id,category:cate,...serv.data()});
-        })
-       }
+            await serviceSnapshot.forEach(serv => {
+                Services.push({
+                    servicecode: serv.id,
+                    category: cate,
+                    ...serv.data()
+                });
+            })
+        }
         return Services;
     } catch (error) {
 
     }
 }
-const findbyid =async (servicecode) =>
-{
+const findbyid = async (servicecode) => {
     try {
         const All = await all();
-        return All.find(ele=>ele.servicecode===servicecode);
+        return All.find(ele => ele.servicecode === servicecode);
     } catch (error) {
         throw error;
     }

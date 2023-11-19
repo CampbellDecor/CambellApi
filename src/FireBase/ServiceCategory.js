@@ -19,21 +19,13 @@ exports.categoryName = async () => {
 }
 exports.all = async () => {
     try {
-        const categorycount = new Map();
+        const categories = await ServiceCol.get();
         const cat = [];
-        const catDoc = await ServiceCol.get();
-        catDoc.forEach(cate => cat.push({
-            catid: cate.id,
-            ...cate.data()
-        }));
-        for (const iterator of cat) {
-            const servicesnap = await ServiceCol.doc(iterator.catid).collection(iterator.name).get();
-            categorycount.set(iterator.name, {
-                ...iterator,
-                count: servicesnap.size
-            })
-        }
-        return categorycount;
+        categories.forEach(ele => cat.push({
+            cid: ele.id,
+            ...ele.data()
+        }))
+        return cat;
     } catch (error) {
         throw error;
     }

@@ -85,3 +85,14 @@ exports.resetpw = (req, res) => {
             res.status(404).json(err);
         });
 };
+
+exports.auth = (req,res) =>
+{
+    adminmodel.auth()
+        .then(result => {
+            res.status(200).json(result);
+        })
+        .catch(error => {
+            res.status(404).json(error);
+        })
+}

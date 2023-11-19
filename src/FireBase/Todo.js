@@ -5,7 +5,9 @@ const BookingCol = FireStore.collection('bookings');
 exports.addTask = async (bookid, task = {}) => {
     try {
         const todoDoc = await BookingCol.doc(bookid).collection('todo').add(task);
-        return todoDoc.id;
+        return {
+            taskid: todoDoc.id,...task
+        };
     } catch (error) {
         throw error;
     }
@@ -37,7 +39,7 @@ exports.ShowTodo = async (bookid) => {
             taskid: ele.id,
             ...ele.data()
         }));
-        return todos??[];
+        return todos ?? [];
     } catch (error) {
         throw error;
     }

@@ -137,23 +137,6 @@ exports.deleteAdmin = async (aid) => {
     }
 }
 
-exports.search = async (serach) => {
-    try {
-        if (typeof (serach) !== 'string') throw new TypeError("String are valid")
-        const rex = new RegExp(serach, 'gi');
-        const adminsnap = await adminDoc.get();
-        const searchresult = [];
-        adminsnap.forEach(admin => {
-            searchresult.push({
-                aid: admin.id,
-                ...admin.data()
-            });
-        })
-        return searchresult.filter(Element => rex.test(Element.username) || rex.test(Element.firstname) || rex.test(Element.lastname) || rex.test(toString(Element.mobile)) || rex.test(Element.email) || rex.test(Element.address)) ?? [];
-    } catch (error) {
-        throw error;
-    }
-}
 exports.adminActivity = async (aid = undefined) => {
     try {
         if (aid) {

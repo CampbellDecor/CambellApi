@@ -65,14 +65,22 @@ exports.sendMessage = async ({
 
 }
 exports.all = async ({
-    params
+    params,
+    cookies
 }) => {
     const {
         uid
     } = params;
+    const userid = await Fire.auth().verifyIdToken(cookies.access_token)
     try {
-        const chats = await allchats(uid);
-        return chats;
+        if (userid.uid === uid) {
+            const chats = await admin.adminchats(uid);
+            return chats;
+        } else {
+            const chats = await allchats(uid);
+            return chats;
+        }
+
     } catch (error) {
         throw error;
     }

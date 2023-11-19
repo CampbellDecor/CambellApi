@@ -171,7 +171,7 @@ exports.oneBooking = async (bookid) => {
                 eventDate: new Date(eventDate.toDate()).toLocaleDateString(),
                 user: userID,
                 payment: paymentAmount,
-                PackageName: name,
+                name,
                 status,
                 isRated,
                 bookid
@@ -197,7 +197,7 @@ exports.DayBookHistory = async (month) => {
                 date
             } = ele.data();
             const dater = new Date(eventDate.toDate());
-            if ((dater.getMonth() + 1) ===parseInt(month)) {
+            if ((dater.getMonth() + 1) === parseInt(month)) {
                 bookings.push({
                     bookid: ele.id,
                     eventDate: dater.toLocaleDateString(),
@@ -214,8 +214,7 @@ exports.DayBookHistory = async (month) => {
     }
 }
 //booking count
-exports.bookcountall = async () =>
-{
+exports.bookcountall = async () => {
     try {
         const bookings = await BookingCol.where('status', 'not-in', ['cart', 'cancelled']).get();
         return await bookings.size;
@@ -256,7 +255,8 @@ exports.all = async () => {
                 status,
                 date,
                 name,
-                PaymentAmount
+                PaymentAmount,
+                userID,
             } = ele.data();
             if (status !== 'cart' && eventDate) {
                 allBooking.push({
@@ -265,6 +265,7 @@ exports.all = async () => {
                     eventDate,
                     bookDate: date,
                     status,
+                    user: userID,
                     paid: PaymentAmount !== undefined
 
                 });

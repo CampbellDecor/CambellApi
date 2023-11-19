@@ -33,9 +33,7 @@ exports.getServices = (req, res) => {
 exports.deleteService = (req, res) => {
 
 };
-exports.blockService = (req, res) => {
 
-};
 exports.searchService = (req, res) => {
 
 }

@@ -42,15 +42,22 @@ exports.all = async () => {
     try {
         const users = [];
         const snapshot = await userCol.get();
-        snapshot.forEach(async user => {
+        snapshot.forEach(user => {
             const {
                 religion,
+                imgURL,
+                phoneNo,
+                name,
                 ...other
             } = user.data();
             users.push({
                 uid: user.id,
-                ...other,
-                religion: religion ?? 'unknown'
+                profile: imgURL,
+                mobile: phoneNo,
+                username:name,
+                    ...other,
+                religion: religion ?? 'unknown',
+                join: user.createTime.toDate().toLocaleDateString()
             });
 
         })

@@ -12,14 +12,26 @@ exports.sendMessage = async ({
         const {
             uid
         } = await Fire.auth().verifyIdToken(access_token);
-        await UserChatsCol.doc(userid).collection("message").add({
+        const now = new Date();
+        const Mes = {
             receiverId: userid,
             senderId: uid,
             text: message,
-            timestamp: new Date(),
+            timestamp: now,
             username: username
-        })
-        return true;
+        }
+        const addMes = await UserChatsCol.doc(userid).collection("message").add(Mes)
+        const Dtime = {
+            date: now.toLocaleDateString(),
+            time: now.toLocaleTimeString()
+        }
+        return {
+            chatid: addMes.id,
+            ...Dtime,
+            type: 'recive',
+            message,
+            uid:userid
+        };
     } catch (error) {
         throw error;
     }
@@ -76,6 +88,7 @@ exports.allchats = async (uid) => {
                 }
                 const type = receiverId === uid ? 'recive' : 'sent';
                 chat.push({
+                    chatid: c.id,
                     ...Dtime,
                     type,
                     message: text,

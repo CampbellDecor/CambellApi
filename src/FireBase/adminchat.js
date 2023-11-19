@@ -12,17 +12,19 @@ exports.sendMessage = async ({
         const chatting = {
             message,
             date: new Date().toLocaleDateString(),
-            time: new Date().toLocalTimeString(),
+            time: new Date().toLocaleTimeString(),
             type: aid === uid ? 'sent' : 'recive'
         }
-        const Admindoc = await adminchatcol.doc(aid).collection("chat").add(chatting);
+        const chatid = await adminchatcol.doc(aid).collection("chat").add(chatting);
         await adminchatcol.doc(aid).update({
             last: {
                 type: aid === uid ? 'sent' : 'recive',
                 message,
             }
         })
-        return true;
+        return {
+            chatid:chatid.id,...chatting
+        };
     } catch (error) {
         throw error;
     }
@@ -73,7 +75,7 @@ exports.adminchats = async (aid) => {
         const Adch = await adminchatcol.doc(aid).collection("chat").get();
         const c = [];
         Adch.forEach(e => {
-            c.push({
+            c.unshift({
                 aid,
                 chatid: e.id,
                 ...others,
@@ -85,3 +87,21 @@ exports.adminchats = async (aid) => {
         throw error;
     }
 }
+
+// exports.searchA = async (searchtext) => {
+//     try {
+
+//         const adminDoc = await showchatllist();
+//         const search = new RegExp(searchtext, 'ig');
+//         const result = [];
+//         adminDoc.forEach(ele => {
+//             if (ele.username.search(search)) {
+//                 result.push(ele)
+//             }
+
+//         })
+//         return result;
+//     } catch (error) {
+//         throw error;
+//     }
+// }

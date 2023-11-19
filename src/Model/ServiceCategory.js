@@ -7,9 +7,8 @@ exports.all = async () => {
         categories.forEach(element => {
             ServiceCate.push(element);
         });
-        if (categories.length <= 0) throw Error("Categoies Not Found");
 
-        else return ServiceCate;
+        return ServiceCate??[];
     } catch (error) {
         throw error;
     }
