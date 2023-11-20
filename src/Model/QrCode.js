@@ -11,7 +11,7 @@ exports.genrateQrtxt = (data) =>
             })
         }
 
-exports.genrateQrfile = (data,filepath="") =>
+exports.genrateQrfile = async (data,filepath="") =>
 {
     let stJSon = JSON.stringify( data );
 
@@ -19,10 +19,10 @@ exports.genrateQrfile = (data,filepath="") =>
             {
                 if ( err ) return console.log( "error" );
             } );
-    
+
 
 }
-exports.genrateQrUrl = (data) =>
+exports.genrateQrUrl =async (data) =>
 {
     let stJSon = JSON.stringify( data );
             Qrcode.toDataURL( stJSon, ( code, err ) =>

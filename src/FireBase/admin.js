@@ -36,10 +36,15 @@ exports.add = async (admin) => {
             await adminc.collection("chat").add(chatting)
             const verifylink = await Firebase.auth().generateEmailVerificationLink(admin?.email);
             const reset = await Firebase.auth().generatePasswordResetLink(admin?.email);
+            const { activity, ...extra } = otherAdmin;
             return {
                 aid: admindata.id,
                 verifylink,
-                reset
+                reset,
+                result: {
+                    aid: admindata.id,
+                    ...extra
+                }
             };
         } else {
             throw new Error('required Field Empty')
@@ -286,11 +291,10 @@ exports.showAdminActivity = async (aid) => {
     }
 }
 
-exports.admincount = async () =>
-{
+exports.admincount = async () => {
     try {
         const admins = await adminDoc.get();
-        return admins?.size??0
+        return admins?.size ?? 0
     } catch (error) {
         throw error;
     }

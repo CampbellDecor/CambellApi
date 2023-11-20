@@ -10,4 +10,5 @@ Router.put("/todoTask", BookController.editTask)
 Router.get("/todoTask/:bookid", BookController.getTasks)
 Router.get('/all', BookController.allBooking);
 Router.get('/one/:bookid', BookController.getBooking)
+Router.get('/approve/:bookid', BookController.approve);
 module.exports = Router;

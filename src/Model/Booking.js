@@ -25,7 +25,15 @@ exports.DayBookCount = async ({
         throw error;
     }
 }
-
+exports.Approve = async ({params}) =>
+{
+    try {
+        const result = await BookingDoa.approveBooking(params.bookid);
+        return result;
+    } catch (error) {
+        throw error;
+    }
+}
 //recent Bookings
 exports.recentBookings = async () => {
     try {

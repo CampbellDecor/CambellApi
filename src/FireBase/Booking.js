@@ -3,15 +3,33 @@ const FireStore = Firebase.firestore();
 const BookingCol = FireStore.collection('bookings');
 const BookingHisCol = FireStore.collection('BookingHistory');
 const USerCol = FireStore.collection('users');
-const Service = require('./Service.js');
-const Event = require('../FireBase/Events.js');
-const Packages = FireStore.collection("users");
-
+const messaging = Firebase.messaging();
+const {
+    genrateQrfile,
+    genrateQrUrl
+} = require('../Model/QrCode.js');
 exports.approveBooking = async (bookcode) => {
     try {
         const booking = BookingCol.doc(bookcode);
+        const Book = await booking.get();
+        const qrpath = `src/Util/QR/${bookcode}.png`
+        const qrsavepath = "QR/" + bookcode + ".png";
+        const qr = await genrateQrfile({
+            bookid: bookcode,
+            ...Book.data()
+        }, qrpath);
+        const Firestorage = Firebase.storage().bucket();
+        Firestorage.upload(qrpath, {
+            destination: qrsavepath
+        })
+        const fileref = Firestorage.file(qrsavepath);
+        const [url] = await fileref.getSignedUrl({
+            action: 'read',
+            expires: '01-11-2024'
+        });
         const book = await booking.update({
-            status: 'active'
+            status: 'active',
+            qr: url
         });
         const bookdetails = await booking.get();
         const {
@@ -22,7 +40,10 @@ exports.approveBooking = async (bookcode) => {
             eventdate: eventDate.toDate(),
             approve: book.writeTime.toDate()
         });
-        return bookingHistory.id;
+        return {
+            bookid: bookdetails.id,
+            ...bookdetails.data()
+        };
     } catch (error) {
         throw error;
     }
@@ -255,7 +276,9 @@ exports.all = async () => {
                 status,
                 date,
                 name,
-                PaymentAmount,
+                paymentAmount,
+                pdf,
+                qr,
                 userID,
             } = ele.data();
             if (status !== 'cart' && eventDate) {
@@ -266,7 +289,9 @@ exports.all = async () => {
                     bookDate: date,
                     status,
                     user: userID,
-                    paid: PaymentAmount !== undefined
+                    pdf,
+                    qr: qr,
+                    paid: paymentAmount ?? false
 
                 });
             }
