@@ -32,4 +32,3 @@ const allUsers = async () => {
     }
 }
 
-allUsers().then(console.log)

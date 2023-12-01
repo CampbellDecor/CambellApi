@@ -1,35 +1,24 @@
-const {
-    FireStore,
-    Auth
-} = require('./Fire.js');
-const AdminCollection = FireStore.collection('admins');
-
-exports.allAdmins = async () =>
+const Authndication = require('./Firebase/Auth.js');
+const {Admin } = require('../Model/Mode/Admin.js');
+const Auth = new Authndication();
+class ServiceAdmin
 {
-    try {
-        const AdminDoc = await AdminCollection.get();
-        const Admins = [];
-        const adminsResult = []
-        AdminDoc.forEach(admin => {
-            const {
-                activity,
-                ...others
-            } = admin.data()
-            Admins.push({
-                aid: admin.id,
-                ...others
-            });
-        });
-        for (const u of Admins) {
-            const admin = await Auth.getAdmin(u.aid);
-            adminsResult.push({
-                ...u,
-                lastOnline: admin.metadata?.lastSignInTime ? new Date(admin.metadata?.lastSignInTime).toISOString() : "Not Yet",
-                join: new Date(admin.metadata.creationTime).toISOString()
-            })
-        }
-        return adminsResult;
+    constructor (admin)
+    {
+        this.admin = admin;
+    }
+    async ResetPassword ()
+    {
+        const { email } = this.admin;
+    try
+    {
+        if (!email) throw new Error("Empty email")
+        const link = await Auth.resetPassword(this.admin?.email);
+        return link;
     } catch (error) {
         throw error;
     }
 }
+}
+module.exports = {
+    ServiceAdmin};

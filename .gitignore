@@ -132,3 +132,8 @@ ServiceKey.json
 FireClient.js
 *.png
 MailInfo.js
+ExtraFunctions/
+Mode/
+Util/
+asserts/
+FireClient.js
