@@ -133,7 +133,8 @@ FireClient.js
 *.png
 MailInfo.js
 ExtraFunctions/
-Mode/
+controller/
+FireBase/
 Util/
 asserts/
 FireClient.js
