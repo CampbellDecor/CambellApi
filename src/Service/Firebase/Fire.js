@@ -8,8 +8,8 @@ const {
 const {
     getMessaging
 } = require("firebase/messaging");
-const FirebaseConfig = require('./FirebaseClintConfig.js');
-const ServiceKey = require('./ServiceKey.json');
+const FirebaseConfig = require('../../config/FirebaseClintConfig.js');
+const ServiceKey = require('../../config/ServiceKey.json');
 
 const firebaseClient = initializeApp(FirebaseConfig);
 Firebase.initializeApp({

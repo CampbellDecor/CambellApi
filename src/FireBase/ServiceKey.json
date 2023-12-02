@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "campbelldecor-c2d1f",
+  "private_key_id": "2384b611b5f82b70c34e3a6ddc0fb67da53b4143",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDP8MDezAtYipYu\nmFBE/KTqYW8O/iBdz+Na3UMlXwaPghALFYeUVF2+MiDpxk2VvtlP2nL4pkYZqwPl\nOrqOlEUZuU5x91FBRE2vDnQ/Sn7LqwHgJFa0yPj14U9kcA9Z8K4Owh8nbsK9PnoZ\ng6Qg79J3ohbyEKP/WIz0mjAOdXtnCx4zQe9NCHMdfdfbsAOlanqnKPKwplTEGb+j\nJ/C7iI9dchkHO7RRNAPOrdiEEn+//qIhl7x8GSdRSRzJtADMoqiNKKxQGgEqSQ58\ndc6DMwVUi7KQUnnRxUUfZZoA4vXmf/ISQ0RtTey9RgqUhr5i8cEh5IoJj+MTaHZM\nvoaECxSbAgMBAAECggEAISJg6V+kMzCqK7STndqQQNTTyJTP/YLh3JnDWFIjDn0Q\nJ2P/3a/v3B3KxtWViVYG9MV/aoW8R9zLWxyXm56ewDGaAWkCZp8Gre1ksq0hNT0D\nqH7B3j7kBPIpH30HxTIn2iwuoK7ykwtAk445ehIc/Hk0pM/oAglPNK7ZF4S67Dk8\nx+B9soNC5BkW/bHpk+ptc4n5fq3ox4gI4/f+CDn/sCHnMDXp0o40fXuRC9wyNCW8\nR8Ors/Fn+sEOBmkrG48bTvLM/z7cr2015eyFh9UNYVgvZbkVTVrxwVpQYVJPk8RP\ndAkYpw6ezs+cBLIy2bpsS1KWINtS+lqz7PThLZ/WgQKBgQDnprpF8B+gcYlRDPUa\nGRL2dH/UnZKcGuSIIYv/agOLVo+lCq8MX2g5XTDvle8wLi5GwJUBdd+Tw/RLROen\n3pq2zEFK/LJZbnJ0qceS/67q8+28Mxj8yAB9JUEiYCKRPb+rShg9idfnWFv6ZAer\nO/i9eu7yaZgu9iD+cpQHVb3YwQKBgQDlzAO8zW4L+ghnwOgVwE+8iC37kTdgxHKQ\nqenACjUgaTIj68E84ViyQXBlDw3ok+Yp+I6+RQb08T/p00NNHugg3j6T8jXR5As5\nesNT8g9crZoL48UxeaUIZIgZTpBGTxTed1s6qIwP/4nf1xzoQSWhFmct4o+lREnv\n7iZTfAkIWwKBgE+tq3iO5XH8W20DdfLqGPmojKeHI3yKS3z/fPX3cwykU3hDOn6Y\n+nJwuXpPKhx6ZfR0HUyJTMO4rPiO1NeK29BwZSzzyiy0rq2uEDVhuLqb+HO5Z6ja\n6kAhZkv6oSkwAhNawwe3uAmc/NYdPf4J/L6/4ByFcZEFm8ephX0YYtqBAoGAWuuP\nhwIYynBRJwvyR7jhU4zl9KUOLiFL2uT/cVYYkwxMJF5BBJ98gnrVx4ZfUGhEJtML\nV0jkacGSMie+dyMFYQvN4qdwl+0Ma9+grPQXE+o0CwRBn0OsAlgUaT7mYosjjKnY\n1KqfUC0hFgl8jIBKLSQ6CrObdh5AyseFLn7i7AUCgYEAq1izEsFs9D6kY6I8aMNE\nyntDrNYgkZD/UU+deYbnBVJCjfmXLdaSwwaxqNy/JtEn67EFapDHRJaK2dpbBfpL\nj+WOFUdN4lWhitXVCPDFHnix4U3zypk19Sb9OTntEpP2Pv7KgsAHGNq5AVnyfAQq\nOJhibPBHm6Ipnr8pBORu6Z4=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-slk35@campbelldecor-c2d1f.iam.gserviceaccount.com",
+  "client_id": "107000910990342913457",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-slk35%40campbelldecor-c2d1f.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

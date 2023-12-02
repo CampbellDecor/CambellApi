@@ -1,5 +1,8 @@
 const Qrcode = require("qrcode");
-const Qr_genrator = require('qrcode-generator')
+const Qr_genrator = require('qrcode-generator');
+const {
+    basepath
+} = require("../../config/BasePath.js")
 
 class QRCode {
     qr_genrator = Qr_genrator(4, 'L');
@@ -49,21 +52,34 @@ class QRCode {
     QrSvg() {
         return this.qr_genrator.createSvgTag();
     }
-    async QrFile (path)
-    {
-        await Qrcode.toFile(path, this.stringData);
-        return path;
+    async QrFile(filename) {
+        try {
+            const Path = basepath + "\\asserts\\Qr\\" + filename
+            await Qrcode.toFile(Path, this.stringData);
+            return Path;
+        } catch (error) {
+            throw error;
+        }
+
     }
-     async QrImageFile(path) {
-         await Qrcode.toFile("Image/"+path+'.png', this.stringData);
-         return path;
+    async QrImageFile(name) {
+        try {
+            const Path = basepath + "\\asserts\\Qr\\" + name + '.png'
+            await Qrcode.toFile(Path, this.stringData);
+            return Path;
+        } catch (error) {
+            throw error;
+        }
+
     }
-    QrDataUrl ()
-    {
+    QrDataUrl() {
         return this.qr_genrator.createDataURL();
     }
 }
 
 
-
-module.exports = QRCode;
+const g = new QRCode({
+    name: "ttt"
+});
+g.QrImageFile('my').then(console.log)
+//module.exports = QRCode;
