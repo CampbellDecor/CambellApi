@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Your Email Template</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Times New Roman', Times, serif;
+                font-size: 75%;
+                background: none;
+            }
+
+            body {
+                width: 100%;
+                text-align: justify;
+                line-height: 1.5rem;
+                background-position: center;
+                background-size: cover;
+                background-image: url("https://wallpapers.com/images/hd/purple-and-white-background-3440-x-1440-tuhp9p9pxlqin7og.jpg");
+                height: max-content;
+                min-height: 700px;
+            }
+
+            a {
+                text-decoration: none;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            header {
+                background-image: url("https://assets.simpleviewinc.com/simpleview/image/upload/c_limit,h_1200,q_75,w_1200/v1/clients/irving-redesign/Events_Page_Header_2903ed9c-40c1-4f6c-9a69-70bb8415295b.jpg");
+                text-align: center;
+                background-position: center;
+                background-size: cover;
+                width: 100%;
+            }
+
+            header .logo {
+                width: 100px;
+                height: 100px;
+            }
+
+            main {
+                min-height: 400px;
+                height: 500px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            main>div {
+                font-size: 1.7rem;
+                line-height: 1.5;
+            }
+
+            header h1 {
+                text-shadow: grey 1.5px 1px 1px;
+            }
+
+            footer {
+                color: azure;
+                padding: 20px;
+                background-image: url("https://worcestertourism.com/wp-content/uploads/2022/08/IMG_8070-2.jpg");
+                background-position: center;
+                background-size: cover;
+                border-top: 1px solid #e5e5e5;
+                height: max-content;
+            }
+
+            footer .footer {
+                margin-top: 10px;
+                height: max-content;
+                background-color: #0b0a0a8e;
+                padding: 10px;
+                display: flex;
+                width: 100%;
+            }
+
+            .footer ul {
+                list-style: none;
+
+            }
+
+            .footer li {
+                line-height: 1.3;
+                font-size: 12px;
+            }
+
+            .footer a {
+                text-decoration: none;
+            }
+        .footer-features{
+            flex-grow: 2;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        </style>
+    </head>
+
+    <body>
+
+        <header style="color: white; text-align: center; padding: 10px;">
+            <img class="logo"
+                src="https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/logo.png?alt=media&amp;token=8beb4a91-6495-41c9-941d-3b26d1403757"
+                alt="Logo">
+            <h1>Campbell Decor</h1>
+        </header>
+
+        <main
+            style="padding: 30px; margin: 5px 20px;text-align: justify;display: flex;align-items: center;justify-content: center;"
+            id="content">
+
+            <div style="width: 90%;">
+                <h2>{{title}}</h2>
+                <h5>Hi, ${{username}}</h5>
+                <p>
+                    {{content}}
+                </p>
+                <p>
+                    {{content2}}
+                </p>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer">
+                <ul>
+                    <li></li>
+                </ul>
+            </div>
+        </footer>
+
+    </body>
+
+</html>

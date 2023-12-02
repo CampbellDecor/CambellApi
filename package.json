@@ -39,6 +39,7 @@
     "nodemailer-express-handlebars": "^6.1.0",
     "path": "^0.12.7",
     "qrcode": "^1.5.1",
+    "qrcode-generator": "^1.4.4",
     "random": "^4.1.0",
     "random-avatar-generator": "^2.0.0",
     "validator": "^13.11.0"
