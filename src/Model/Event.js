@@ -1,12 +1,29 @@
 const {
-    all
-} = require("../FireBase/Events.js");
+    ServiceAdmin
+} = require('../Service/Admin_Service.js');
+const AdminService = new ServiceAdmin();
+class AdminModel {
 
+    all() {
 
-exports.allEvents = async () => {
-    try {
-        return await all();
-    } catch (error) {
-        throw error;
     }
+    async add() {
+        return 20;
+    }
+    delete() {
+
+    }
+    edit() {
+
+    }
+    getByID() {
+
+    }
+    getByEmail() {
+
+    }
+
+}
+module.exports = {
+    AdminModel
 }

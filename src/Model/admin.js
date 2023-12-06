@@ -1,29 +1,26 @@
-const { ServiceAdmin } = require('../Service/Admin_Service.js');
+const {
+  ServiceAdmin
+} = require('../Service/Admin_Service.js');
 const AdminService = new ServiceAdmin();
-class AdminModel{
+class AdminModel {
 
-  all ()
-  {
+  async all({
+    cookies
+  }) {
 
   }
-  async add ()
-  {
+  async add({
+    body}) {
     return 20;
   }
-  delete ()
-  {
+  async remove({
+    body
+  }) {
 
   }
-  edit ()
-  {
-
-  }
-  getByID ()
-  {
-
-  }
-  getByEmail ()
-  {
+  async edit({
+    body
+  }) {
 
   }
 

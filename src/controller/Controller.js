@@ -1,4 +1,4 @@
-const {AdminModel}=require('../Model/admin.js')
+const { AdminModel } = require('../Model/admin.js');
 exports.httpfun = (req, res, fun) =>
 {
     fun(req)
@@ -9,4 +9,6 @@ exports.httpfun = (req, res, fun) =>
         })
 }
 
+
 exports.adminModel = new AdminModel();
+
