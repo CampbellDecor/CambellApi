@@ -1,7 +1,4 @@
-const express = require('express');
-const PayContoller = require('../controller/PaymentHistory.js');
-
-const Router = express.Router();
-
-Router.get('/', PayContoller.all);
-module.exports = Router;
+Router.post("/", add);
+Router.get("/", all);
+Router.put("/", update);
+Router.delete("/", remove);

@@ -7,6 +7,7 @@ const {
     getIdToken,
     signOut
 } = require('firebase/auth')
+
 const Authendication = function () {
 
 }
@@ -24,7 +25,7 @@ Authendication.prototype.addnew = async function ({
             displayName: username,
             password,
             email: email,
-            photoURL: profile,
+            photoURL: profile===''?undefined:profile,
             disabled: isBlock
         })
         return {
@@ -42,7 +43,25 @@ Authendication.prototype.addnew = async function ({
         throw error
     }
 }
-
+Authendication.prototype.UserByID = async function (uid)
+{
+    try {
+ const user = await Auth.getUser(uid);
+ return {
+     uid,
+     username: user.displayName,
+     email: user.email,
+     isBlock: user.disabled,
+     mobile: user.phoneNumber,
+     verfied: user.emailVerified,
+     profile: user.photoURL,
+     join: new Date(user.metadata.creationTime).toDateString(),
+     lastOnline: 'Not yet'
+ }
+    } catch (error) {
+        throw error;
+    }
+}
 Authendication.prototype.editUser = async function ({
     uid,
     username,
@@ -57,18 +76,7 @@ Authendication.prototype.editUser = async function ({
             phoneNumber: mobile,
             email
         })
-        const user = await Auth.getUser(uid);
-        return {
-            uid,
-            username: user.displayName,
-            email: user.email,
-            isBlock: user.disabled,
-            mobile: user.phoneNumber,
-            verfied: user.emailVerified,
-            profile: user.photoURL,
-            join: new Date(user.metadata.creationTime).toDateString(),
-            lastOnline: 'Not yet'
-        }
+        return await this.UserByID(uid);
     } catch (error) {
         throw error;
     }
@@ -112,7 +120,7 @@ Authendication.prototype.getAll = async function () {
                 lastOnline: metadata?.lastSignInTime ? new Date(metadata?.lastSignInTime) : 'Not Yet'
             })
         })
-        return usersD;
+        return usersD
     } catch (error) {
         throw error
     }
@@ -183,5 +191,25 @@ Authendication.prototype.count = async function ()
         throw error
     }
 }
-
+Authendication.prototype.block = async function (uid)
+{
+try {
+    await Auth.updateUser(uid, {
+        disabled: true
+    });
+    return await this.UserByID(uid);
+} catch (error) {
+    throw error;
+}
+}
+Authendication.prototype.unblock = async function (uid) {
+    try {
+        await Auth.updateUser(uid, {
+            disabled: false
+        });
+        return await this.UserByID(uid);
+    } catch (error) {
+        throw error;
+    }
+}
 module.exports = Authendication;

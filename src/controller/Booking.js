@@ -1,110 +1,12 @@
-const BookingModel = require('../Model/Booking.js');
-//all Booking in one Month
-exports.allBooking = (req, res) => {
-    BookingModel.all()
-        .then(result => {
-            res.status(200).json(result);
-        }).catch(error => {
-            res.status(404).json(error);
-        })
-};
-//Booking Count For One Month every day booking Count
-exports.getMonthBookingsSummary = (req, res) => {
-    BookingModel.DayBookCount(req)
-        .then(result => {
-            res.status(200).json(result);
-        })
-        .catch(
-            error => {
-                console.log(error);
-                res.status(404).json(error);
-            }
-        )
-}
-//Recent Bookings
-exports.recentBooking = (req, res) => {
-    BookingModel.recentBookings()
-        .then(result => {
-            res.status(200).json(result);
-        }).catch(error => {
-            res.status(404).json(error);
-        })
-
-};
-//Booking ByID
-exports.getBooking = (req, res) => {
-    BookingModel.OneBooking(req)
-        .then(result => {
-            res.status(200).json(result)
-        })
-        .catch(error => {
-            console.error(error)
-            res.status(404).json(error)
-        })
+exports.add = (req, res) => {
 
 }
+exports.all = (req, res) => {
 
-exports.approve = (req, res) =>
-{
-    BookingModel.Approve(req)
-       .then(result => {
-               res.status(200).json(result)
-           })
-           .catch(error => {
-               console.error(error)
-               res.status(404).json(error)
-           })
 }
+exports.update = (req, res) => {
 
-
-
-
-
-
-
-
-/* ------------------------------------------ToDo---------------------------------
-*/
-exports.editTask = (req, res) =>
-{
-    BookingModel.editTask(req.body)
-        .then(result => {
-            res.status(200).json(result);
-        })
-        .catch(error => {
-            console.error(error);
-            res.status(404).json(error);
-        })
 }
+exports.remove = (req, res) => {
 
-
-exports.addTask = (req, res) => {
-    BookingModel.addTask(req)
-        .then(result => {
-            res.status(200).json(result);
-        })
-        .catch(error => {
-            console.error(error)
-            res.status(404).json(error);
-        })
-}
-exports.deleteTask = (req, res) => {
-    BookingModel.deleteTask(req.body)
-        .then(result => {
-            res.status(200).json(result)
-        })
-        .catch(error => {
-            res.status(404).json(error)
-        })
-}
-
-
-exports.getTasks = (req, res) => {
-    BookingModel.showTask(req)
-        .then(result => {
-            res.status(200).json(result);
-        }).catch(error => {
-            console.error(error)
-            res.status(404).json(error);
-        })
 }

@@ -1,6 +1,11 @@
+const validator = require('validator');
+
 exports.Admin = function (
     aid = '',
     username = '',
+    firstname = '',
+    lastname = '',
+    email = '',
     password = '',
     isSuper = false,
     isOnline = false,
@@ -10,10 +15,12 @@ exports.Admin = function (
     mobile = '',
     ratings = 0,
     profile = '',
-    address = '') {
+    address = '',
+    verfied = false) {
+
+    if (email !== '' && !validator.isEmail(email)) throw new TypeError("email is invalid")
 
     return {
-        aid,
         username,
         password,
         isSuper,
@@ -25,132 +32,82 @@ exports.Admin = function (
         mobile,
         profile,
         address,
-        get username() {
-            return username;
-        },
-        get address() {
-            return address;
-        },
-        set address(address) {
-            this.address = address
-            return this;
-        },
-        get profile() {
-            return profile;
-        },
-        get mobile() {
-            return mobile;
-        },
-        get password() {
-            return password;
-        },
-        get isOnline() {
-            return isOnline;
-        },
-        get isBlock() {
-            return isBlock;
-        },
-        get isSuper() {
-            return isSuper;
-        },
-        get join() {
-            return join;
-        },
-        get lastOnline() {
-            return lastOnline;
-        },
-        get ratings() {
-            return ratings;
-        },
-        get isBlock() {
-            return isBlock;
-        },
-        set username(username) {
-            this.username = username;
-            return this
-        },
-        set mobile(mobile) {
-            this.mobile = mobile;
-            return this;
-        },
-        set password(password) {
-            this.password = password;
-            return this
-        },
-        set isOnline(isOnline) {
-            this.isOnline = isOnline;
-            return this
-        },
-        set isBlock(isBlock) {
-            this.isBlock = isBlock;
-            return this
-        },
-        set isSuper(isSuper) {
-            this.isSuper = isSuper;
-            return this
-        },
-        set join(join) {
-            this.join = join;
-            return this
-        },
-        set profile(profile) {
-            this.profile = profile;
-            return this
-        },
-        set lastOnline(lastOnline) {
-            this.lastOnline = lastOnline;
-            return this
-        },
-        set ratings(ratings) {
-            this.ratings = ratings;
-            return this
-        },
-        set isBlock(isBlock) {
-            this.isBlock = isBlock;
-            return this
-        },
-        get aid() {
-            return aid;
-        },
+        email,
+        firstname,
+        lastname,
+        address,
+        verfied,
         get data() {
             return {
-                aid,
-                username,
-                password,
-                isSuper,
-                isOnline,
-                isBlock,
-                join,
-                lastOnline,
-                ratings,
-                mobile,
-                profile
+                aid: this.aid,
+                address: this.address,
+                username: this.username,
+                password: this.password,
+                isSuper: this.isSuper,
+                isOnline: this.isOnline,
+                isBlock: this.isBlock,
+                join: this.join,
+                lastOnline: this.lastOnline,
+                ratings: this.ratings,
+                mobile: this.mobile,
+                profile: this.profile,
+                email: this.email,
+                lastname: this.lastname,
+                firstname: this.firstname,
+                verfied: this.verfied
+            };
+        },
+        get firebasedata() {
+            return {
+                address: this.address,
+                username: this.username,
+                isSuper: this.isSuper,
+                isBlock: this.isBlock,
+                ratings: this.ratings,
+                mobile: this.mobile,
+                profile: this.profile,
+                email: this.email,
+                lastname: this.lastname,
+                firstname: this.firstname,
             };
         },
         set data({
-            aid,
             username,
             password,
             isSuper,
             isOnline,
             isBlock,
-            join,
-            lastOnline,
             ratings,
             mobile,
-            profile
+            profile,
+            email,
+            firstname,
+            lastname,
+            address
         }) {
-            this.aid = aid,
-                this.username = username,
-                this.password = password,
-                this.isSuper = isSuper,
-                this.isOnline = isOnline,
-                this.isBlock = isBlock,
-                this.join = join,
-                this.lastOnline = lastOnline,
-                this.ratings = ratings,
-                this.mobile = mobile,
-                this.profile = profile
+            if (email && !validator.isEmail(email)) throw new TypeError("email is invalid")
+            this.username = username ?? "",
+                this.password = password ?? "",
+                this.isSuper = isSuper ?? false,
+                this.isOnline = isOnline ?? false,
+                this.isBlock = isBlock ?? false
+            this.ratings = ratings ?? 0,
+                this.mobile = mobile ?? '',
+                this.profile = profile ?? ''
+            this.email = email ?? "";
+            this.address = address ?? "",
+                this.lastname = lastname ?? '',
+                this.firstname = firstname ?? ""
+        },
+        set auth_data({
+            join,
+            lastOnline,
+            verfied
+        }) {
+
+            this.join = join ?? "",
+                this.lastOnline = lastOnline ?? ''
+            this.verfied = verfied ?? false;
         },
         toString() {
             return JSON.stringify({
@@ -165,6 +122,9 @@ exports.Admin = function (
                 ratings,
                 mobile,
                 profile,
+                email,
+                firstname,
+                lastname,
                 address
             })
         }
@@ -179,49 +139,6 @@ exports.AdminActivity = function (aid = '', title = '', description = '', date =
         description,
         date,
         time,
-        get aid() {
-            return aid;
-        },
-        get title() {
-            return title;
-        },
-        get description() {
-            return description;
-        },
-        get date() {
-            return date;
-        },
-        get time() {
-            return time;
-        },
-        set aid(aid) {
-            this.aid = aid;
-            return this;
-        },
-        set title(title) {
-            this.title = title;
-            return this;
-        },
-        set description(description) {
-            this.description = description
-            return this;
-        },
-        set date(date) {
-            this.date = date;
-            return this;
-        },
-        set Time(date = new Date()) {
-            this.time = date.toLocaleTimeString();
-            return this;
-        },
-        set Date(date = new Date()) {
-            this.date = date.toDateString();
-            return this;
-        },
-        set time(time) {
-            this.time = time;
-            return this;
-        },
         set data({
             aid,
             title,
@@ -237,12 +154,21 @@ exports.AdminActivity = function (aid = '', title = '', description = '', date =
         },
         get data() {
             return {
-                aid,
-                title,
-                description,
-                date,
-                time,
+                aid:this.aid,
+                title:this.title,
+                description:this.description,
+                date:this.date,
+                time:this.time,
             }
+        },
+        set data({title,description,date,time}) {
+
+                this.aid=aid,
+                this.title=title,
+                this.description=description,
+                this.date = date ?? new Date().toDateString();
+                    this.time = time ?? new Date().toLocaleTimeString();
+
         },
         toString() {
             return JSON.stringify({
@@ -256,5 +182,3 @@ exports.AdminActivity = function (aid = '', title = '', description = '', date =
 
     }
 }
-
-

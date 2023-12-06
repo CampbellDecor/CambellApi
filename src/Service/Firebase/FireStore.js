@@ -54,7 +54,7 @@ Store.prototype.editDoc = async function (id, data) {
     try {
 
         await this.collection.doc(id).update(data);
-        const module = await collection.doc(id).get();
+        const module = await this.collection.doc(id).get();
         return {
             id,
             ...module.data()
@@ -99,4 +99,4 @@ Store.prototype.find = async function (field, value,operator)
     }
 }
 
-module.exports =Store
+module.exports = { Store };

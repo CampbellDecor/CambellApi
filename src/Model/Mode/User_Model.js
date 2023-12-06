@@ -10,13 +10,14 @@ exports.User = function (
     mobile = '',
     bookCount = 0,
     profile = '',
-    address = ''
+    address = '',
+    verfied = false,
+    email = ''
 ) {
 
     return {
         uid,
         username,
-        password,
         religion,
         isOnline,
         isBlock,
@@ -26,114 +27,24 @@ exports.User = function (
         mobile,
         profile,
         address,
-        get username() {
-            return username;
-        },
-        get address() {
-            return address;
-        },
-        set address(address) {
-            this.address = address
-            return this;
-        },
-        get profile() {
-            return profile;
-        },
-        get mobile() {
-            return mobile;
-        },
-        get password() {
-            return password;
-        },
-        get isOnline() {
-            return isOnline;
-        },
-        get isBlock() {
-            return isBlock;
-        },
-        get religion() {
-            return religion;
-        },
-        get join() {
-            return join;
-        },
-        get lastOnline() {
-            return lastOnline;
-        },
-        get Bookcount() {
-            return bookCount;
-        },
-        get isBlock() {
-            return isBlock;
-        },
-        set username(username) {
-            this.username = username;
-            return this
-        },
-        set mobile(mobile) {
-            this.mobile = mobile;
-            return this;
-        },
-        set password(password) {
-            this.password = password;
-            return this
-        },
-        set isOnline(isOnline) {
-            this.isOnline = isOnline;
-            return this
-        },
-        set isBlock(isBlock) {
-            this.isBlock = isBlock;
-            return this
-        },
-        set religion(religion) {
-            this.religion = religion;
-            return this
-        },
-        set join(join) {
-            this.join = join;
-            return this
-        },
-        set profile(profile) {
-            this.profile = profile;
-            return this
-        },
-        set lastOnline(lastOnline) {
-            this.lastOnline = lastOnline;
-            return this
-        },
-        set Bookcount(Bookcount) {
-            this.bookCount = Bookcount;
-            return this
-        },
-        set isBlock(isBlock) {
-            this.isBlock = isBlock;
-            return this
-        },
-        get uid() {
-            return uid
-        },
-        set uid(uid) {
-            this.uid = uid;
-            return this
-        },
+        verfied,
+        email,
         get data() {
             return {
-                uid,
-                username,
-                password,
-                religion,
-                isOnline,
-                isBlock,
-                join,
-                lastOnline,
-                bookCount,
-                mobile,
-                profile
+                uid: this.uid ?? '',
+                email: this.email ?? '',
+                username: this.username ?? '',
+                religion: this.religion ?? '',
+                isOnline: this.isOnline ?? false,
+                isBlock: this.isBlock ?? false,
+                join: this.join ?? '',
+                lastOnline: this.lastOnline ?? 'Notyet',
+                bookCount: this.bookCount ?? 0,
+                mobile: this.mobile ?? '',
+                profile: this.profile ?? ''
             };
         },
         set data({
-            uid,
             username,
             password,
             religion,
@@ -143,10 +54,11 @@ exports.User = function (
             lastOnline,
             bookCount,
             mobile,
-            profile
+            profile,
+            verfied,
+            email
         }) {
-            this.uid = uid,
-                this.username = username,
+            this.username = username,
                 this.password = password,
                 this.religion = religion,
                 this.isOnline = isOnline,
@@ -155,7 +67,52 @@ exports.User = function (
                 this.lastOnline = lastOnline,
                 this.bookCount = bookCount,
                 this.mobile = mobile,
-                this.profile = profile
+                this.profile = profile;
+            this.verfied = verfied;
+            this.email = email;
+        },
+        set firedata({
+            name,
+            religion,
+            isBlock,
+            phoneNo,
+            imgURL,
+            address,
+            email
+
+        }) {
+            this.username = name,
+
+                this.religion = religion,
+                this.isBlock = isBlock,
+                this.mobile = phoneNo,
+                this.profile = imgURL;
+            this.address = address;
+            this.email = email;
+        },
+        get firedata() {
+            return {
+                name: this.username,
+
+                religion: this.religion,
+                isBlock: this.isBlock,
+                phoneNo: this.mobile,
+                imgURL: this.profile,
+                address: this.address,
+                email: this.email
+            }
+        },
+        set auth_data({
+            isOnline,
+            join,
+            lastOnline,
+            verfied
+        }) {
+            this.username = username,
+                this.isOnline = isOnline;
+            this.join = join,
+                this.lastOnline = lastOnline,
+                this.verfied = verfied;
         },
         toString() {
             return JSON.stringify({
@@ -170,12 +127,11 @@ exports.User = function (
                 bookCount,
                 mobile,
                 profile,
-                address
-            })
+                address,
+                verfied
+            });
         }
-    }
+    };
 
 
-}
-
-
+};

@@ -14,15 +14,28 @@ try {
     throw error;
 }
 }
-FireDB.prototype.DeepaddDoc = async function (id,data) {
-    if (!data) throw new TypeError('Empty Data!')
-    try {
-        const add = this.collection.child(id).push(data);
-        console.log(add.key);
+FireDB.prototype.AddNesetedDoc = async function (id,data,subid)
+{
+    try
+    {
+
+        const doc = await this.collection.child(id);
+        let result;
+        if (subid)
+        {
+            result = await doc.child(subid);
+            result.set(data);
+            return id;
+        } else
+        {
+            result = await doc.push(data);
+            return result.key;
+        }
     } catch (error) {
         throw error;
     }
 }
+
 FireDB.prototype.addWithIDDoc = async function (id,data) {
     try {
         const add =await this.collection.child(id);
@@ -103,3 +116,4 @@ FireDB.prototype.findById = async function (id)
     }
 }
 
+module.exports = { FireDB };
