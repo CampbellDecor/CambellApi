@@ -101,7 +101,7 @@ class HtmlCambellMail extends CambellMail {
 
 //Mail Templete send
 class HtmlTempleteCambellMail extends CambellMail {
-  constructor(auth, reciver = '', subject = '', template = '', context = {}) {
+  constructor(auth, reciver = '', subject = '', template = 'main', context = {}) {
     super(auth, reciver, subject);
     this.template = template;
     this.pathname = '';
@@ -112,10 +112,13 @@ class HtmlTempleteCambellMail extends CambellMail {
     this.pathname = pathname
     return this;
   }
-  setTemplet(templete, context) {
+  setTemplete(templete, context) {
     this.template = templete;
     this.context = context;
   }
+   setContext(context) {
+     this.context = context;
+   }
   prepare() {
     const handlebarOption = {
       veiwEngine: {

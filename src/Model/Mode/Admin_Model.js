@@ -106,7 +106,7 @@ exports.Admin = function (
         }) {
 
             this.join = join ?? "",
-                this.lastOnline = lastOnline ?? ''
+                this.lastOnline = lastOnline ?? 'Not Yet'
             this.verfied = verfied ?? false;
         },
         toString() {

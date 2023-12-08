@@ -98,5 +98,13 @@ Store.prototype.find = async function (field, value,operator)
         throw error;
     }
 }
-
+Store.prototype.findById = async function (id)
+{
+    try {
+        const data = await this.collection.doc(id).get();
+        return { id: data.id, ...data.data() };
+    } catch (error) {
+        throw error;
+    }
+}
 module.exports = { Store };

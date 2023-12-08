@@ -25,7 +25,7 @@ Authendication.prototype.addnew = async function ({
             displayName: username,
             password,
             email: email,
-            photoURL: profile===''?undefined:profile,
+            photoURL: profile === '' ? undefined : profile,
             disabled: isBlock
         })
         return {
@@ -43,21 +43,20 @@ Authendication.prototype.addnew = async function ({
         throw error
     }
 }
-Authendication.prototype.UserByID = async function (uid)
-{
+Authendication.prototype.UserByID = async function (uid) {
     try {
- const user = await Auth.getUser(uid);
- return {
-     uid,
-     username: user.displayName,
-     email: user.email,
-     isBlock: user.disabled,
-     mobile: user.phoneNumber,
-     verfied: user.emailVerified,
-     profile: user.photoURL,
-     join: new Date(user.metadata.creationTime).toDateString(),
-     lastOnline: 'Not yet'
- }
+        const user = await Auth.getUser(uid);
+        return {
+            uid,
+            username: user.displayName,
+            email: user.email,
+            isBlock: user.disabled,
+            mobile: user.phoneNumber,
+            verfied: user.emailVerified,
+            profile: user.photoURL,
+            join: new Date(user.metadata.creationTime).toDateString(),
+            lastOnline: 'Not yet'
+        }
     } catch (error) {
         throw error;
     }
@@ -126,16 +125,39 @@ Authendication.prototype.getAll = async function () {
     }
 }
 
-Authendication.prototype.login = async function ({
-    email,
+Authendication.prototype.login = async function (
+    mail,
     password
-}) {
+) {
     try {
-        const Login = await signInWithEmailAndPassword(clientAuth, email, password);
+        const Login = await signInWithEmailAndPassword(clientAuth, mail, password);
         const access_token = await getIdToken(Login.user);
+        const {
+            user
+        } = Login;
+        const {
+            uid,
+            email,
+            photoURL,
+            phoneNumber,
+            disabled,
+            displayName,
+            emailVerified,
+            metadata
+        } = user;
         return {
             access_token,
-            uid: Login.user.uid
+            user: {
+                id: uid,
+                email,
+                profile: photoURL,
+                mobile: phoneNumber,
+                isBlock: disabled,
+                username: displayName,
+                join: new Date(metadata?.creationTime).toDateString(),
+                verfied: emailVerified,
+                lastOnline: metadata?.lastSignInTime ? new Date(metadata?.lastSignInTime) : 'Not Yet'
+            }
         }
     } catch (error) {
         throw error;
@@ -154,19 +176,22 @@ Authendication.prototype.resetPassword = async function (email) {
     try {
         if (!email) throw new Error("Email is Empty");
         const resetlink = await Auth.generatePasswordResetLink(email);
-        return resetlink;
+        const user = await this.search(email);
+        return {
+            resetlink,
+            user: user[0]
+        };
     } catch (error) {
         throw error;
     }
 }
-Authendication.prototype.search = async function (search)
-{
+Authendication.prototype.search = async function (search) {
     if (!search || typeof (search) !== 'string')
         throw new TypeError("one string Parameter request ");
     try {
         const users = await this.getAll();
-        const regex = new RegExp(search,'ig');
-       const exist=users.filter(auth => regex.test(auth.id) || regex.test(auth.email) || regex.test(auth.mobile))
+        const regex = new RegExp(search, 'ig');
+        const exist = users.filter(auth => regex.test(auth.id) || regex.test(auth.email) || regex.test(auth.mobile))
         return exist ?? [];
     } catch (error) {
         throw error;
@@ -182,25 +207,23 @@ Authendication.prototype.isExist = async function (search) {
         throw error;
     }
 }
-Authendication.prototype.count = async function ()
-{
+Authendication.prototype.count = async function () {
     try {
         const user = await this.getAll();
-        return user.length??0
+        return user.length ?? 0
     } catch (error) {
         throw error
     }
 }
-Authendication.prototype.block = async function (uid)
-{
-try {
-    await Auth.updateUser(uid, {
-        disabled: true
-    });
-    return await this.UserByID(uid);
-} catch (error) {
-    throw error;
-}
+Authendication.prototype.block = async function (uid) {
+    try {
+        await Auth.updateUser(uid, {
+            disabled: true
+        });
+        return await this.UserByID(uid);
+    } catch (error) {
+        throw error;
+    }
 }
 Authendication.prototype.unblock = async function (uid) {
     try {
@@ -208,6 +231,14 @@ Authendication.prototype.unblock = async function (uid) {
             disabled: false
         });
         return await this.UserByID(uid);
+    } catch (error) {
+        throw error;
+    }
+}
+Authendication.prototype.deCodeToken = async function (token) {
+    try {
+        const decodedata = await Auth.verifyIdToken(token);
+        return decodedata;
     } catch (error) {
         throw error;
     }

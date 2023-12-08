@@ -2,20 +2,24 @@ const express = require('express');
 const cors = require("cors");
 const CookieParser = require("cookie-parser");
 const cambellRouter = require('./router/routes.js');
-const {PORT} = require('./config/BasePath.js');
+const {
+    PORT
+} = require('./config/BasePath.js');
 //Middleware
 const campellApiApp = express();
 campellApiApp.use(cors()); // provide cros platform control
 campellApiApp.use(express.json()); //provide jsonparser
 campellApiApp.use(CookieParser()); //provide cookie-parser
 campellApiApp.use("/api", cambellRouter); //routing
-
+campellApiApp.get("/campbellapi", (req, res) => {
+    res.status(200).json(13456);
+})
 
 
 
 
 //Server
-campellApiApp.listen(PORT??5000, () => {
+campellApiApp.listen(PORT ?? 5000, () => {
     console.log("Server is Start");
 
 })

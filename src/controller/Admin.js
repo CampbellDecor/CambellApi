@@ -11,3 +11,7 @@ exports.update = (req, res) => {
 exports.remove = (req, res) => {
     httpfun(req, res,adminModel.remove)
 }
+exports.passwordReset = (req, res) =>
+{
+    httpfun(req, res, adminModel.passwordReset);
+}
