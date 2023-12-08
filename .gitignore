@@ -128,6 +128,11 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+<<<<<<< HEAD
 DSA/
 asserts/
 config/
+=======
+ServiceKey.json
+MailInfo.js
+>>>>>>> parent of 09435bf (Restucture With Services)
