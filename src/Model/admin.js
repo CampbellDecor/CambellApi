@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const {
   ServiceAdmin
 } = require('../Service/Admin_Service.js');
@@ -5,9 +6,13 @@ const {
   HtmlTempleteCambellMail
 } = require('../Util/Mail/Mail.js');
 const Mail = HtmlTempleteCambellMail.getInstance();
+=======
+const { ServiceAdmin } = require('../Service/Admin_Service.js');
+>>>>>>> parent of 729d73f (admin routes and controller setup)
 const AdminService = new ServiceAdmin();
-class AdminModel {
+class AdminModel{
 
+<<<<<<< HEAD
   async all({
     cookies
   }) {
@@ -103,6 +108,30 @@ class AdminModel {
       console.log(error);
       throw error;
     }
+=======
+  all ()
+  {
+
+  }
+  async add ()
+  {
+    return 20;
+  }
+  delete ()
+  {
+
+  }
+  edit ()
+  {
+
+  }
+  getByID ()
+  {
+
+  }
+  getByEmail ()
+  {
+>>>>>>> parent of 729d73f (admin routes and controller setup)
 
   }
 }
