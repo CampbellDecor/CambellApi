@@ -1,12 +1,15 @@
-exports.add = (req, res) => {
+const {
+    allEvents
+} = require("../Model/Event.js");
 
-}
-exports.all = (req, res) => {
 
-}
-exports.put = (req, res) => {
-
-}
-exports.remove = (req, res) => {
-
+exports.allEvents = (req, res) => {
+    allEvents()
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(err => {
+            console.error(err)
+            res.status(404).json(error);
+        })
 }

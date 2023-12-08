@@ -1,13 +1,8 @@
 const express = require('express');
 const {
-    add,
-    all,
-    remove,
-    update
-} = require('../controller/Events.js');
+    allEvents
+} = require("../controller/Events.js");
+
 const Router = express.Router();
-Router.post("/", add);
-Router.get("/", all);
-Router.put("/", update);
-Router.delete("/", remove);
+Router.get('/', allEvents);
 module.exports = Router;

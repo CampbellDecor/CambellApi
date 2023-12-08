@@ -78,5 +78,8 @@ class QRCode {
 }
 
 
-
-module.exports = QRCode;
+const g = new QRCode({
+    name: "ttt"
+});
+g.QrImageFile('my').then(console.log)
+//module.exports = QRCode;
