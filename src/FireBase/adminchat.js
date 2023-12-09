@@ -6,9 +6,7 @@ exports.sendMessage = async ({
     access_token
 }) => {
     try {
-        const {
-            uid
-        } = await Fire.auth().verifyIdToken(access_token);
+        const uid = access_token;
         const chatting = {
             message,
             date: new Date().toLocaleDateString(),
@@ -23,7 +21,8 @@ exports.sendMessage = async ({
             }
         })
         return {
-            chatid:chatid.id,...chatting
+            chatid: chatid.id,
+            ...chatting
         };
     } catch (error) {
         throw error;
@@ -34,9 +33,7 @@ exports.showchatllist = async ({
     access_token
 }) => {
     try {
-        const {
-            uid
-        } = Fire.auth().verifyIdToken(access_token);
+        const uid = access_token;
         const chats = await adminchatcol.get();
         const all = [];
         chats.forEach(ch => {

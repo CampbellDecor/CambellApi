@@ -7,7 +7,7 @@ const messaging = Firebase.messaging();
 const {
     genrateQrfile,
     genrateQrUrl
-} = require('../Model/QrCode.js');
+} = require('../Util/QR/QrCode.js');
 exports.approveBooking = async (bookcode) => {
     try {
         const booking = BookingCol.doc(bookcode);

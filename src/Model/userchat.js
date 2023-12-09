@@ -11,9 +11,7 @@ exports.chatListuser = async ({
     cookies
 }) => {
     try {
-        const {
-            uid
-        } = await Fire.auth().verifyIdToken(cookies.access_token);
+        const uid = cookies.access_token;
         const admin = await adminChat.doc("CuXlAV6HTGYn3hVyYDaSSIj0nqx1").get();
         const {
             profile,
@@ -35,9 +33,7 @@ exports.sendMessage = async ({
 }) => {
     try {
         const access_token = cookies.access_token;
-        const {
-            uid
-        } = await Fire.auth().verifyIdToken(access_token);
+        const uid= access_token;
         const {
             userid,
             username,
@@ -71,7 +67,7 @@ exports.all = async ({
     const {
         uid
     } = params;
-    const userid = await Fire.auth().verifyIdToken(cookies.access_token)
+    const userid =cookies.access_token
     try {
         if (userid.uid === uid) {
             const chats = await admin.adminchats(uid);

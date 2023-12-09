@@ -1,4 +1,4 @@
-const {resetpassword} = require("../Model/admin.js");
+const adminmodel = require("../Model/admin.js");
 exports.addAdmin = (req, res) => {
     adminmodel.add(req).then(
         result => {
@@ -65,6 +65,7 @@ exports.AuthAdmin = (req, res) => {
             res.status(200).json(result);
         })
         .catch(error => {
+            console.log(error);
             res.status(404).json(error);
         })
 };
@@ -87,8 +88,7 @@ exports.resetpassword = (req, res) => {
 };
 
 
-exports.auth = (req,res) =>
-{
+exports.auth = (req, res) => {
     adminmodel.auth()
         .then(result => {
             res.status(200).json(result);

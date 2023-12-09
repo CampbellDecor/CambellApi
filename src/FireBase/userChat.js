@@ -9,9 +9,7 @@ exports.sendMessage = async ({
     username
 }) => {
     try {
-        const {
-            uid
-        } = await Fire.auth().verifyIdToken(access_token);
+        const uid = access_token;
         const now = new Date();
         const Mes = {
             receiverId: userid,
@@ -30,7 +28,7 @@ exports.sendMessage = async ({
             ...Dtime,
             type: 'recive',
             message,
-            uid:userid
+            uid: userid
         };
     } catch (error) {
         throw error;

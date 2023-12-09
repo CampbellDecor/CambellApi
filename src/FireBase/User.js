@@ -54,8 +54,8 @@ exports.all = async () => {
                 uid: user.id,
                 profile: imgURL,
                 mobile: phoneNo,
-                username:name,
-                    ...other,
+                username: name,
+                ...other,
                 religion: religion ?? 'unknown',
                 join: user.createTime.toDate().toLocaleDateString()
             });
@@ -344,5 +344,21 @@ exports.isOnline = async (uid) => {
 
     } catch (error) {
         return false;
+    }
+}
+
+exports.addNote =async (
+    uid, note
+) => {
+    try {
+        await userCol.doc(uid).update({
+            note: note
+        })
+        const user = await userCol.doc(uid).get();
+        return {
+            uid,
+            ...user.data()};
+    } catch (error) {
+        throw error;
     }
 }

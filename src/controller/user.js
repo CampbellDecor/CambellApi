@@ -102,8 +102,7 @@ exports.userBook = (req, res) => {
         usermodel.OneUserBookingHistroy(uid)
             .then(result => {
                 res.status(200).json(result);
-            }).catch(error =>
-            {
+            }).catch(error => {
                 console.error(error)
                 res.status(404).json(error);
             })
@@ -115,6 +114,15 @@ exports.userBook = (req, res) => {
 
 exports.BookUser = (req, res) => {
     usermodel.BookUSerDetails(req)
+        .then(result => res.status(200).json(result))
+        .catch(error => {
+            console.error(error);
+            res.status(404).json(error);
+        });
+}
+
+exports.addNote = (req, res) => {
+    usermodel.addNote(req)
         .then(result => res.status(200).json(result))
         .catch(error => {
             console.error(error);

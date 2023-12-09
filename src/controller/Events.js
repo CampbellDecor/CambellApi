@@ -10,6 +10,6 @@ exports.allEvents = (req, res) => {
         })
         .catch(err => {
             console.error(err)
-            res.status(404).json(error);
+            res.status(404).json(err);
         })
 }

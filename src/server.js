@@ -3,7 +3,7 @@ const cors = require("cors");
 const cambellRouter = require('./router/routes.js');
 const campellApiApp = express();
 const CookieParser = require("cookie-parser");
-const multer = require("multer");
+
 
 //Middleware
 campellApiApp.use(cors()); // provide cros platform control

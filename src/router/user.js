@@ -16,4 +16,5 @@ Router.get('/hints/list', UserContoller.seachHint);
 Router.get('/search/:search', UserContoller.search);
 Router.get('/book/:uid', UserContoller.userBook);
 Router.get('/bookDetails/:uid', UserContoller.BookUser);
+Router.post('/usernote', UserContoller.addNote);
 module.exports = Router;

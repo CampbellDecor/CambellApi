@@ -2,7 +2,7 @@ const Fire = require('./Fire.js');
 
 exports.alluser = async () => {
     try {
-        const userslis =await (await Fire.auth().listUsers()).users
+        const userslis =(await Fire.auth().listUsers()).users
         const users = [];
         userslis.forEach(ele =>
         {

@@ -1,6 +1,6 @@
 const userDao = require("../FireBase/User.js");
 const randompwd = require("generate-password");
-const Mail = require("./Mail.js");
+const Mail = require("../Util/Mail/Mail.js");
 const BookingDao = require('../FireBase/Booking.js')
 const userModel = (userDoc) => {
     const {
@@ -344,6 +344,16 @@ exports.BookUSerDetails = async (req) => {
         } = req.params;
         const bookuser = await BookingDao.BookUser(uid);
         return bookuser;
+    } catch (error) {
+        throw error;
+    }
+}
+exports.addNote = async ({
+    body
+}) => {
+    try {
+        const usernote = await userDao.addNote(body.uid, body.note);
+        return userSetModel(usernote);
     } catch (error) {
         throw error;
     }

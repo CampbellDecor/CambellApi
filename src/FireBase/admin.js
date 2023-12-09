@@ -36,7 +36,10 @@ exports.add = async (admin) => {
             await adminc.collection("chat").add(chatting)
             const verifylink = await Firebase.auth().generateEmailVerificationLink(admin?.email);
             const reset = await Firebase.auth().generatePasswordResetLink(admin?.email);
-            const { activity, ...extra } = otherAdmin;
+            const {
+                activity,
+                ...extra
+            } = otherAdmin;
             return {
                 aid: admindata.id,
                 verifylink,
@@ -60,10 +63,7 @@ exports.all = async (access_token) => {
 
         const admins = [];
         const snapshot = await adminDoc.get();
-        const {
-            uid,
-            ...other
-        } = await Auth.verifyIdToken(access_token);
+        const uid = access_token;
         snapshot.forEach(admin => {
             if (admin.id !== uid) {
                 admins.push({
@@ -163,9 +163,7 @@ exports.adminActivity = async (aid = undefined) => {
 
 exports.login = async (req) => {
     try {
-        const {
-            uid
-        } = await Auth.verifyIdToken(req.cookies.access_token);
+        const uid = req.cookies.access_token;
 
         await adminDoc.doc(uid).update({
             isOnline: true,
@@ -189,9 +187,7 @@ exports.login = async (req) => {
 }
 exports.logout = async (req) => {
     try {
-        const {
-            uid
-        } = await Auth.verifyIdToken(req.cookies.access_token);
+        const uid = req.cookies.access_token;
         await adminDoc.doc(uid).update({
             isOnline: false,
             activity: FieldValue.arrayUnion({
@@ -207,9 +203,7 @@ exports.logout = async (req) => {
 exports.addActivity = async (req, addaction = 'admin activity') => {
     try {
         const action = req.body?.action ?? addaction;
-        const {
-            uid
-        } = await Auth.verifyIdToken(req.cookies.access_token);
+        const uid = req.cookies.access_token;
 
         await adminDoc.doc(uid).update({
             activity: FieldValue.arrayUnion({
