@@ -5,32 +5,16 @@ const BookingHisCol = FireStore.collection('BookingHistory');
 const USerCol = FireStore.collection('users');
 const messaging = Firebase.messaging();
 const {
-    genrateQrfile,
-    genrateQrUrl
+    QRCode
 } = require('../Util/QR/QrCode.js');
-exports.approveBooking = async (bookcode) => {
+const {
+    ShowTodo
+} = require('./Todo.js');
+const approveBooking = async (bookcode) => {
     try {
         const booking = BookingCol.doc(bookcode);
-        const Book = await booking.get();
-        const qrpath = `src/Util/QR/${bookcode}.png`
-        const qrsavepath = "QR/" + bookcode + ".png";
-        const qr = await genrateQrfile({
-            bookid: bookcode,
-            ...Book.data()
-        }, qrpath);
-        const Firestorage = Firebase.storage().bucket();
-        Firestorage.upload(qrpath, {
-            destination: qrsavepath
-        })
-        const fileref = Firestorage.file(qrsavepath);
-        const [url] = await fileref.getSignedUrl({
-            action: 'read',
-            expires: '01-11-2024'
-        });
-        const book = await booking.update({
-            status: 'active',
-            qr: url
-        });
+
+
         const bookdetails = await booking.get();
         const {
             eventDate
@@ -48,7 +32,7 @@ exports.approveBooking = async (bookcode) => {
         throw error;
     }
 }
-exports.rejectedBooking = async (bookcode) => {
+const rejectedBooking = async (bookcode) => {
     try {
         const booking = await BookingCol.doc(bookcode).update({
             status: 'rejected'
@@ -173,7 +157,7 @@ exports.recentBookings = async () => {
     }
 }
 //book by id one booking
-exports.oneBooking = async (bookid) => {
+const oneBooking = async (bookid) => {
     try {
         const book = await BookingCol.doc(bookid);
         const bookDetails = await book.get();
@@ -186,6 +170,7 @@ exports.oneBooking = async (bookid) => {
                 status,
                 isRated,
                 name,
+                qrcode
             } = bookDetails.data();
             return {
                 bookDate: new Date(date.toDate()).toLocaleDateString(),
@@ -193,6 +178,7 @@ exports.oneBooking = async (bookid) => {
                 user: userID,
                 payment: paymentAmount,
                 name,
+                qr: qrcode,
                 status,
                 isRated,
                 bookid
@@ -206,7 +192,7 @@ exports.oneBooking = async (bookid) => {
     }
 }
 //for show how many book in a number and month wise show
-exports.DayBookHistory = async (month) => {
+const DayBookHistory = async (month) => {
     try {
         const BookDoc = await BookingCol.where('status', 'not-in', ["cart", "cancelled"]).get();
         const bookings = [];
@@ -235,7 +221,7 @@ exports.DayBookHistory = async (month) => {
     }
 }
 //booking count
-exports.bookcountall = async () => {
+const bookcountall = async () => {
     try {
         const bookings = await BookingCol.where('status', 'not-in', ['cart', 'cancelled']).get();
         return await bookings.size;
@@ -245,7 +231,7 @@ exports.bookcountall = async () => {
     }
 }
 //one user booking counts
-exports.userBookingCount = async (uid) => {
+const userBookingCount = async (uid) => {
     try {
         const booking = [];
         const Book = await BookingCol.where('userID', '==', uid).get();
@@ -266,7 +252,7 @@ exports.userBookingCount = async (uid) => {
     }
 }
 //all Bookings
-exports.all = async () => {
+const all = async () => {
     try {
         const allBooking = [];
         const bookings = await BookingCol.get()
@@ -278,8 +264,9 @@ exports.all = async () => {
                 name,
                 paymentAmount,
                 pdf,
-                qr,
+                qrcode,
                 userID,
+
             } = ele.data();
             if (status !== 'cart' && eventDate) {
                 allBooking.push({
@@ -290,8 +277,9 @@ exports.all = async () => {
                     status,
                     user: userID,
                     pdf,
-                    qr: qr,
-                    paid: paymentAmount ?? false
+                    qr: qrcode,
+                    paid: paymentAmount ?? 0,
+                    paymentType: paymentAmount ? "Paypal" : "HandsOne"
 
                 });
             }
@@ -302,7 +290,7 @@ exports.all = async () => {
     }
 }
 
-exports.deleteTask = async (bookid, taskid) => {
+const deleteTask = async (bookid, taskid) => {
     try {
         const BookDoc = await BookingCol.doc(bookid).collection('todo').doc(taskid).delete();
         return BookDoc.writeTime;
@@ -312,7 +300,7 @@ exports.deleteTask = async (bookid, taskid) => {
 }
 
 
-exports.UserBookDetails = async (uid) => {
+const UserBookDetails = async (uid) => {
     try {
         const Bookings = await BookingCol.where('userID', '!=', uid).get();
         const bookings = [];
@@ -338,3 +326,50 @@ exports.UserBookDetails = async (uid) => {
         throw error;
     }
 }
+
+const Qrgenarate = async (bookcode) => {
+    try {
+        const Book = await oneBooking(bookcode);
+        const Todo = await ShowTodo(bookcode);
+        const history = [];
+        const Bookhistory = await BookingHisCol.where('bookcode', '==',
+            bookcode).get();
+        Bookhistory.forEach(ele => {
+            const Data = Object.entries(ele.data());
+            history.push({
+                hiscode: ele.id,
+                action: Data[1][0],
+                DataTime: new Date(Data[1][1].toDate()).toString(),
+
+            });
+        });
+        const BookData = {
+            Todo,
+            ...Book,
+            history
+        }
+        const qr = new QRCode(BookData);
+        const Data = await qr.QrDataUrl();
+        await BookingCol.doc(bookcode).update({
+            qrcode: Data
+        })
+        return await oneBooking(bookcode);
+    } catch (error) {
+        throw error;
+    }
+}
+
+module.exports = {
+    oneBooking,
+    Qrgenarate,
+    UserBookDetails,
+    all,
+    approveBooking,
+    bookcountall,
+    rejectedBooking,
+    deleteTask,
+    allBookings,
+    UserBookDetails,
+    userBookingCount,
+    DayBookHistory
+};

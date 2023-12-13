@@ -44,16 +44,15 @@ exports.getBooking = (req, res) => {
 
 }
 
-exports.approve = (req, res) =>
-{
+exports.approve = (req, res) => {
     BookingModel.Approve(req)
-       .then(result => {
-               res.status(200).json(result)
-           })
-           .catch(error => {
-               console.error(error)
-               res.status(404).json(error)
-           })
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(error => {
+            console.error(error)
+            res.status(404).json(error)
+        })
 }
 
 
@@ -64,9 +63,8 @@ exports.approve = (req, res) =>
 
 
 /* ------------------------------------------ToDo---------------------------------
-*/
-exports.editTask = (req, res) =>
-{
+ */
+exports.editTask = (req, res) => {
     BookingModel.editTask(req.body)
         .then(result => {
             res.status(200).json(result);
@@ -101,6 +99,16 @@ exports.deleteTask = (req, res) => {
 
 exports.getTasks = (req, res) => {
     BookingModel.showTask(req)
+        .then(result => {
+            res.status(200).json(result);
+        }).catch(error => {
+            console.error(error)
+            res.status(404).json(error);
+        })
+}
+
+exports.QrGenrate = (req, res) => {
+    BookingModel.Qrgenrate(req)
         .then(result => {
             res.status(200).json(result);
         }).catch(error => {

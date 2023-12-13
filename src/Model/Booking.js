@@ -25,8 +25,9 @@ exports.DayBookCount = async ({
         throw error;
     }
 }
-exports.Approve = async ({params}) =>
-{
+exports.Approve = async ({
+    params
+}) => {
     try {
         const result = await BookingDoa.approveBooking(params.bookid);
         return result;
@@ -143,5 +144,14 @@ exports.showTask = async ({
         return Todolist ?? [];
     } catch (error) {
         throw error;
+    }
+}
+exports.Qrgenrate = async ({
+    params
+}) => {
+    try {
+      return  await  BookingDoa.Qrgenarate(params.bookid);
+    } catch (error) {
+        throw error
     }
 }

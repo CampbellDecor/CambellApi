@@ -1,13 +1,11 @@
 const Firebase = require('./Fire');
 const FireStore = Firebase.firestore();
 const eventCol = FireStore.collection('events');
-exports.all = async () =>
-{
+exports.all = async () => {
     try {
         const result = []
         const eventsSnap = await eventCol.get();
-        eventsSnap.forEach(event =>
-        {
+        eventsSnap.forEach(event => {
             result.push({
                 eventid: event.id,
                 ...event.data(),
@@ -22,12 +20,16 @@ exports.all = async () =>
 exports.add = async (data) => {
     try {
         const result = await eventCol.add(data);
-        return result.id;
+        return {
+            eventid:result.id,
+            ...data,
+              added: new Date().toLocaleDateString()
+        };
     } catch (error) {
         throw error;
     }
 }
-exports.edit = async (eventcode,data) => {
+exports.edit = async (eventcode, data) => {
     try {
         const result = await eventCol.doc(eventcode).update(data);
         return result.writeTime;
@@ -35,30 +37,34 @@ exports.edit = async (eventcode,data) => {
         throw error;
     }
 }
-exports.deleteEvent = async (eventcode) => {
+exports.deleteEvent = async ({ eventid }) => {
     try {
-        const result = await eventCol.doc(eventcode).delete();
-        return result.writeTime;
+         await eventCol.doc(eventid).delete();
+        return eventid;
     } catch (error) {
         throw error;
     }
 }
-exports. SelectEventById= async (eventcode) => {
+exports.SelectEventById = async (eventcode) => {
     try {
         const result = await eventCol.doc(eventcode).get();
-        return{eventid:result.id,...result.data()}
-    } catch (error)
-    {
+        return {
+            eventid: result.id,
+            ...result.data()
+        }
+    } catch (error) {
         throw error;
     }
 }
 exports.search = async (searchtext) => {
-    try
-    {
+    try {
         const regx = new RegExp(searchtext, 'ig');
         const result = []
         const eventSnap = await eventCol.get();
-        eventSnap.forEach(e => result.push({ eventcode: e.id, ...e.data() }));
+        eventSnap.forEach(e => result.push({
+            eventcode: e.id,
+            ...e.data()
+        }));
         return result.filter(e => regx.test(e.name));
     } catch (error) {
         throw error;
@@ -72,6 +78,3 @@ exports.count = async () => {
         throw error;
     }
 }
-
-
-

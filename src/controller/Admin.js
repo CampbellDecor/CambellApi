@@ -94,6 +94,7 @@ exports.auth = (req, res) => {
             res.status(200).json(result);
         })
         .catch(error => {
+            console.error(error);
             res.status(404).json(error);
         })
 }
