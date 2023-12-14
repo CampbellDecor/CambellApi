@@ -1,13 +1,11 @@
-var Firebase= require('firebase-admin');
+var Firebase = require('firebase-admin');
 
-const ServiceKey=require('./ServiceKey.json');
+const ServiceKey = require('../config/ServiceKey.json');
 
-Firebase.initializeApp(
-    {
-        credential: Firebase.credential.cert( ServiceKey ),
-        storageBucket: "campbelldecor-c2d1f.appspot.com",
-        databaseURL: "https://campbelldecor-c2d1f-default-rtdb.firebaseio.com"
-    }
-);
+Firebase.initializeApp({
+    credential: Firebase.credential.cert(ServiceKey),
+    storageBucket: "campbelldecor-c2d1f.appspot.com",
+    databaseURL: "https://campbelldecor-c2d1f-default-rtdb.firebaseio.com"
+});
 
-module.exports=Firebase;
+module.exports = Firebase;

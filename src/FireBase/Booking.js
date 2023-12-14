@@ -3,7 +3,6 @@ const FireStore = Firebase.firestore();
 const BookingCol = FireStore.collection('bookings');
 const BookingHisCol = FireStore.collection('BookingHistory');
 const USerCol = FireStore.collection('users');
-const messaging = Firebase.messaging();
 const {
     QRCode
 } = require('../Util/QR/QrCode.js');

@@ -1,6 +1,6 @@
 const userDao = require("../FireBase/User.js");
 const randompwd = require("generate-password");
-const Mail = require("../Util/Mail/Mail.js");
+const Mail = require("./Mail.js");
 const BookingDao = require('../FireBase/Booking.js')
 const userModel = (userDoc) => {
     const {
