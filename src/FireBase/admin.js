@@ -250,9 +250,7 @@ exports.findById = async (aid) => {
     }
 
 }
-exports.resetPassword = async ({
-    aid
-}) => {
+exports.resetPassword = async ({aid}) => {
     try {
         const admin = await Firebase.auth().getUser(aid)
         const resetlink = await Firebase.auth().generatePasswordResetLink(admin.email);

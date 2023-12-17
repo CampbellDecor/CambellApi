@@ -23,3 +23,15 @@ exports.nameSearch = (req, res) => {
             res.status(404).json(err);
         })
 }
+
+exports.add = (req, res) =>
+{
+    searchByName(req)
+        .then(result => {
+            res.status(200).json(result);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(404).json(err);
+        })
+}

@@ -9,3 +9,13 @@ catch (error) {
     throw error;
 }
 }
+
+exports.addCategory = async ({body}) =>
+{
+    try {
+        const Service = await ServiceDao.addCategory(body);
+        return Service;
+    } catch (error) {
+        throw error;
+    }
+}

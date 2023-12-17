@@ -7,6 +7,14 @@ exports.addService = (req, res) => {
             res.status(404).json(result);
         })
 };
+exports.addCategory = (req, res) => {
+    ServiceModel.addCategory(req)
+        .then(result => res.status(200).json(result))
+        .catch(result => {
+            console.error(result)
+            res.status(404).json(result);
+        })
+};
 exports.getService = (req, res) => {
     const serviceId = req.params.serviceId;
     ServiceModel.OneService(serviceId)
@@ -30,16 +38,3 @@ exports.getServices = (req, res) => {
         })
 }
 
-exports.deleteService = (req, res) => {
-
-};
-
-exports.searchService = (req, res) => {
-
-}
-exports.editService = (req, res) => {
-
-};
-exports.ImgUpload = (req, res) => {
-
-}

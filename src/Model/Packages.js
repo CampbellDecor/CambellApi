@@ -22,3 +22,18 @@ exports.searchByName = async ({
         throw error;
     }
 }
+
+exports.addPack = async ({
+    body
+}) => {
+    try {
+        const {
+            services,
+            ...others
+        } = body;
+        console.log(services);
+        return services;
+    } catch (error) {
+        throw error;
+    }
+}

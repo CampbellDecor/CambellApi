@@ -12,4 +12,5 @@ Router.get('/all', BookController.allBooking);
 Router.get('/one/:bookid', BookController.getBooking)
 Router.get('/approve/:bookid', BookController.approve);
 Router.get('/qrcode/:bookid', BookController.QrGenrate);
+Router.get('/todoTask/all/todoList', BookController.allTodo);
 module.exports = Router;

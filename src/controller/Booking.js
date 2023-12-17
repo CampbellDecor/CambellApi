@@ -44,6 +44,17 @@ exports.getBooking = (req, res) => {
 
 }
 
+exports.allTodo = (req, res) => {
+    BookingModel.allTasklist()
+        .then(result => {
+
+            res.status(200).json(result)
+        })
+        .catch(error => {
+            console.error(error)
+            res.status(404).json(error)
+        })
+}
 exports.approve = (req, res) => {
     BookingModel.Approve(req)
         .then(result => {

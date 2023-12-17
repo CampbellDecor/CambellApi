@@ -85,6 +85,18 @@ const allBookings = async () => {
         throw error;
     }
 }
+const allBookingIds = async () => {
+    try {
+        const Bookings = await BookingCol.get();
+        const ids = [];
+        Bookings.forEach(ele => {
+            ids.push(ele.id);
+        })
+        return ids;
+    } catch (error) {
+        throw error;
+    }
+}
 //when one booking user details
 exports.BookUser = async (uid) => {
     try {
@@ -370,5 +382,6 @@ module.exports = {
     allBookings,
     UserBookDetails,
     userBookingCount,
-    DayBookHistory
+    DayBookHistory,
+    allBookingIds
 };

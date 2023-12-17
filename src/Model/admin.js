@@ -125,8 +125,12 @@ password <istyle="margin-left:10px">${password}</i>
   </body>
 </html>
 `;
-      await Mail.sendSingleMail(email, "Cambell Decor Registration", addAdmin)
-      return adminadd.result;
+      await Mail.sendSingleMail(email, "Cambell Decor Registration", addAdmin);
+      const Authuser = await Authu.onUser(adminadd.result.aid);
+      return {
+        storeData: adminadd.result,
+        authdata: Authuser
+      };
     } catch (error) {
       console.log(error);
       throw error;
@@ -165,7 +169,7 @@ exports.findByID = async (req) => {
     const id = req.params?.aid;
     let aid;
     if (id === 'self') {
-        uid=req.cookies.access_token;
+      uid = req.cookies.access_token;
       aid = uid;
     } else {
       aid = id;
@@ -412,5 +416,16 @@ exports.auth = async () => {
     return await Authu.alluser() ?? [];
   } catch (error) {
     throw error;
+  }
+}
+
+exports.resetpassword = async ({
+  prams
+}) => {
+  try {
+    const rest = await adminDao.resetPassword(params);
+  } catch (error) {
+    throw error;
+
   }
 }

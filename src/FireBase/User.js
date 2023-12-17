@@ -3,7 +3,6 @@ const Firebase = require("./Fire.js");
 const {
     FieldValue
 } = require("firebase-admin/firestore");
-const FireStorage = require("./Storage.js");
 const userCol = Firebase.firestore().collection("users");
 const {
     addActivity
