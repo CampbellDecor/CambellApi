@@ -1,17 +1,10 @@
-const Facebook = require('facebook-node-sdk');
+const Axios = require('axios');
 
-const F = new Facebook({
-    appId: "1227010361309478",
-    secret: '2f62645902ab2918bd3dcfe07d6de2df',
-    accessToken:"EAARb9ZAy4uSYBO9RVThlJg0fjX5OVw59vEC7uV6WntNjAZAV4Qiz6xGIlsnGSC299kNRdmqYuL2l9CGWMkjnQPPZBewsTTg06KXZASmIa4Llc8sJwfbBLO8vNMEiwHYF0BBDCLDyCjQMVRTf92qjQfxFbEZBkzmvk8IQG9J1IRKWKb1HZBmLQtVhuwXvuSR4diUq5Y27xzdDYnyRb0ZBQZDZD"
-});
+const accessToken ='EAARb9ZAy4uSYBOZCVspCDlQsQfEcVG88VV2IJ6y0pZAZAh3LG7xVkoC9UXFqhUZBY82mMve8LV8oki7oPcFAZAFcjoDl4WrNGC0uZAdZBPO5XmAZAcK54uo3uJrUjl76W2og2qQZCmYDZA0L3etSsFMxkZBZAFbENy9tnvru4tToxHMwV35loDWSz4wpSAZCZBqsihMyp9bJj9cuJZACvwxYj5pLjP3fDu0ZD';
+const pageId = '127588653657712';
+const apiUrl = `https://graph.facebook.com/v13.0/${pageId}?fields=fan_count&access_token=${accessToken}`;
 
-facebook.api(`/${"127588653657712"}`, 'get', {
-    fields: 'fan_count'
-}, function (res) {
-    if (res && res.error) {
-        console.error(res.error);
-    } else {
-        console.log(`Number of likes for the page: ${res.fan_count}`);
-    }
-});
+Axios.get(apiUrl).then(res =>
+{
+    console.log(res.data);
+})

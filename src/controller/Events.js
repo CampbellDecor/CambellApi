@@ -1,7 +1,8 @@
 const {
     allEvents,
     addEvents,
-    deleteEvent
+    deleteEvent,
+    editEvent
 } = require("../Model/Event.js");
 
 
@@ -15,7 +16,16 @@ exports.allEvents = (req, res) => {
             res.status(404).json(err);
         })
 }
-
+exports.editEvents = (req, res) => {
+    editEvent(req)
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(err => {
+            console.error(err)
+            res.status(404).json(err);
+        })
+}
 exports.deleteEvent = (req, res) => {
     deleteEvent(req)
         .then(result => {

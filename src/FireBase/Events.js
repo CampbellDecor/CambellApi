@@ -31,8 +31,8 @@ exports.add = async (data) => {
 }
 exports.edit = async (eventcode, data) => {
     try {
-        const result = await eventCol.doc(eventcode).update(data);
-        return result.writeTime;
+        await eventCol.doc(eventcode).update(data);
+        return true;
     } catch (error) {
         throw error;
     }

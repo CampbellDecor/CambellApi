@@ -1,7 +1,8 @@
 const {
     all,
     add,
-    deleteEvent
+    deleteEvent,
+    edit
 } = require("../FireBase/Events.js");
 
 
@@ -27,6 +28,21 @@ exports.deleteEvent = async ({
 }) => {
     try {
         return await deleteEvent(params);
+    } catch (error) {
+        throw error;
+    }
+}
+exports.editEvent = async ({
+    body
+}) => {
+    try {
+        const {
+            eventid,
+            ...others
+        } = body;
+        await edit(eventid, others);
+        const event = await all();
+       return event.find(ele => ele.eventid === eventid);
     } catch (error) {
         throw error;
     }

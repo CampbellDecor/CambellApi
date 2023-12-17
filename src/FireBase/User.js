@@ -67,9 +67,8 @@ exports.all = async () => {
 };
 exports.block = async (userid, req, reason = 'Anwanted Activity') => {
     try {
-        const {
-            uid
-        } = await Firebase.auth().verifyIdToken(req.cookies.access_token);
+        const
+            uid = req.cookies.access_token;
         const user = await Firebase.auth().updateUser(userid, {
             disabled: true
         })
@@ -88,9 +87,8 @@ exports.block = async (userid, req, reason = 'Anwanted Activity') => {
 }
 exports.unblock = async (userid, req, note = 'conatact with email') => {
     try {
-        const {
-            uid
-        } = await Firebase.auth().verifyIdToken(req.cookies.access_token);
+        const
+            uid = req.cookies.access_token;
         const user = await Firebase.auth().updateUser(userid, {
             disabled: false,
         })
@@ -346,7 +344,7 @@ exports.isOnline = async (uid) => {
     }
 }
 
-exports.addNote =async (
+exports.addNote = async (
     uid, note
 ) => {
     try {
@@ -356,7 +354,8 @@ exports.addNote =async (
         const user = await userCol.doc(uid).get();
         return {
             uid,
-            ...user.data()};
+            ...user.data()
+        };
     } catch (error) {
         throw error;
     }
