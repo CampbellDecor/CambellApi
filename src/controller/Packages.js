@@ -1,6 +1,7 @@
 const {
     allPack,
-    searchByName
+    searchByName,
+    addPack
 } = require("../Model/Packages.js");
 
 
@@ -24,9 +25,8 @@ exports.nameSearch = (req, res) => {
         })
 }
 
-exports.add = (req, res) =>
-{
-    searchByName(req)
+exports.add = (req, res) => {
+    addPack(req)
         .then(result => {
             res.status(200).json(result);
         })

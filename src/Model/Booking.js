@@ -150,14 +150,14 @@ exports.allTasklist = async () => {
     try {
         const BookList = await BookingDoa.allBookingIds();
         const TododListTask = [];
-       for (const iterator of BookList) {
-           const Todolist = await TodoDoa.ShowTodo(iterator);
-           const TODO = {
-               todoID: iterator,
-               List: Todolist
-           }
-           TododListTask.push(TODO);
-       }
+        for (const iterator of BookList) {
+            const Todolist = await TodoDoa.ShowTodo(iterator);
+            const TODO = {
+                todoID: iterator,
+                List: Todolist
+            }
+            TododListTask.push(TODO);
+        }
 
         return TododListTask;
     } catch (error) {
@@ -171,5 +171,16 @@ exports.Qrgenrate = async ({
         return await BookingDoa.Qrgenarate(params.bookid);
     } catch (error) {
         throw error
+    }
+}
+
+exports.RejectBook = async ({
+    params
+}) => {
+    try {
+        return await BookingDoa.rejectedBooking(params.bookid);
+    } catch (error) {
+        throw error;
+
     }
 }

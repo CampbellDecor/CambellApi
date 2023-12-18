@@ -55,7 +55,7 @@ exports.addCategory = async (data) => {
 exports.addService = async (mainService, data) => {
     try {
         const ServiceData = await ServiceCol.doc(mainService).add(data);
-
+        
         return {
             ...data,serid:ServiceData.id
         }

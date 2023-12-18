@@ -118,7 +118,7 @@ exports.block = async (request) => {
     <h5>Hi, ${blocked.email.substring(0,blocked.email.indexOf('@')-1)}</h5>
     <p>We hope this message finds you well. We regret to inform you that your user account with Campbell Decor has been temporarily blocked because of multiple suspicious activity or violation of terms of service.
 
-We understand the inconvenience this may cause and apologize for any disruption to your experience with Campbell Decor. Our primary concern is the security of your account and your data.  If you believe this block is in error, do not hesitate to reach out to us for further assistance.  </p>
+We understand the inconvenience this may cause and apologize for any disruption to your experience with Campbell Decor. Our primary concern is the security of your account and your data.  If you believe this block is in error, do not hesitate to reach out to us for further assistance.</p>
 <p>
     Thank you
 for your understanding and cooperation.We look forward to resolving this matter promptly and having you back as a valued customer. </p>
@@ -180,7 +180,7 @@ exports.unblock = async (request) => {
     <div style="width: 90%;">
     <h2>Account unBlocked</h2>
     <h5>Hi, ${blocked.email.substring(0,blocked.email.indexOf('@')-1)}</h5>
-    < p > We hope this message finds you well.We are writing to inform you that your account on Campbell Decor has been successfully unblocked.
+    <p> We hope this message finds you well.We are writing to inform you that your account on Campbell Decor has been successfully unblocked.
     After a thorough review of your account, we 've lifted the block to ensure you can once again access and enjoy the full range of services provided by Campbell Decor. We apologize for any inconvenience this temporary block may have caused and appreciate your patience and understanding throughout this process.
     We encourage you to log in to your account now to resume your activities and make the most of Campbell Decor 's features. Should you encounter any further issues or have any questions, please don'
     t hesitate to reach out to our team.

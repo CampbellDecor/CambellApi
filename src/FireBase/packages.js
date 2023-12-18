@@ -12,12 +12,45 @@ const assignPackage = (pack = [], element) => {
         pack.push({
             packageID: element.id,
             ...others,
-            name: packageName,
+            packageName,
             services: arr
         })
     }
 
 
+}
+exports.addPackage = async ({
+    services,
+    packname,
+    packImg,
+    price
+}) => {
+    try {
+        const Ser = {};
+        services.forEach((ele, index) => {
+            Ser['0' + (index + 1)] = ele;
+        })
+        const Package = {
+            imgURL: packImg,
+            packageName: packname,
+            price: parseInt(price),
+            services: Ser,
+            rating_count: 1,
+            avg_rating: 0,
+        }
+        const packAdd = await PackageCol.add(Package);
+        return {
+            packageID: packAdd.id,
+            imgURL: packImg,
+            packageName: packname,
+            services: services,
+            rating_count: 1,
+            avg_rating: 0,
+            price
+        }
+    } catch (error) {
+        throw error;
+    }
 }
 exports.allPack = async () => {
     try {

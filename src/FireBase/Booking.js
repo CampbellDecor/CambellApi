@@ -9,38 +9,7 @@ const {
 const {
     ShowTodo
 } = require('./Todo.js');
-const approveBooking = async (bookcode) => {
-    try {
-        const booking = BookingCol.doc(bookcode);
 
-
-        const bookdetails = await booking.get();
-        const {
-            eventDate
-        } = bookdetails.data();
-        const bookingHistory = await BookingHisCol.add({
-            bookcode,
-            eventdate: eventDate.toDate(),
-            approve: book.writeTime.toDate()
-        });
-        return {
-            bookid: bookdetails.id,
-            ...bookdetails.data()
-        };
-    } catch (error) {
-        throw error;
-    }
-}
-const rejectedBooking = async (bookcode) => {
-    try {
-        const booking = await BookingCol.doc(bookcode).update({
-            status: 'rejected'
-        });
-        return booking.writeTime.toDate();
-    } catch (error) {
-        throw error;
-    }
-}
 const allBookings = async () => {
     try {
         const bookingsnap = await BookingCol.get();
@@ -369,7 +338,36 @@ const Qrgenarate = async (bookcode) => {
         throw error;
     }
 }
-
+const approveBooking = async (bookcode) => {
+    try {
+        const booking = BookingCol.doc(bookcode);
+        const book=await booking.update({
+            status: 'active'
+        })
+        const bookdetails = await booking.get();
+        const {
+            eventDate
+        } = bookdetails.data();
+        const bookingHistory = await BookingHisCol.add({
+            bookcode,
+            eventdate: eventDate.toDate(),
+            approve: book.writeTime.toDate()
+        });
+        return await oneBooking(bookcode);
+    } catch (error) {
+        throw error;
+    }
+}
+const rejectedBooking = async (bookcode) => {
+    try {
+        const booking = await BookingCol.doc(bookcode).update({
+            status: 'rejected'
+        });
+        return await oneBooking(bookcode);
+    } catch (error) {
+        throw error;
+    }
+}
 module.exports = {
     oneBooking,
     Qrgenarate,

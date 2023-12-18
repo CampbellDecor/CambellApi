@@ -38,3 +38,11 @@ exports.getServices = (req, res) => {
         })
 }
 
+exports.addServices = (req, res) => {
+    ServiceModel.addService(req)
+        .then(services => {
+            res.status(200).json(services);
+        }).catch(err => {
+            res.status(404).json(err);
+        })
+}

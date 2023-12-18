@@ -66,6 +66,16 @@ exports.approve = (req, res) => {
         })
 }
 
+exports.reject= (req, res) => {
+    BookingModel.RejectBook(req)
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(error => {
+            console.error(error)
+            res.status(404).json(error)
+        })
+}
 
 
 

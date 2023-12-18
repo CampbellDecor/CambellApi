@@ -1,6 +1,7 @@
 const {
     allPack,
-    searchByName
+    searchByName,
+    addPackage
 } = require("../FireBase/packages.js")
 
 exports.allPack = async () => {
@@ -27,12 +28,8 @@ exports.addPack = async ({
     body
 }) => {
     try {
-        const {
-            services,
-            ...others
-        } = body;
-        console.log(services);
-        return services;
+        const newPack = await addPackage(body);
+        return newPack;
     } catch (error) {
         throw error;
     }

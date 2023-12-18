@@ -394,7 +394,7 @@ exports.deleteAdmin = async (req) => {
 
 
 
-    return deleteadmin;
+    return aid;
   } catch (error) {
     throw error;
   }
