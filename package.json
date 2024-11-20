@@ -9,7 +9,8 @@
   "scripts": {
     "test": "jest --watch",
     "build": "node server.js",
-    "start": "nodemon src/server.js"
+    "start": "nodemon src/server.js",
+    "format":"ts-node --pretty"
   },
   "keywords": [],
   "author": "",
