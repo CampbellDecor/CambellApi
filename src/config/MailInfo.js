@@ -1,4 +1,0 @@
- exports.auth = {
-   user: '',
-   pass: ""
- }

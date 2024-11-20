@@ -1,7 +1,0 @@
-{
-    "jest.rootPath": "./tests",
-    "compile-hero.disable-compile-files-on-did-save-code": true,
-    "githubPullRequests.ignoredPullRequestBranches": [
-        "main"
-    ]
-}
